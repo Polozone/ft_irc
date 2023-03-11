@@ -13,6 +13,9 @@
 #include <cstring>
 #include <sys/types.h>
 #include <netdb.h>
+#include <iostream>
+#include <poll.h>
+#include <vector>
 
 #define SERVER_PORT "15000"
 #define SERVER_ADDR "127.0.0.1"
@@ -21,4 +24,5 @@
 #define FALSE            0
 
 int launchServer();
+int setPoll(int listener_fd);
 
