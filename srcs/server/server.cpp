@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 09:30:30 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/11 14:07:48 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/12 11:19:46 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int handleServerErrors(const char *str, int *sd) {
     return (1);
 }
 
-int getAddrinfo(struct addrinfo *&servinfo, char *serverPort) {
+int getAddrinfo(struct addrinfo *&servinfo, const char *serverPort) {
     int status;
     struct addrinfo hints;
 
@@ -70,18 +70,15 @@ int getListenerSock(const struct addrinfo *servinfo) {
     return (listen_sd);
 }
 
-int launchServer(char *serverPort) {
+int launchServer(const char *serverPort, const char *password) {
     int listen_sd;
     struct addrinfo *servinfo;
 
+    (void)password;
     getAddrinfo(servinfo, serverPort);
-    
+
     listen_sd = getListenerSock(servinfo);
-    if (listen_sd < 0) {
-        std::cerr << "Error getting the listener_sock\n";
-        return (-1);
-    }
-    
+
     setPoll(listen_sd);
     
     freeaddrinfo(servinfo);

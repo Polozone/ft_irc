@@ -22,5 +22,5 @@
 #define TRUE             1
 #define FALSE            0
 
-int launchServer(char *serverPort);
+int launchServer(const char *serverPort, const char *password);
 int setPoll(int listener_fd);
