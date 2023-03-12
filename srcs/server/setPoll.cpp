@@ -69,6 +69,7 @@ int readExistingConnection(const std::vector<struct pollfd> &fds, int i, int &cl
             if (detectEOF(buffer))
                 printf("EOF!!\n");
             std::cout << buffer << "\n";
+            // parentChannelHandler();
             memset(buffer, 0, sizeof(buffer));
             break;
         }
