@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./server.hpp"
+#include "./Server.hpp"
 
 struct pollfd createPollFdNode(int sd, int event)
 {
