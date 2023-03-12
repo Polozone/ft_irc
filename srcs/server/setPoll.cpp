@@ -6,11 +6,23 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/11 12:32:16 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/11 14:19:17 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./Server.hpp"
+
+int detectEOF(const char *str)
+{
+    int i = 0;
+    while (str[i])
+    {
+        if (!str[i + 1] && str[i] != '\n')
+            return (1);
+        i++;
+    }
+    return (0);
+}
 
 struct pollfd createPollFdNode(int sd, int event)
 {
@@ -54,11 +66,12 @@ int readExistingConnection(const std::vector<struct pollfd> &fds, int i, int &cl
         }
         if (status > 0)
         {
+            if (detectEOF(buffer))
+                printf("EOF!!\n");
             std::cout << buffer << "\n";
             memset(buffer, 0, sizeof(buffer));
             break;
         }
-
     } while (TRUE);
     return (0);
 }

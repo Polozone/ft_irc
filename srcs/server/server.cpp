@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 09:30:30 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/10 15:29:52 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/12 11:19:46 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int handleServerErrors(const char *str, int *sd) {
     return (1);
 }
 
-int getAddrinfo(struct addrinfo *&servinfo) {
+int getAddrinfo(struct addrinfo *&servinfo, const char *serverPort) {
     int status;
     struct addrinfo hints;
 
@@ -28,7 +28,7 @@ int getAddrinfo(struct addrinfo *&servinfo) {
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    if ((status = getaddrinfo(SERVER_ADDR, SERVER_PORT, &hints, &servinfo)) != 0) {
+    if ((status = getaddrinfo(SERVER_ADDR, serverPort, &hints, &servinfo)) != 0) {
         std::cerr << "getaddrinfo error: " << gai_strerror(status) << std::endl;
         return (-1);
     }
@@ -70,18 +70,15 @@ int getListenerSock(const struct addrinfo *servinfo) {
     return (listen_sd);
 }
 
-int launchServer() {
+int launchServer(const char *serverPort, const char *password) {
     int listen_sd;
     struct addrinfo *servinfo;
 
-    getAddrinfo(servinfo);
-    
+    (void)password;
+    getAddrinfo(servinfo, serverPort);
+
     listen_sd = getListenerSock(servinfo);
-    if (listen_sd < 0) {
-        std::cerr << "Error getting the listener_sock\n";
-        return (-1);
-    }
-    
+
     setPoll(listen_sd);
     
     freeaddrinfo(servinfo);
