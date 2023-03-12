@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./server.hpp"
+#include "./Server.hpp"
 
 int handleServerErrors(const char *str, int *sd) {
     perror(str);

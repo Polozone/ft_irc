@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./server.hpp"
+#include "./Server.hpp"
 
 int detectEOF(const char *str)
 {
