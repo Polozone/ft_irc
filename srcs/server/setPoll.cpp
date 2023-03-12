@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/11 14:19:17 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/12 14:47:06 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,16 @@ int readExistingConnection(const std::vector<struct pollfd> &fds, int i, int &cl
                 printf("EOF!!\n");
             std::cout << buffer << "\n";
             memset(buffer, 0, sizeof(buffer));
+            
+            struct hostent *hostname;
+            hostname = gethostbyname("localhost");
+            printf("%s\n", hostname->h_name);
+            status = send(fds[i].fd, "localhost :Welcome to the localhost Network, theodeville[!theodeville@localhost]", 81, 0);
+            if (status < 0)
+            {
+                perror("status");
+                return (-1);
+            }
             break;
         }
     } while (TRUE);

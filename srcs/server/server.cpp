@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 09:30:30 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/12 11:19:46 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/12 14:16:52 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@ int handleServerErrors(const char *str, int *sd) {
         close(*sd);
     }
     return (1);
+}
+
+int welcomeClient(int fd)
+{
+    (void)fd;
+    std::string welcomeClient;
+
+    welcomeClient = ":irc 001 theodeville :Welcome to the server!\n";
+    return (0);
 }
 
 int getAddrinfo(struct addrinfo *&servinfo, const char *serverPort) {
@@ -45,8 +54,7 @@ int getListenerSock(const struct addrinfo *servinfo) {
         return (handleServerErrors("socket()", NULL));
     }
 
-    status = setsockopt(listen_sd, SOL_SOCKET,  SO_REUSEADDR,
-                  (char *)&on, sizeof(on));
+    status = setsockopt(listen_sd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
     if (status < 0) {
         return (handleServerErrors("sockopt()", &listen_sd));
     }
@@ -78,7 +86,7 @@ int launchServer(const char *serverPort, const char *password) {
     getAddrinfo(servinfo, serverPort);
 
     listen_sd = getListenerSock(servinfo);
-
+    
     setPoll(listen_sd);
     
     freeaddrinfo(servinfo);

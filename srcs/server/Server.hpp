@@ -24,3 +24,4 @@
 
 int launchServer(const char *serverPort, const char *password);
 int setPoll(int listener_fd);
+int welcomeClient(int fd);
