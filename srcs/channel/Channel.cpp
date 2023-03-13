@@ -21,18 +21,18 @@ void    Channel::printExistingChannels(){
 void    detectCommand(std::string &userInput)
 {
     std::string command;
-    std::string content;
+    std::string contentCommand;
     if (userInput.size() > 5)
     {
         command = userInput.substr(0, 4);
-        content = userInput.substr(5, userInput.length() - 1);
+        contentCommand = userInput.substr(5, userInput.length() - 1);
     }
     else
         return ;
     if (command == "JOIN")
-        joinCommand(content);
+        joinCommand(contentCommand);
     else if (command == "MODE")
-        modeCommand(content);
+        modeCommand(contentCommand);
     
 }
 
