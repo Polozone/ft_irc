@@ -1,9 +1,10 @@
 
 #include "Channel.hpp"
+#include "../commands/join.cpp"
+#include "../commands/mode.cpp"
 
 void    Channel::addExistingChannels(std::string &channelName)
 {
-    
     std::vector<std::string>::iterator it = std::find(_existingChannels.begin(), _existingChannels.end(), channelName);
     if (it == _existingChannels.end())
         _existingChannels.push_back(channelName);
@@ -17,10 +18,22 @@ void    Channel::printExistingChannels(){
     }
 }
 
-void    joinCommand(std::string &userInput)
+void    detectCommand(std::string &userInput)
 {
-    if (userInput.substr(0, 4) == "JOIN")
-        dprintf(2, "JOIN CMD\n");
+    std::string command;
+    std::string content;
+    if (userInput.size() > 5)
+    {
+        command = userInput.substr(0, 4);
+        content = userInput.substr(5, userInput.length() - 1);
+    }
+    else
+        return ;
+    if (command == "JOIN")
+        joinCommand(content);
+    else if (command == "MODE")
+        modeCommand(content);
+    
 }
 
 void handlerUserInput()
@@ -29,7 +42,7 @@ void handlerUserInput()
 
     while (true) {
         std::getline(std::cin, input);
-        joinCommand(input);
+        detectCommand(input);
         if (input == "exit") {
             break; // Sortie de la boucle si la chaîne est "exit"
         }

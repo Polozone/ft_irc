@@ -3,15 +3,14 @@
 
 int main(int ac, char **av)
 {
-	std::string name1 = "channel1";
-	std::string name2 = "channel2";
-	std::string name3 = "channel3";
-	Channel test;
-	test.addExistingChannels(name1);
-	test.addExistingChannels(name2);
-	test.addExistingChannels(name3);
-	test.addExistingChannels(name3);
-	test.printExistingChannels();
+	// std::string name1 = "channel1";
+	// std::string name2 = "channel2";
+	// std::string name3 = "channel3";
+	// Channel test;
+	// test.addExistingChannels(name1);
+	// test.addExistingChannels(name2);
+	// test.addExistingChannels(name3);
+	// test.printExistingChannels();
 	handlerUserInput();
 	if (ac != 3)
 	{
