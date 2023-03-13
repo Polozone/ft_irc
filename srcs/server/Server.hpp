@@ -22,5 +22,40 @@
 #define TRUE             1
 #define FALSE            0
 
-int launchServer(const char *serverPort, const char *password);
 int setPoll(int listener_fd);
+int welcomeClient(int fd);
+
+class Server {
+
+public:
+    Server(const char *port, const char *password);
+    ~Server();
+
+
+
+private:
+    Server();
+    Server(const Server &rhs);
+
+    Server  &operator=(const Server &rhs);
+
+    int getAddrinfo();
+    int launchServer();
+    int getListenerSock();
+
+    int setPoll();
+    int polling();
+    int acceptIncomingConnection();
+    int readExistingConnection(int i);
+    int closeConnection(int i);
+
+
+    const char                  *port;
+    const char                  *password;
+    int                         listen_sd;
+    int                         end_server;
+    int                         close_conn;
+    std::vector<struct pollfd>  fds;
+    struct addrinfo             *servinfo;
+
+};
