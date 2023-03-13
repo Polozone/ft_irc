@@ -1,3 +1,4 @@
 #pragma once
 
-#include "srcs/server/server.hpp"
+#include "srcs/server/Server.hpp"
+#include "srcs/channel/Channel.hpp"
