@@ -42,6 +42,26 @@ int Server::closeConnection(int i)
     return (0);
 }
 
+int Server::handleCtrlD(const char *buffer)
+{
+    std::string tmp(buffer);
+    if (detectEOF(buffer))
+    {
+        concatenate = 1;
+        concatenatedCmd += tmp;
+        return (1);
+    }
+    else if (!detectEOF(buffer) && concatenate)
+    {
+        concatenate = 0;
+        concatenatedCmd += tmp;
+        std::cout << concatenatedCmd << std::endl;
+        concatenatedCmd.empty();
+        return (1);
+    }
+    return (0);
+}
+
 int Server::readExistingConnection(int i)
 {
     int status;
@@ -64,10 +84,11 @@ int Server::readExistingConnection(int i)
     }
     if (status > 0)
     {
-        if (detectEOF(buffer))
-            printf("EOF!!\n");
-        std::cout << buffer << "\n";
-        memset(buffer, 0, sizeof(buffer));
+        if (!handleCtrlD(buffer))
+        {
+            std::cout << buffer << "\n";
+            memset(buffer, 0, sizeof(buffer));
+        }
         return (0);
     }
     return (0);

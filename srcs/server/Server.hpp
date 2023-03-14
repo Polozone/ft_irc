@@ -31,8 +31,6 @@ public:
     Server(const char *port, const char *password);
     ~Server();
 
-
-
 private:
     Server();
     Server(const Server &rhs);
@@ -48,6 +46,7 @@ private:
     int acceptIncomingConnection();
     int readExistingConnection(int i);
     int closeConnection(int i);
+    int handleCtrlD(const char *buffer);
 
 
     const char                  *port;
@@ -57,5 +56,7 @@ private:
     int                         close_conn;
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
+    int                         concatenate;
+    std::string                 concatenatedCmd;
 
 };
