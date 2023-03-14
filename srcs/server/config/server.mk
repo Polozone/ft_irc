@@ -1,3 +1,3 @@
-SRCS += ./srcs/server/server.cpp ./srcs/server/setPoll.cpp 
+SRCS += ./srcs/server/setPoll.cpp ./srcs/server/_Server.cpp
 
 HEADER += ./srcs/server/server.hpp
