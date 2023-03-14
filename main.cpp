@@ -11,7 +11,7 @@ int main(int ac, char **av)
 	// test.addExistingChannels(name2);
 	// test.addExistingChannels(name3);
 	// test.printExistingChannels();
-	handlerUserInput();
+	// handlerUserInput();
 	if (ac != 3)
 	{
 		std::cerr << "./ircserv [port number] [password]\n";

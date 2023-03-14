@@ -61,6 +61,8 @@ private:
     int                         close_conn;
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
+    std::vector<std::string>    _existingChannels;
+    std::string                 *_command;
     int                         concatenate;
     std::string                 concatenatedCmd;
 
