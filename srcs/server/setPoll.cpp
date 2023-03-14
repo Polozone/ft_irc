@@ -64,9 +64,11 @@ int Server::readExistingConnection(int i)
     }
     if (status > 0)
     {
+        std::string command(buffer);
         if (detectEOF(buffer))
             printf("EOF!!\n");
         std::cout << buffer << "\n";
+        parseCommand(command);
         memset(buffer, 0, sizeof(buffer));
         return (0);
     }

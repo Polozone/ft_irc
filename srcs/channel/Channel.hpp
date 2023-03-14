@@ -11,12 +11,10 @@ class Channel {
 
     public:
 
-        void    addExistingChannels(std::string &channelName);
-        void    printExistingChannels();
+        
 
     private:
 
-        std::vector<std::string>    _existingChannels;
         std::map<int, Client*>      _clients;
 
     //      // Ajout d'un élément à la map

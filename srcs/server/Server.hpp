@@ -16,6 +16,7 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
+#include <algorithm>
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -49,6 +50,10 @@ private:
     int readExistingConnection(int i);
     int closeConnection(int i);
 
+    void    addExistingChannels(const std::string &channelName);
+    void    printExistingChannels();
+    
+    void    parseCommand(std::string &userInput);
 
     const char                  *port;
     const char                  *password;
@@ -57,5 +62,7 @@ private:
     int                         close_conn;
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
+    std::vector<std::string>    _existingChannels;
+    std::string                 *_command;
 
 };
