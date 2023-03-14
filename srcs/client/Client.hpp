@@ -17,5 +17,6 @@ private:
 
     std::string _user;
     std::string _nick;
+    int         _fd;
 
 };

@@ -12,27 +12,6 @@
 
 #include "./Server.hpp"
 
-int detectEOF(const char *str)
-{
-    int i = 0;
-    while (str[i])
-    {
-        if (!str[i + 1] && str[i] != '\n')
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-struct pollfd createPollFdNode(int sd, int event)
-{
-    struct pollfd pollFdNode = {
-        .fd = sd,
-        .events = event};
-
-    return (pollFdNode);
-}
-
 int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;

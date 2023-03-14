@@ -1,5 +1,6 @@
 #include "./Server.hpp"
 
+// CLASS INIT
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
@@ -22,14 +23,7 @@ Server  &Server::operator=(const Server &rhs)
     return (*this);
 }
 
-int handleServerErrors(const char *str, int *sd) {
-    perror(str);
-    if (*sd) {
-        close(*sd);
-    }
-    return (1);
-}
-
+// MEMBER FUNCTIONS
 int Server::getAddrinfo() {
     int status;
     struct addrinfo hints;
