@@ -52,7 +52,12 @@ private:
     void    addExistingChannels(const std::string &channelName);
     void    printExistingChannels();
     
-    void    parseCommand(std::string &userInput);
+    void    setCommand(std::string &userInput);
+
+    void    callCommand();
+
+    void    joinCommand();
+    void    modeCommand();
 
     const char                  *port;
     const char                  *password;
@@ -62,8 +67,9 @@ private:
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
     std::vector<std::string>    _existingChannels;
-    std::string                 *_command;
+    std::vector<std::string>    _command;
     int                         concatenate;
     std::string                 concatenatedCmd;
+
 
 };

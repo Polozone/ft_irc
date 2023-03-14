@@ -1,5 +1,6 @@
 
 #include <string>
+#include <sstream>
 
 std::string removeExtraSpaces(std::string &str) {
     std::string result;

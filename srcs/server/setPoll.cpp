@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./Server.hpp"
+#include "../utils/string_utils.cpp"
 
 int detectEOF(const char *str)
 {
@@ -86,6 +87,8 @@ int Server::readExistingConnection(int i)
     {
         if (!handleCtrlD(buffer))
         {
+            std::string input(buffer);
+            setCommand(input);
             std::cout << buffer << "\n";
             memset(buffer, 0, sizeof(buffer));
         }
@@ -182,4 +185,38 @@ int Server::setPoll()
     } while (end_server == FALSE);
 
     return (0);
+}
+
+void    Server::joinCommand()
+{
+    std::cout << "JOIN" << std::endl;
+}
+
+void    Server::modeCommand()
+{
+    std::cout << "mode" << std::endl;
+}
+
+void    Server::callCommand()
+{
+    if (_command[0] == "JOIN")
+        joinCommand();
+    else if (_command[0] == "MODE")
+        modeCommand();
+    else
+        std::cout << "Command not found" << std::endl;
+}
+
+void    Server::setCommand(std::string &userInput)
+{
+    std::string withoutExtraSpace = removeExtraSpaces(userInput);
+    _command = split(withoutExtraSpace, ' ');
+
+    std::vector<std::string>::iterator it;
+    callCommand();
+    // std::cout << _command[0] << std::endl;
+    // for (it = _command.begin(); it != _command.end(); ++it)
+    // {
+    //     std::cout << *it << std::endl;
+    // }
 }

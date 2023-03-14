@@ -118,8 +118,3 @@ void    Server::printExistingChannels(){
 //         }
 //     }
 // }
-
-void    Server::parseCommand(std::string &userInput)
-{
-    dprintf(2, "test\n");
-}
