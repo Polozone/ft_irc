@@ -11,6 +11,7 @@
 # **************************************************************************** #
 
 include srcs/server/config/server.mk
+include srcs/client/config/client.mk
 
 
 NAME	= ircserv

@@ -16,7 +16,8 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
-#include "./srcs/client/Client.hpp"
+#include <string>
+#include "../client/Client.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -52,7 +53,8 @@ private:
     int handleCtrlD(const char *buffer);
 
     // Add new Client
-    int addNewClient();
+    int addNewClient(const char *buffer, int client_fd);
+    int checkIfClient(const char *buffer) const;
 
 
     const char                  *port;
@@ -72,3 +74,4 @@ private:
 int handleServerErrors(const char *str, int *sd);
 int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
+std::string getCommandContent(const char *buffer);

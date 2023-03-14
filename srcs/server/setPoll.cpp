@@ -65,8 +65,12 @@ int Server::readExistingConnection(int i)
     {
         if (!handleCtrlD(buffer))
         {
+            printf("1\n");
+            addNewClient(buffer, fds[i].fd);
+            printf("2\n");
             std::cout << buffer << "\n";
             memset(buffer, 0, sizeof(buffer));
+            printf("3\n");
         }
         return (0);
     }
