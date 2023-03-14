@@ -29,20 +29,16 @@ int Server::checkIfClient(const char *buffer) const
 std::string getCommandContent(const char *buffer)
 {
     std::string commandContent;
-    printf("11\n");
     std::string tmp(buffer);
-    printf("22\n");
     int i = 0;
 
     while (buffer[i] != 32 && buffer[i])
         i++;
     
     i++;
-    printf("33\n");
     commandContent = tmp.substr(i, tmp.size() - i);
-    printf("44\n");
 
     std::cout << commandContent << std::endl;
 
-    return NULL;
+    return "NULL";
 }

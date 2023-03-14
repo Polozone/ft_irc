@@ -55,6 +55,7 @@ private:
     // Add new Client
     int addNewClient(const char *buffer, int client_fd);
     int checkIfClient(const char *buffer) const;
+    int createClient(const char *nick, const char *user);
 
 
     const char                  *port;
