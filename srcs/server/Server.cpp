@@ -2,7 +2,7 @@
 #include "./Server.hpp"
 
 Server::Server(const char *port, const char *password)
-    : port(port), password(password), end_server(0), close_conn(0)
+    : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
     Server::launchServer();
 }
@@ -60,8 +60,7 @@ int Server::getListenerSock() {
         return (handleServerErrors("sockopt()", &listen_sd));
     }
 
-    int flags = fcntl(listen_sd, F_GETFL, 0);
-    status = fcntl(listen_sd, F_SETFL, flags | O_NONBLOCK);
+    status = fcntl(listen_sd, F_SETFL, O_NONBLOCK);
     if (status < 0) {
         return (handleServerErrors("fcntl()", &listen_sd));
     }
