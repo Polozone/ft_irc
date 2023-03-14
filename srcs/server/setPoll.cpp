@@ -33,66 +33,52 @@ struct pollfd createPollFdNode(int sd, int event)
     return (pollFdNode);
 }
 
-int closeConnection(std::vector<struct pollfd> &fds, int i)
+int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;
     close(fds[i].fd);
     fds.erase(fds.begin() + i);
+    close_conn = 0;
     return (0);
 }
 
-int readExistingConnection(const std::vector<struct pollfd> &fds, int i, int &close_conn)
+int Server::readExistingConnection(int i)
 {
     int status;
-    char buffer[1026];
+    char buffer[1026] = {0};
 
-    do
+    status = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+    if (status < 0)
     {
-        status = recv(fds[i].fd, buffer, sizeof(buffer), 0);
-        if (status < 0)
+        if (errno != EWOULDBLOCK)
         {
-            if (errno != EWOULDBLOCK)
-            {
-                perror("  recv() failed");
-                close_conn = TRUE;
-            }
-            return (-1);
-        }
-        if (status == 0)
-        {
-            printf("  Connection closed\n");
+            perror("  recv() failed");
             close_conn = TRUE;
-            break;
         }
-        if (status > 0)
-        {
-            if (detectEOF(buffer))
-                printf("EOF!!\n");
-            std::cout << buffer << "\n";
-            memset(buffer, 0, sizeof(buffer));
-            
-            struct hostent *hostname;
-            hostname = gethostbyname("localhost");
-            printf("%s\n", hostname->h_name);
-            status = send(fds[i].fd, "localhost :Welcome to the localhost Network, theodeville[!theodeville@localhost]", 81, 0);
-            if (status < 0)
-            {
-                perror("status");
-                return (-1);
-            }
-            break;
-        }
-    } while (TRUE);
+        return (-1);
+    }
+    if (status == 0)
+    {
+        close_conn = TRUE;
+        return (0);
+    }
+    if (status > 0)
+    {
+        if (detectEOF(buffer))
+            printf("EOF!!\n");
+        std::cout << buffer << "\n";
+        memset(buffer, 0, sizeof(buffer));
+        return (0);
+    }
     return (0);
 }
 
-int acceptIncomingConnection(int listener_fd, int &end_server,
-                             std::vector<struct pollfd> &fds)
+int Server::acceptIncomingConnection()
 {
     int new_sd;
     do
     {
-        new_sd = accept(listener_fd, NULL, NULL);
+        new_sd = accept(listen_sd, NULL, NULL);
         if (new_sd < 0)
         {
             if (errno != EWOULDBLOCK)
@@ -110,7 +96,7 @@ int acceptIncomingConnection(int listener_fd, int &end_server,
     return (0);
 }
 
-int polling(std::vector<struct pollfd> &fds)
+int Server::polling()
 {
     int status;
 
@@ -130,18 +116,15 @@ int polling(std::vector<struct pollfd> &fds)
     return (0);
 }
 
-int setPoll(int listener_fd)
+int Server::setPoll()
 {
-    std::vector<struct pollfd> fds;
     int current_size;
-    int end_server = FALSE;
-    int close_conn;
 
-    fds.push_back(createPollFdNode(listener_fd, POLLIN));
+    fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
     {
-        if (polling(fds) == -1)
+        if (polling() == -1)
             break;
         current_size = fds.size();
         for (int i = 0; i < current_size; i++)
@@ -150,7 +133,7 @@ int setPoll(int listener_fd)
                 continue;
             if (fds[i].revents & POLLHUP)
             {
-                closeConnection(fds, i);
+                closeConnection(i);
                 continue;
             }
             if (fds[i].revents != POLLIN)
@@ -160,19 +143,19 @@ int setPoll(int listener_fd)
                 break;
             }
 
-            if (fds[i].fd == listener_fd)
+            if (fds[i].fd == listen_sd)
             {
-                if (acceptIncomingConnection(listener_fd, end_server, fds) == -1)
+                if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
-                if (readExistingConnection(fds, i, close_conn) == -1)
+                if (readExistingConnection(i) == -1)
                     break;
             }
             
             if (close_conn)
-                closeConnection(fds, i);
+                closeConnection(i);
         }
 
     } while (end_server == FALSE);
