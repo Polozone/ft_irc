@@ -17,7 +17,8 @@
 #include <poll.h>
 #include <vector>
 #include <algorithm>
-#include "./srcs/client/Client.hpp"
+#include "../client/Client.hpp"
+#include "../channel/Channel.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -64,7 +65,6 @@ private:
     // Add new Client
     int addNewClient();
 
-
     const char                  *port;
     const char                  *password;
     int                         listen_sd;
@@ -76,8 +76,8 @@ private:
     std::vector<std::string>    _command;
     int                         concatenate;
     std::string                 concatenatedCmd;
-    std::vector<Client>         clients;
-
+    std::vector<Client*>        _clients;
+    std::vector<Channel*>       _ptrToChannel;
 
 };
 

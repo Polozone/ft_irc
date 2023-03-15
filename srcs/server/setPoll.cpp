@@ -68,7 +68,6 @@ int Server::readExistingConnection(int i)
         {
             std::string input(buffer);
             setCommand(input);
-            std::cout << buffer << "\n";
             memset(buffer, 0, sizeof(buffer));
         }
         return (0);
@@ -168,7 +167,39 @@ int Server::setPoll()
 
 void    Server::joinCommand()
 {
-    std::cout << "JOIN" << std::endl;
+    std::vector<std::string> channelList;
+    std::vector<std::string> passwdList;
+    if (_command[1].find(',') != std::string::npos)
+        channelList = split(_command[1], ',');
+    else
+        channelList[0] = _command[1];
+    if (!_command[2].empty())
+    {
+        if (_command[2].find(',') != std::string::npos)
+            passwdList = split(_command[2], ',');
+        else
+            passwdList[0] = _command[2];
+    }
+    size_t index = 0;
+    for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); ++it)
+    {
+        if (passwdList[index].empty())
+        {
+            Channel *newChannel = new Channel(channelList[index], "");
+            std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
+        }
+        else
+        {
+            Channel *newChannel = new Channel(channelList[index], passwdList[index]);
+            std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
+        }
+        // std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
+        index++;
+        // _ptrToChannel.push_back()
+    }
+    // for (std::vector<std::string>::iterator it = passwdList.begin(); it != passwdList.end(); ++it)
+    //     std::cout << *it << std::endl;
+    //Channel *channel = new Channel();
 }
 
 void    Server::modeCommand()
