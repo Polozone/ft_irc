@@ -16,6 +16,8 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
+#include <string>
+#include "../client/Client.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -31,23 +33,29 @@ public:
     Server(const char *port, const char *password);
     ~Server();
 
-
-
 private:
     Server();
     Server(const Server &rhs);
 
     Server  &operator=(const Server &rhs);
 
-    int getAddrinfo();
+    // Server setup
     int launchServer();
+    int getAddrinfo();
     int getListenerSock();
 
+    // Poll setup
     int setPoll();
     int polling();
     int acceptIncomingConnection();
     int readExistingConnection(int i);
     int closeConnection(int i);
+    int handleCtrlD(const char *buffer);
+
+    // Add new Client
+    int addNewClient(const char *buffer, int client_fd);
+    int checkIfClient(const char *buffer) const;
+    int createClient(const char *nick, const char *user);
 
 
     const char                  *port;
@@ -57,5 +65,14 @@ private:
     int                         close_conn;
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
+    int                         concatenate;
+    std::string                 concatenatedCmd;
+    std::vector<Client>         clients;
 
 };
+
+// Server Utils
+int handleServerErrors(const char *str, int *sd);
+int detectEOF(const char *str);
+struct pollfd createPollFdNode(int sd, int event);
+std::string getCommandContent(const char *buffer);

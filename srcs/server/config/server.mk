@@ -1,3 +1,3 @@
-SRCS += ./srcs/server/setPoll.cpp ./srcs/server/_Server.cpp
+SRCS += ./srcs/server/Server.cpp ./srcs/server/setPoll.cpp ./srcs/server/serverUtils.cpp ./srcs/server/addNewClient.cpp
 
-HEADER += ./srcs/server/server.hpp
+HEADER += ./srcs/server/Server.hpp

@@ -1,7 +1,8 @@
 #include "./Server.hpp"
 
+// CLASS INIT
 Server::Server(const char *port, const char *password)
-    : port(port), password(password), end_server(0), close_conn(0)
+    : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
     Server::launchServer();
 }
@@ -22,14 +23,7 @@ Server  &Server::operator=(const Server &rhs)
     return (*this);
 }
 
-int handleServerErrors(const char *str, int *sd) {
-    perror(str);
-    if (*sd) {
-        close(*sd);
-    }
-    return (1);
-}
-
+// MEMBER FUNCTIONS
 int Server::getAddrinfo() {
     int status;
     struct addrinfo hints;
@@ -59,8 +53,7 @@ int Server::getListenerSock() {
         return (handleServerErrors("sockopt()", &listen_sd));
     }
 
-    int flags = fcntl(listen_sd, F_GETFL, 0);
-    status = fcntl(listen_sd, F_SETFL, flags | O_NONBLOCK);
+    status = fcntl(listen_sd, F_SETFL, O_NONBLOCK);
     if (status < 0) {
         return (handleServerErrors("fcntl()", &listen_sd));
     }
