@@ -1,44 +1,78 @@
 #include "./Server.hpp"
 
-int Server::addNewClient(const char *buffer, int client_fd)
+static int commandNumber(const char *buffer)
 {
-    if (checkIfClient(buffer) == 1)
-        getCommandContent(buffer);
-    else if (checkIfClient(buffer) == 2)
-        getCommandContent(buffer);
-    
-    std::string to_send(":localhost 001 tdeville :Welcome to IRC Network, tdeville!tdeville@tdeville\r\n");
-    if (send(client_fd, to_send.data(), to_send.size(), 0) < 0)
-        printf("send error\n");
-    return (0);
-}
-
-int Server::checkIfClient(const char *buffer) const
-{
-    const std::string tmp(buffer);
-
-    if (tmp.find("NICK ") != std::string::npos) {
-        return (1);
-    }
-    else if (tmp.find("USER ") != std::string::npos) {
-        return (2);
-    }
-    return (0);
-}
-
-std::string getCommandContent(const char *buffer)
-{
-    std::string commandContent;
-    std::string tmp(buffer);
     int i = 0;
+    int cmd = 0;
 
-    while (buffer[i] != 32 && buffer[i])
+    while (buffer[i])
+    {
+        if (buffer[i] == 13 && buffer[i + 1] == 10)
+            cmd++;
         i++;
-    
-    i++;
-    commandContent = tmp.substr(i, tmp.size() - i);
+    }
+    return (cmd);
+}
 
-    std::cout << commandContent << std::endl;
+const std::string extractCommandContent(const std::string &buffer, const std::string &command)
+{
+    size_t  pos = buffer.find(command);
+    size_t  end;
 
-    return "NULL";
+    if (pos != std::string::npos)
+        end = pos + command.length();
+
+    return (buffer.substr(end, buffer.length() - end));
+}
+
+int Server::findClientByFd(int client_fd) const
+{
+    std::cout << clientsTryingToConnect[0].getFd() << std::endl;
+    for (int i = 0; i < clientsTryingToConnect.size(); i++)
+    {
+        if (clientsTryingToConnect[i].getFd() == client_fd)
+            return (i);
+    }
+    std::cerr << "Client Not Found By Fd\n";
+    return (-1);
+}
+
+int Server::checkIfClient(const char *buffer, int client_fd)
+{
+    std::string tmp(buffer);
+    if (tmp.find("CAP LS ") != std::string::npos)
+    {
+        Client newClient;
+        newClient.setFd(client_fd);
+        std::cout << newClient.getFd() << std::endl;
+        clientsTryingToConnect.push_back(newClient);
+        std::cout << "test: " << clientsTryingToConnect[0].getFd() << std::endl;
+    }
+    if (tmp.find("NICK ") != std::string::npos)
+        addNick(client_fd, extractCommandContent(tmp, "NICK "));
+    if (tmp.find("USER ") != std::string::npos)
+        addUser(client_fd, extractCommandContent(tmp, "USER "));
+    return (0);
+}
+
+void    Server::addNick(int client_fd, const std::string &nick)
+{
+    int i = findClientByFd(client_fd);
+    clientsTryingToConnect[i].setNick(nick);
+}
+
+void    Server::addUser(int client_fd, const std::string &user)
+{
+    int i = findClientByFd(client_fd);
+    clientsTryingToConnect[i].setUser(user);
+}
+
+void Server::printClient() const
+{
+    for (size_t i = 0; i < clientsTryingToConnect.size(); i++)
+    {
+        std::cout << clientsTryingToConnect[i].getFd() << std::endl;
+        std::cout << clientsTryingToConnect[i].getNick() << std::endl;
+        std::cout << clientsTryingToConnect[i].getUser() << std::endl;
+    }
 }

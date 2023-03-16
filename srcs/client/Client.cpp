@@ -1,12 +1,10 @@
 #include "./Client.hpp"
 
-Client::Client() {}
-Client::Client(const std::string &user, const std::string &nick) :
-    _user(user), _nick(nick) {}
-Client::Client(const Client &rhs) {}
+Client::Client() : _fd(0), _nick(""), _user("") {}
+Client::Client(const Client &rhs) { *this = rhs; }
 Client::~Client() {}
 
-Client  &Client::operator=(const Client &rhs)
+Client &Client::operator=(const Client &rhs)
 {
     _user = rhs._user;
     _user = rhs._nick;

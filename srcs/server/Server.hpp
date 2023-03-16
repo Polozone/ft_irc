@@ -16,18 +16,20 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
+#include <map>
 #include <string>
 #include "../client/Client.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
-#define TRUE             1
-#define FALSE            0
+#define TRUE 1
+#define FALSE 0
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
 
-class Server {
+class Server
+{
 
 public:
     Server(const char *port, const char *password);
@@ -37,7 +39,7 @@ private:
     Server();
     Server(const Server &rhs);
 
-    Server  &operator=(const Server &rhs);
+    Server &operator=(const Server &rhs);
 
     // Server setup
     int launchServer();
@@ -53,26 +55,30 @@ private:
     int handleCtrlD(const char *buffer);
 
     // Add new Client
-    int addNewClient(const char *buffer, int client_fd);
-    int checkIfClient(const char *buffer) const;
-    int createClient(const char *nick, const char *user);
+    int checkIfClient(const char *buffer, int client_fd);
+    int findClientByFd(int client_fd) const;
+    void    addNick(int client_fd, const std::string &nick);
+    void    addUser(int client_fd, const std::string &user);
+
+    // Utils
+    void printClient() const;
 
 
-    const char                  *port;
-    const char                  *password;
-    int                         listen_sd;
-    int                         end_server;
-    int                         close_conn;
-    std::vector<struct pollfd>  fds;
-    struct addrinfo             *servinfo;
-    int                         concatenate;
-    std::string                 concatenatedCmd;
-    std::vector<Client>         clients;
-
+    const char *port;
+    const char *password;
+    int listen_sd;
+    int end_server;
+    int close_conn;
+    std::vector<struct pollfd> fds;
+    struct addrinfo *servinfo;
+    int concatenate;
+    std::string concatenatedCmd;
+    std::vector<Client> clients;
+    std::vector<Client> clientsTryingToConnect;
 };
 
 // Server Utils
 int handleServerErrors(const char *str, int *sd);
 int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
-std::string getCommandContent(const char *buffer);
+const std::string extractCommandContent(const std::string &buffer, const std::string &command);

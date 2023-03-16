@@ -1,4 +1,3 @@
-
 #include "Channel.hpp"
 
 int test()
