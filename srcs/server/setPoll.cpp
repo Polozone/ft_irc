@@ -76,10 +76,10 @@ int Server::readExistingConnection(int i)
         if (!handleCtrlD(buffer))
         {
             std::string input(buffer);
-            setCommand(input);
+            setCommand(input, fds[i].fd);
             checkIfClient(buffer, fds[i].fd);
             std::cout << buffer << "\n\n";
-            std::cout << "vec size: " << clientsTryingToConnect.size() << std::endl;
+            // std::cout << "vec size: " << clientsTryingToConnect.size() << std::endl;
             memset(buffer, 0, sizeof(buffer));
         }
     }
@@ -175,10 +175,11 @@ int Server::setPoll()
     return (0);
 }
 
-void    Server::joinCommand()
+void    Server::joinCommand(int clientFd)
 {
     std::vector<std::string> channelList;
     std::vector<std::string> passwdList;
+    Client  *client = clients[findClientByFd(clientFd)];
 
     if (_command[1].find(',') != std::string::npos)
         channelList = split(_command[1], ',');
@@ -197,39 +198,50 @@ void    Server::joinCommand()
     {
         Channel *channel;
         if (i < passwdList.size())
-            channel = new Channel(channelList[i], passwdList[i]);
+            channel = new Channel(channelList[i], passwdList[i], client);
         else
-            channel = new Channel(channelList[i], "");
+            channel = new Channel(channelList[i], "", client);
         addToChannelList(channel);
         i++;
     }
-    //printChannelList();
+    printChannelList();
 }
 
 // MODE #chann -o name
-
 void    Server::modeCommand()
 {
-    std::cout << "mode" << std::endl;
+
 }
 
-void    Server::callCommand()
+void    Server::parseModeCommand()
+{
+    std::string targetChannel;
+    if (_command.size() > 1)
+        targetChannel = _command[1];
+    if (findChannelByName(targetChannel) == NULL)
+    {
+        std::cout << "Channel does not exist" << std::endl;
+        return ;
+    }
+}
+
+void    Server::callCommand(int clientFd)
 {
     if (_command[0] == "JOIN")
-        joinCommand();
+        joinCommand(clientFd);
     else if (_command[0] == "MODE")
-        modeCommand();
+        parseModeCommand();
     else
         std::cout << "Command not found" << std::endl;
 }
 
-void    Server::setCommand(std::string &userInput)
+void    Server::setCommand(std::string &clientInput, int clientFd)
 {
-    if (userInput.empty())
+    if (clientInput.empty())
         return ;
-    std::string withoutExtraSpace = removeExtraSpaces(userInput);
+    std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     _command = split(withoutExtraSpace, ' ');
     if (_command.size() < 2)
         return ;
-    callCommand();
+    callCommand(clientFd);
 }

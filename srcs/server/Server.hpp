@@ -60,31 +60,34 @@ private:
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
     
-    void    setCommand(std::string &userInput);
+    void    setCommand(std::string &clientInput, int clientFd);
+    void    callCommand(int clientFd);
 
-    void    callCommand();
+    void    joinCommand(int clientFd);
 
-    void    joinCommand();
+    void    parseModeCommand();
     void    modeCommand();
     // Add new Client
-    int checkIfClient(const char *buffer, int client_fd);
-    int findClientByFd(int client_fd) const;
+    int     checkIfClient(const char *buffer, int client_fd);
+    int     findClientByFd(int client_fd) const;
+    void    addClientToList(Client *toAdd);
+    
     void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
 
     // Utils
 
-    const char *port;
-    const char *password;
-    int listen_sd;
-    int end_server;
-    int close_conn;
-    std::vector<struct pollfd> fds;
-    struct addrinfo *servinfo;
-    int concatenate;
-    std::string concatenatedCmd;
-    std::vector<Client> clients;
-    std::vector<Client *> clientsTryingToConnect;
+    const char                  *port;
+    const char                  *password;
+    int                         listen_sd;
+    int                         end_server;
+    int                         close_conn;
+    std::vector<struct pollfd>  fds;
+    struct addrinfo *           servinfo;
+    int                         concatenate;
+    std::string                 concatenatedCmd;
+    std::vector<Client*>        clients;
+    std::vector<Client *>       clientsTryingToConnect;
     std::vector<std::string>    _command;
     std::vector<Channel*>       _channelList;
 

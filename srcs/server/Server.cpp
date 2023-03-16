@@ -5,7 +5,19 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
-    Server::launchServer();
+    Client *name = new Client(4, "hostnamectl");
+    Client *name2 = new Client(5, "hostnamectl2");
+    Client *name3 = new Client(6, "hostnamectl3");
+    addClientToList(name);
+    addClientToList(name2);
+    addClientToList(name3);
+    // Server::launchServer();
+    std::string input;
+    while (1)
+    {
+        std::getline(std::cin, input);
+        setCommand(input, 4);
+    }
 }
 
 Server::~Server() {}
@@ -104,7 +116,7 @@ void    Server::printChannelList()
     for (it = _channelList.begin(); it != _channelList.end(); ++it)
     {
         Channel* channel = *it;
-        std::cout << channel->getChannelName() << std::endl;
+        std::cout << "channelName:" << channel->getChannelName() <<std::endl;
     }
 }
 
@@ -118,4 +130,9 @@ Channel*    Server::findChannelByName(std::string channelName)
             return (*it);
     }
     return (NULL);
+}
+
+void    Server::addClientToList(Client *toAdd)
+{
+    clients.push_back(toAdd);
 }
