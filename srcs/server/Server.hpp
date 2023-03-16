@@ -16,7 +16,9 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
-#include "./srcs/client/Client.hpp"
+#include <map>
+
+#include "../client/Client.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -25,6 +27,7 @@
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
+
 
 class Server {
 
@@ -55,17 +58,17 @@ private:
     int addNewClient();
 
 
-    const char                  *port;
-    const char                  *password;
-    int                         listen_sd;
-    int                         end_server;
-    int                         close_conn;
-    std::vector<struct pollfd>  fds;
-    struct addrinfo             *servinfo;
-    int                         concatenate;
-    std::string                 concatenatedCmd;
-    std::vector<Client>         clients;
-
+    const char                      *port;
+    const char                      *password;
+    int                             listen_sd;
+    int                             end_server;
+    int                             close_conn;
+    std::vector<struct pollfd>      fds;
+    struct addrinfo                 *servinfo;
+    int                             concatenate;
+    std::string                     concatenatedCmd;
+    std::map<const int, Client *>   _clientList;
+    std::map<int, std::string>      _buffersByFd;
 };
 
 // Server Utils
