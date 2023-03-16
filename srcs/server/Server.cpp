@@ -73,7 +73,6 @@ int Server::getListenerSock() {
 }
 
 int Server::launchServer() {
-    struct addrinfo *servinfo;
 
     getAddrinfo();
 
