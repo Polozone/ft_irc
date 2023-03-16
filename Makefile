@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+         #
+#    By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/10 10:22:05 by theodeville       #+#    #+#              #
-#    Updated: 2023/03/10 10:27:07 by theodeville      ###   ########.fr        #
+#    Updated: 2023/03/16 10:47:24 by alexanderva      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,13 +24,13 @@ CFLAGS	=	-std=c++98 #-Wall -Wextra -Werror
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-%.o:		%.cpp $(HEADERS) Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o:		%.cpp $(HEADER) Makefile
+	$(CC)  $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
 
-$(NAME):	$(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+$(NAME):	$(OBJS) $(HEADER)
+	$(CC)  $(CFLAGS) $(HEADER) $(OBJS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)

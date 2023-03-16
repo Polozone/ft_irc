@@ -67,12 +67,11 @@ int Server::checkIfClient(const char *buffer, int client_fd)
 void    Server::addNick(int client_fd, const std::string &nick)
 {
     int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i]->setNick(nick);
+    clientsTryingToConnect[i]->setNickname(nick);
 }
 
 void    Server::addUser(int client_fd, const std::string &user)
 {
     int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i]->setUser(user);
+    clientsTryingToConnect[i]->setUsername(user);
 }
-
