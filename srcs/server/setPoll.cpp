@@ -192,8 +192,10 @@ void    Server::joinCommand()
         addToChannelList(channel);
         i++;
     }
-    printChannelList();
+    //printChannelList();
 }
+
+// MODE #chann -o name
 
 void    Server::modeCommand()
 {
@@ -202,7 +204,6 @@ void    Server::modeCommand()
 
 void    Server::callCommand()
 {
-    // std::cout << _command[0] << std::endl;
     if (_command[0] == "JOIN")
         joinCommand();
     else if (_command[0] == "MODE")
@@ -220,9 +221,4 @@ void    Server::setCommand(std::string &userInput)
     if (_command.size() < 2)
         return ;
     callCommand();
-    // std::cout << _command[0] << std::endl;
-    // for (it = _command.begin(); it != _command.end(); ++it)
-    // {
-    //     std::cout << *it << std::endl;
-    // }
 }

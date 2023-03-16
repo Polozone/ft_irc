@@ -108,3 +108,15 @@ void    Server::printChannelList()
         std::cout << channel->getChannelName() << std::endl;
     }
 }
+
+Channel*    Server::findChannelByName(std::string channelName)
+{
+    std::vector<Channel *>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        if ((*it)->getChannelName() == channelName)
+            return (*it);
+    }
+    return (NULL);
+}
