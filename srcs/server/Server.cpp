@@ -5,13 +5,7 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
-    // Server::launchServer();
-    std::string input;
-    while (1)
-    {
-        getline(std::cin, input);
-        setCommand(input);
-    }
+    Server::launchServer();
 }
 
 Server::~Server() {}
