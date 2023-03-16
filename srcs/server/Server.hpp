@@ -61,7 +61,6 @@ private:
     void    addUser(int client_fd, const std::string &user);
 
     // Utils
-    void printClient() const;
 
 
     const char *port;
@@ -74,7 +73,7 @@ private:
     int concatenate;
     std::string concatenatedCmd;
     std::vector<Client> clients;
-    std::vector<Client> clientsTryingToConnect;
+    std::vector<Client *> clientsTryingToConnect;
 };
 
 // Server Utils

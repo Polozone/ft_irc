@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/16 09:16:49 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/16 10:50:22 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int Server::readExistingConnection(int i)
         {
             checkIfClient(buffer, fds[i].fd);
             std::cout << buffer << "\n\n";
+            std::cout << "vec size: " << clientsTryingToConnect.size() << std::endl;
             memset(buffer, 0, sizeof(buffer));
         }
     }

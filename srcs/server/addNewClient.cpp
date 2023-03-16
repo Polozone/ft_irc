@@ -27,14 +27,22 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
 
 int Server::findClientByFd(int client_fd) const
 {
-    std::cout << clientsTryingToConnect[0].getFd() << std::endl;
     for (int i = 0; i < clientsTryingToConnect.size(); i++)
     {
-        if (clientsTryingToConnect[i].getFd() == client_fd)
+        if (clientsTryingToConnect[i]->getFd() == client_fd)
             return (i);
     }
     std::cerr << "Client Not Found By Fd\n";
     return (-1);
+}
+
+int askPassword(int client_fd)
+{
+    printf("ici meme\n");
+    std::string rplPasswd(":localhost 001 :Welcome to the localhost/4242 Network, tdeville!theodeville@theodeville");
+    if (send(client_fd, rplPasswd.data(), rplPasswd.size(), 0) < 0)
+        printf("Send error\n");
+    return (0);
 }
 
 int Server::checkIfClient(const char *buffer, int client_fd)
@@ -42,37 +50,29 @@ int Server::checkIfClient(const char *buffer, int client_fd)
     std::string tmp(buffer);
     if (tmp.find("CAP LS ") != std::string::npos)
     {
-        Client newClient;
-        newClient.setFd(client_fd);
-        std::cout << newClient.getFd() << std::endl;
+        Client *newClient = new Client;
+        newClient->setFd(client_fd);
         clientsTryingToConnect.push_back(newClient);
-        std::cout << "test: " << clientsTryingToConnect[0].getFd() << std::endl;
     }
     if (tmp.find("NICK ") != std::string::npos)
         addNick(client_fd, extractCommandContent(tmp, "NICK "));
     if (tmp.find("USER ") != std::string::npos)
+    {
         addUser(client_fd, extractCommandContent(tmp, "USER "));
+        askPassword(client_fd);
+    }
     return (0);
 }
 
 void    Server::addNick(int client_fd, const std::string &nick)
 {
     int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i].setNick(nick);
+    clientsTryingToConnect[i]->setNick(nick);
 }
 
 void    Server::addUser(int client_fd, const std::string &user)
 {
     int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i].setUser(user);
+    clientsTryingToConnect[i]->setUser(user);
 }
 
-void Server::printClient() const
-{
-    for (size_t i = 0; i < clientsTryingToConnect.size(); i++)
-    {
-        std::cout << clientsTryingToConnect[i].getFd() << std::endl;
-        std::cout << clientsTryingToConnect[i].getNick() << std::endl;
-        std::cout << clientsTryingToConnect[i].getUser() << std::endl;
-    }
-}
