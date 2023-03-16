@@ -16,9 +16,11 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
+#include <algorithm>
 #include <map>
-#include <string>
 #include "../client/Client.hpp"
+#include "../channel/Channel.hpp"
+#include "../utils/string_utils.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -54,6 +56,16 @@ private:
     int closeConnection(int i);
     int handleCtrlD(const char *buffer);
 
+    void        addToChannelList(Channel *toAdd);
+    void        printChannelList();
+    Channel*    findChannelByName(std::string channelName);
+    
+    void    setCommand(std::string &userInput);
+
+    void    callCommand();
+
+    void    joinCommand();
+    void    modeCommand();
     // Add new Client
     int checkIfClient(const char *buffer, int client_fd);
     int findClientByFd(int client_fd) const;
@@ -61,7 +73,6 @@ private:
     void    addUser(int client_fd, const std::string &user);
 
     // Utils
-
 
     const char *port;
     const char *password;
@@ -74,6 +85,9 @@ private:
     std::string concatenatedCmd;
     std::vector<Client> clients;
     std::vector<Client *> clientsTryingToConnect;
+    std::vector<std::string>    _command;
+    std::vector<Channel*>       _channelList;
+
 };
 
 // Server Utils

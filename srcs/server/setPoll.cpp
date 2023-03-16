@@ -75,6 +75,8 @@ int Server::readExistingConnection(int i)
     {
         if (!handleCtrlD(buffer))
         {
+            std::string input(buffer);
+            setCommand(input);
             checkIfClient(buffer, fds[i].fd);
             std::cout << buffer << "\n\n";
             std::cout << "vec size: " << clientsTryingToConnect.size() << std::endl;
@@ -171,4 +173,63 @@ int Server::setPoll()
     } while (end_server == FALSE);
 
     return (0);
+}
+
+void    Server::joinCommand()
+{
+    std::vector<std::string> channelList;
+    std::vector<std::string> passwdList;
+
+    if (_command[1].find(',') != std::string::npos)
+        channelList = split(_command[1], ',');
+    else
+        channelList.push_back(_command[1]);    
+    if (_command.size() > 2)
+    {
+        if (_command[2].find(',') != std::string::npos)
+            passwdList = split(_command[2], ',');
+        else
+            passwdList.push_back(_command[2]);
+    }
+    std::vector<std::string>::iterator it;
+    size_t i = 0;
+    for (it = channelList.begin(); it != channelList.end(); ++it)
+    {
+        Channel *channel;
+        if (i < passwdList.size())
+            channel = new Channel(channelList[i], passwdList[i]);
+        else
+            channel = new Channel(channelList[i], "");
+        addToChannelList(channel);
+        i++;
+    }
+    //printChannelList();
+}
+
+// MODE #chann -o name
+
+void    Server::modeCommand()
+{
+    std::cout << "mode" << std::endl;
+}
+
+void    Server::callCommand()
+{
+    if (_command[0] == "JOIN")
+        joinCommand();
+    else if (_command[0] == "MODE")
+        modeCommand();
+    else
+        std::cout << "Command not found" << std::endl;
+}
+
+void    Server::setCommand(std::string &userInput)
+{
+    if (userInput.empty())
+        return ;
+    std::string withoutExtraSpace = removeExtraSpaces(userInput);
+    _command = split(withoutExtraSpace, ' ');
+    if (_command.size() < 2)
+        return ;
+    callCommand();
 }

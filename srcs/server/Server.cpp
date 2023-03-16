@@ -1,3 +1,4 @@
+
 #include "./Server.hpp"
 
 // CLASS INIT
@@ -83,3 +84,38 @@ int Server::launchServer() {
     return (0);
 }
 
+void    Server::addToChannelList(Channel *toAdd)
+{
+    std::vector<Channel*>::iterator it;
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* tmp = *it;
+        if (tmp->getChannelName() == toAdd->getChannelName())
+            break ;
+    }
+    if (it == _channelList.end())
+        _channelList.push_back(toAdd);
+}
+
+void    Server::printChannelList()
+{
+    std::vector<Channel*>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* channel = *it;
+        std::cout << channel->getChannelName() << std::endl;
+    }
+}
+
+Channel*    Server::findChannelByName(std::string channelName)
+{
+    std::vector<Channel *>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        if ((*it)->getChannelName() == channelName)
+            return (*it);
+    }
+    return (NULL);
+}

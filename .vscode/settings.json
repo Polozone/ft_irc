@@ -60,6 +60,7 @@
         "variant": "cpp",
         "vector": "cpp",
         "algorithm": "cpp",
+        "*.tcc": "cpp",
         "__tree": "cpp",
         "map": "cpp"
     }
