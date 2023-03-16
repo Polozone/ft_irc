@@ -1,6 +1,5 @@
 
-#include <string>
-#include <sstream>
+#include "string_utils.hpp"
 
 std::string removeExtraSpaces(std::string &str) {
     std::string result;
@@ -29,6 +28,5 @@ std::vector<std::string> split(std::string str, char separator)
     while (std::getline(ss, token, separator)) {
         result.push_back(token);
     }
-
     return result;
 }

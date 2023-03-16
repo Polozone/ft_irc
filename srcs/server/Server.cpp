@@ -5,7 +5,13 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
-    Server::launchServer();
+    // Server::launchServer();
+    std::string input;
+    while (1)
+    {
+        getline(std::cin, input);
+        setCommand(input);
+    }
 }
 
 Server::~Server() {}
@@ -85,30 +91,26 @@ int Server::launchServer() {
     return (0);
 }
 
-void    Server::addExistingChannels(const std::string &channelName)
+void    Server::addToChannelList(Channel *toAdd)
 {
-    std::vector<std::string>::iterator it = std::find(_existingChannels.begin(), _existingChannels.end(), channelName);
-    if (it == _existingChannels.end())
-        _existingChannels.push_back(channelName);
-    else 
-        std::cout << "You are trying to create " << channelName << ". There is already a channel of this name" << std::endl;
+    std::vector<Channel*>::iterator it;
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* tmp = *it;
+        if (tmp->getChannelName() == toAdd->getChannelName())
+            break ;
+    }
+    if (it == _channelList.end())
+        _channelList.push_back(toAdd);
 }
 
-void    Server::printExistingChannels(){
-     for (std::vector<std::string>::iterator it = _existingChannels.begin(); it != _existingChannels.end(); ++it) {
-        std::cout << *it << std::endl;
+void    Server::printChannelList()
+{
+    std::vector<Channel*>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* channel = *it;
+        std::cout << channel->getChannelName() << std::endl;
     }
 }
-
-// void handlerUserInput()
-// {
-//     std::string input;
-
-//     while (true) {
-//         std::getline(std::cin, input);
-//         parseCommand(input);
-//         if (input == "exit") {
-//             break; // Sortie de la boucle si la chaîne est "exit"
-//         }
-//     }
-// }

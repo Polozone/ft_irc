@@ -17,8 +17,10 @@
 #include <poll.h>
 #include <vector>
 #include <algorithm>
+#include <map>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
+#include "../utils/string_utils.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
@@ -53,8 +55,8 @@ private:
     int closeConnection(int i);
     int handleCtrlD(const char *buffer);
 
-    void    addExistingChannels(const std::string &channelName);
-    void    printExistingChannels();
+    void    addToChannelList(Channel *toAdd);
+    void    printChannelList();
     
     void    setCommand(std::string &userInput);
 
@@ -77,7 +79,7 @@ private:
     int                         concatenate;
     std::string                 concatenatedCmd;
     std::vector<Client*>        _clients;
-    std::vector<Channel*>       _ptrToChannel;
+    std::vector<Channel*>       _channelList;
 
 };
 

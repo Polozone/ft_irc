@@ -13,6 +13,7 @@
 include srcs/server/config/server.mk
 include srcs/client/config/client.mk
 include srcs/channel/config/channel.mk
+include srcs/utils/config/utils.mk
 
 
 NAME	= ircserv

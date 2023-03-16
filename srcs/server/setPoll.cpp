@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "./Server.hpp"
-#include "../utils/string_utils.cpp"
 
 int Server::closeConnection(int i)
 {
@@ -169,37 +168,31 @@ void    Server::joinCommand()
 {
     std::vector<std::string> channelList;
     std::vector<std::string> passwdList;
+
     if (_command[1].find(',') != std::string::npos)
         channelList = split(_command[1], ',');
     else
-        channelList[0] = _command[1];
-    if (!_command[2].empty())
+        channelList.push_back(_command[1]);    
+    if (_command.size() > 2)
     {
         if (_command[2].find(',') != std::string::npos)
             passwdList = split(_command[2], ',');
         else
-            passwdList[0] = _command[2];
+            passwdList.push_back(_command[2]);
     }
-    size_t index = 0;
-    for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); ++it)
+    std::vector<std::string>::iterator it;
+    size_t i = 0;
+    for (it = channelList.begin(); it != channelList.end(); ++it)
     {
-        if (passwdList[index].empty())
-        {
-            Channel *newChannel = new Channel(channelList[index], "");
-            std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
-        }
+        Channel *channel;
+        if (i < passwdList.size())
+            channel = new Channel(channelList[i], passwdList[i]);
         else
-        {
-            Channel *newChannel = new Channel(channelList[index], passwdList[index]);
-            std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
-        }
-        // std::cout << newChannel->getPasswd() << " " << newChannel->getChannelName() << std::endl;
-        index++;
-        // _ptrToChannel.push_back()
+            channel = new Channel(channelList[i], "");
+        addToChannelList(channel);
+        i++;
     }
-    // for (std::vector<std::string>::iterator it = passwdList.begin(); it != passwdList.end(); ++it)
-    //     std::cout << *it << std::endl;
-    //Channel *channel = new Channel();
+    printChannelList();
 }
 
 void    Server::modeCommand()
@@ -209,6 +202,7 @@ void    Server::modeCommand()
 
 void    Server::callCommand()
 {
+    // std::cout << _command[0] << std::endl;
     if (_command[0] == "JOIN")
         joinCommand();
     else if (_command[0] == "MODE")
@@ -219,10 +213,12 @@ void    Server::callCommand()
 
 void    Server::setCommand(std::string &userInput)
 {
+    if (userInput.empty())
+        return ;
     std::string withoutExtraSpace = removeExtraSpaces(userInput);
     _command = split(withoutExtraSpace, ' ');
-
-    std::vector<std::string>::iterator it;
+    if (_command.size() < 2)
+        return ;
     callCommand();
     // std::cout << _command[0] << std::endl;
     // for (it = _command.begin(); it != _command.end(); ++it)
