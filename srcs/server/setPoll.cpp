@@ -6,32 +6,11 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/12 14:47:06 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/16 09:16:49 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./Server.hpp"
-
-int detectEOF(const char *str)
-{
-    int i = 0;
-    while (str[i])
-    {
-        if (!str[i + 1] && str[i] != '\n')
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-struct pollfd createPollFdNode(int sd, int event)
-{
-    struct pollfd pollFdNode = {
-        .fd = sd,
-        .events = event};
-
-    return (pollFdNode);
-}
 
 int Server::closeConnection(int i)
 {
@@ -42,10 +21,41 @@ int Server::closeConnection(int i)
     return (0);
 }
 
+int Server::handleCtrlD(const char *buffer)
+{
+    std::string tmp(buffer);
+    if (detectEOF(buffer))
+    {
+        std::cout << "EOF\n";
+        concatenate = 1;
+        concatenatedCmd += tmp;
+        return (1);
+    }
+    else if (!detectEOF(buffer) && concatenate)
+    {
+        concatenate = 0;
+        concatenatedCmd += tmp;
+        std::cout << concatenatedCmd << std::endl;
+        concatenatedCmd.empty();
+        return (1);
+    }
+    return (0);
+}
+
+void printStringInInt(const char *buffer)
+{
+    int i = 0;
+    while (buffer[i])
+    {
+        printf("%d\n", buffer[i]);
+        i++;
+    }
+}
+
 int Server::readExistingConnection(int i)
 {
     int status;
-    char buffer[1026] = {0};
+    char buffer[4056] = {0};
 
     status = recv(fds[i].fd, buffer, sizeof(buffer), 0);
     if (status < 0)
@@ -60,15 +70,15 @@ int Server::readExistingConnection(int i)
     if (status == 0)
     {
         close_conn = TRUE;
-        return (0);
     }
     if (status > 0)
     {
-        if (detectEOF(buffer))
-            printf("EOF!!\n");
-        std::cout << buffer << "\n";
-        memset(buffer, 0, sizeof(buffer));
-        return (0);
+        if (!handleCtrlD(buffer))
+        {
+            checkIfClient(buffer, fds[i].fd);
+            std::cout << buffer << "\n\n";
+            memset(buffer, 0, sizeof(buffer));
+        }
     }
     return (0);
 }
@@ -142,7 +152,6 @@ int Server::setPoll()
                 end_server = TRUE;
                 break;
             }
-
             if (fds[i].fd == listen_sd)
             {
                 if (acceptIncomingConnection() == -1)
@@ -153,7 +162,7 @@ int Server::setPoll()
                 if (readExistingConnection(i) == -1)
                     break;
             }
-            
+
             if (close_conn)
                 closeConnection(i);
         }
