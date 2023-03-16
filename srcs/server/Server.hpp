@@ -55,8 +55,9 @@ private:
     int closeConnection(int i);
     int handleCtrlD(const char *buffer);
 
-    void    addToChannelList(Channel *toAdd);
-    void    printChannelList();
+    void        addToChannelList(Channel *toAdd);
+    void        printChannelList();
+    Channel*    findChannelByName(std::string &channelName);
     
     void    setCommand(std::string &userInput);
 
@@ -74,7 +75,6 @@ private:
     int                         close_conn;
     std::vector<struct pollfd>  fds;
     struct addrinfo             *servinfo;
-    std::vector<std::string>    _existingChannels;
     std::vector<std::string>    _command;
     int                         concatenate;
     std::string                 concatenatedCmd;
