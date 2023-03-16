@@ -55,12 +55,16 @@ private:
     int handleCtrlD(const char *buffer);
 
     // Add new Client
-    int checkIfClient(const char *buffer, int client_fd);
-    int findClientByFd(int client_fd) const;
+    int     checkIfNewClient(const char *buffer, int client_fd);
+    int     findClientByFd(int client_fd) const;
     void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
+    void    addPassword(int client_fd, const std::string &pass);
+    int     handleConnection(int client_fd);
+
 
     // Utils
+    void printClients() const;
 
 
     const char *port;
@@ -72,7 +76,7 @@ private:
     struct addrinfo *servinfo;
     int concatenate;
     std::string concatenatedCmd;
-    std::vector<Client> clients;
+    std::vector<Client *> clients;
     std::vector<Client *> clientsTryingToConnect;
 };
 
