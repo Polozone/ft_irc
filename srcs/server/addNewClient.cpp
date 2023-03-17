@@ -16,13 +16,18 @@ static int commandNumber(const char *buffer)
 
 const std::string extractCommandContent(const std::string &buffer, const std::string &command)
 {
-    size_t  pos = buffer.find(command);
-    size_t  end;
+    size_t pos = buffer.find(command);
+    size_t end;
+    size_t i = 0;
 
     if (pos != std::string::npos)
+    {
         end = pos + command.length();
+        while (buffer[i + end] != 13)
+            i++;
+    }
 
-    return (buffer.substr(end, buffer.length() - end - 2));
+    return (buffer.substr(end, i));
 }
 
 int Server::findClientByFd(int client_fd) const
@@ -39,12 +44,13 @@ int Server::findClientByFd(int client_fd) const
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
     std::string tmp(buffer);
-    if (tmp.find ("PASS ") != std::string::npos)
+    if (tmp.find("PASS ") != std::string::npos)
     {
         Client *newClient = new Client;
         newClient->setFd(client_fd);
         clientsTryingToConnect.push_back(newClient);
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
+        std::cout << clientsTryingToConnect[0]->getPassword();
     }
     if (tmp.find("NICK ") != std::string::npos)
         addNick(client_fd, extractCommandContent(tmp, "NICK "));
@@ -56,19 +62,19 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     return (0);
 }
 
-void    Server::addNick(int client_fd, const std::string &nick)
+void Server::addNick(int client_fd, const std::string &nick)
 {
     int i = findClientByFd(client_fd);
     clientsTryingToConnect[i]->setNick(nick);
 }
 
-void    Server::addUser(int client_fd, const std::string &user)
+void Server::addUser(int client_fd, const std::string &user)
 {
     int i = findClientByFd(client_fd);
     clientsTryingToConnect[i]->setUser(user);
 }
 
-void    Server::addPassword(int client_fd, const std::string &pass)
+void Server::addPassword(int client_fd, const std::string &pass)
 {
     int i = findClientByFd(client_fd);
     clientsTryingToConnect[i]->setPassword(pass);
@@ -83,8 +89,8 @@ int Server::handleConnection(int client_fd)
     std::cout << "ici " << tmp << "strcmp (tmp, passwd) = " << strcmp(password, clientsTryingToConnect[i]->getPassword().c_str()) << std::endl;
     if (!tmp.compare(clientsTryingToConnect[i]->getPassword()))
     {
-        const std::string welcomeClient = ":localhost/" + sPort + " 001 " + \
-            clientsTryingToConnect[i]->getNick() + " :Welcome to the server\r\n";
+        const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
+                                          clientsTryingToConnect[i]->getNick() + " :Welcome to the server\r\n";
         if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
         {
             std::cerr << "Send error\n";
