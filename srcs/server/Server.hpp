@@ -44,28 +44,40 @@ private:
     Server &operator=(const Server &rhs);
 
     // Server setup
-    int launchServer();
-    int getAddrinfo();
-    int getListenerSock();
+    int         launchServer();
+    int         getAddrinfo();
+    int         getListenerSock();
 
     // Poll setup
-    int setPoll();
-    int polling();
-    int acceptIncomingConnection();
-    int readExistingConnection(int i);
-    int closeConnection(int i);
-    int handleCtrlD(const char *buffer);
+    int         setPoll();
+    int         polling();
+    int         acceptIncomingConnection();
+    int         readExistingConnection(int i);
+    int         closeConnection(int i);
+    int         handleCtrlD(const char *buffer);
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
     
-    void    setCommand(std::string &userInput);
+    // Commands
 
-    void    callCommand();
+    void        setCommand(std::string &clientInput, int clientFd);
+    void        callCommand(std::vector<std::string> inputClient, int clientFd);
 
-    void    joinCommand();
-    void    modeCommand();
+    void        joinCommand(std::vector<std::string> command, int clientFd);
+
+    // ModeCommand
+
+    void        parseModeCommand(std::vector<std::string> command, int clientFd);
+    void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
+    void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
+    void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
     int     findClientByFd(int client_fd) const;
@@ -75,24 +87,25 @@ private:
     int     handleConnection(int client_fd);
     int     welcomeClient(int i, int client_fd);
     int     wrongPassword(int i, int client_fd);
+    int         findConnectedClientByFd(int client_fd);
+    void        printClientList();
 
 
     // Utils
     void printClients() const;
     
 
-    const char *port;
-    const char *password;
-    int listen_sd;
-    int end_server;
-    int close_conn;
-    std::vector<struct pollfd> fds;
-    struct addrinfo *servinfo;
-    int concatenate;
-    std::string concatenatedCmd;
-    std::vector<Client *> clients;
-    std::vector<Client *> clientsTryingToConnect;
-    std::vector<std::string>    _command;
+    const char                  *port;
+    const char                  *password;
+    int                         listen_sd;
+    int                         end_server;
+    int                         close_conn;
+    std::vector<struct pollfd>  fds;
+    struct addrinfo *           servinfo;
+    int                         concatenate;
+    std::string                 concatenatedCmd;
+    std::vector<Client*>        clients;
+    std::vector<Client *>       clientsTryingToConnect;
     std::vector<Channel*>       _channelList;
 
 };

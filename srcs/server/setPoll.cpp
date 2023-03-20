@@ -177,61 +177,61 @@ int Server::setPoll()
     return (0);
 }
 
-void    Server::joinCommand()
+void    Server::joinCommand(std::vector<std::string> command, int clientFd)
 {
     std::vector<std::string> channelList;
     std::vector<std::string> passwdList;
+    Client *client = clients[findConnectedClientByFd(clientFd)];
 
-    if (_command[1].find(',') != std::string::npos)
-        channelList = split(_command[1], ',');
+    if (command[1].find(',') != std::string::npos)
+        channelList = split(command[1], ',');
     else
-        channelList.push_back(_command[1]);    
-    if (_command.size() > 2)
+        channelList.push_back(command[1]);
+    if (command.size() > 2)
     {
-        if (_command[2].find(',') != std::string::npos)
-            passwdList = split(_command[2], ',');
+        if (command[2].find(',') != std::string::npos)
+            passwdList = split(command[2], ',');
         else
-            passwdList.push_back(_command[2]);
+            passwdList.push_back(command[2]);
     }
     std::vector<std::string>::iterator it;
     size_t i = 0;
     for (it = channelList.begin(); it != channelList.end(); ++it)
     {
         Channel *channel;
-        if (i < passwdList.size())
-            channel = new Channel(channelList[i], passwdList[i]);
-        else
-            channel = new Channel(channelList[i], "");
-        addToChannelList(channel);
+        if ((channel = findChannelByName(channelList[i])) == NULL)
+        {
+            if (i < passwdList.size())
+                channel = new Channel(channelList[i], passwdList[i], client);
+            else
+                channel = new Channel(channelList[i], "", client);
+            addToChannelList(channel);
+        }
+        channel->addClientToChannel(clientFd, client);
+        channel->printClientList();
         i++;
     }
-    //printChannelList();
+    // printChannelList();
 }
 
-// MODE #chann -o name
-
-void    Server::modeCommand()
+void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
 {
-    std::cout << "mode" << std::endl;
-}
-
-void    Server::callCommand()
-{
-    if (_command[0] == "JOIN")
-        joinCommand();
-    else if (_command[0] == "MODE")
-        modeCommand();
+    if (inputClient[0] == "JOIN")
+        joinCommand(inputClient, clientFd);
+    else if (inputClient[0] == "MODE")
+        parseModeCommand(inputClient, clientFd);
     else
         std::cout << "Command not found" << std::endl;
 }
 
-void    Server::setCommand(std::string &userInput)
+void    Server::setCommand(std::string &clientInput, int clientFd)
 {
-    if (userInput.empty())
+    std::vector<std::string> inputParsed;
+    if (clientInput.empty())
         return ;
-    std::string withoutExtraSpace = removeExtraSpaces(userInput);
-    _command = split(withoutExtraSpace, ' ');
-    if (_command.size() < 2)
+    std::string withoutExtraSpace = removeExtraSpaces(clientInput);
+    inputParsed = split(withoutExtraSpace, ' ');
+    if (inputParsed.size() < 2)
         return ;
-    callCommand();
+    callCommand(inputParsed, clientFd);
 }
