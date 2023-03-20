@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <map>
 #include "../client/Client.hpp"
+#include "../server/numeric_replies.hpp"
+
+class Server;
 
 class Channel {
 
@@ -21,7 +24,7 @@ class Channel {
         bool                        getPrivateStatus(){return _isPrivate;};
         bool                        getSecretStatus(){return _isSecret;};
         bool                        getInviteStatus(){return _isInviteOnly;};
-        std::string                 getTopic(){return _topic;};
+        bool                        getTopicStatus(){return _topic;};
         int                         getMaxClient(){return _maxClients;};
 
         void                        setPasswd(std::string &passwd){_passwd = passwd;};
@@ -29,14 +32,13 @@ class Channel {
         void                        setPrivateStatus(bool status){_isPrivate = status;};
         void                        setSecretStatus(bool status){_isSecret = status;};
         void                        setInviteStatus(bool status){_isInviteOnly = status;};
-        void                        setTopic(std::string topic){_topic = topic;};
+        void                        setTopicStatus(bool status){_topic = status;};
         void                        setMaxClient(int maxClients){_maxClients = maxClients;};                        
         void                        setStatusModerate(bool status){_isModerate = status;};                        
+        void                        setTopicContent(std::string content){_topicContent = content;};
 
         void                        addOperator(std::string &opName);
         void                        removeOperator(std::string &opName);
-        void                        printOperators();
-        void                        printSpeakList();
 
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
@@ -46,7 +48,10 @@ class Channel {
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
         bool                        isClientExist(std::string &clientName);
+
         void                        printClientList();
+        void                        printOperators();
+        void                        printSpeakList();
 
     private:
         Channel();
@@ -66,9 +71,9 @@ class Channel {
         bool                                _isPrivate; // -p  -> dont list channel form outside with /list
         bool                                _isSecret;  // -s -> idem
         bool                                _isInviteOnly; // -i -> user accepted if they were invited by operators
-        std::string                         _topic;         // -t -> set a topic of channel
+        bool                                _topic;         // -t -> set a topic of channel
         int                                 _maxClients;    // -l -> limits of clients
         bool                                _isModerate;   // -m --> only operators or -v users
         bool                                _isVoice;     // -v -> grants user to speak on -m channel
-
+        std::string                         _topicContent; // content of the topic
 };

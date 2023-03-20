@@ -68,9 +68,9 @@ void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clien
 void    Server::modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted)
 {
     if (sign == '+')
-        targetedChannel->setTopic(clientTargeted);
+        targetedChannel->setTopicStatus(true);
     else if (sign == '-')
-        targetedChannel->setTopic("");
+        targetedChannel->setTopicStatus(false);
     else
         std::cout << "bad format, except + or - before flag" << std::endl;
 }
@@ -105,6 +105,26 @@ void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clien
         std::cout << "bad format, except + or - before flag" << std::endl;
 }
 
+void    Server::modePflag(char sign, Channel *targetedChannel, std::string clientTargeted)
+{
+    if (sign == '+')
+        targetedChannel->setPrivateStatus(true);
+    else if (sign == '-')
+        targetedChannel->setPrivateStatus(false);
+    else
+        std::cout << "bad format, except + or - before flag" << std::endl;
+}
+
+void    Server::modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted)
+{
+    if (sign == '+')
+        targetedChannel->setInviteStatus(true);
+    else if (sign == '-')
+        targetedChannel->setInviteStatus(false);
+    else
+        std::cout << "bad format, except + or - before flag" << std::endl;
+}
+
 void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel)
 {
     std::string flags = command[2];
@@ -117,6 +137,9 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
             actualArg = command[counter];
         else
             actualArg = "";
+
+        if (i - 1 < 0)
+            i++;
         if (flags[i] && flags[i] == 'o')
         {
             modeOflag(flags[i - 1], targetedChannel, actualArg);
@@ -139,14 +162,14 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
         }
         else if (flags[i] && flags[i] == 'm')
             modeSflag(flags[i - 1], targetedChannel, actualArg);
-        // else
-        // {
-        //     std::cout << "flag " << "'" << flags[i] << "'" << " does not exist" << std::endl;
-        // }
+        else if (flags[i] && flags[i] == 'p')
+            modePflag(flags[i - 1], targetedChannel, actualArg);
+        else if (flags[i] && flags[i] == 's')
+            modePflag(flags[i - 1], targetedChannel, actualArg);
+        else if (flags[i] && flags[i] == 'i')
+            modeIflag(flags[i - 1], targetedChannel, actualArg);
     }
-    targetedChannel->printSpeakList();
-    // std::cout << targetedChannel->printSpeakList() << std::endl;
-    // targetedChannel->printOperators();
+    std::cout << targetedChannel->getPrivateStatus() << std::endl;
 }
 
 
@@ -167,6 +190,6 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
     {
         if ((flagNeedArgs = parseFlags(command[2])) == -1)
             return ;
+        executeFlags(flagNeedArgs, command, clientFd, targetedChannel);
     }
-    executeFlags(flagNeedArgs, command, clientFd, targetedChannel);
 }
