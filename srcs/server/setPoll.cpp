@@ -229,7 +229,7 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
         return ;
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
-    if (clientInput.size() < 2)
+    if (inputParsed.size() < 2)
         return ;
     callCommand(inputParsed, clientFd);
 }

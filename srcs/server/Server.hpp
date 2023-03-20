@@ -73,6 +73,10 @@ private:
     void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
     void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
+    void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted);
 
     // Add new Client
     int         checkIfClient(const char *buffer, int client_fd);

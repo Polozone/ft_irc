@@ -29,12 +29,14 @@ class Channel {
         void                        setPrivateStatus(bool status){_isPrivate = status;};
         void                        setSecretStatus(bool status){_isSecret = status;};
         void                        setInviteStatus(bool status){_isInviteOnly = status;};
-        void                        setTopic(std::string &topic){_topic = topic;};
+        void                        setTopic(std::string topic){_topic = topic;};
         void                        setMaxClient(int maxClients){_maxClients = maxClients;};                        
+        void                        setStatusModerate(bool status){_isModerate = status;};                        
 
         void                        addOperator(std::string &opName);
         void                        removeOperator(std::string &opName);
         void                        printOperators();
+        void                        printSpeakList();
 
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
