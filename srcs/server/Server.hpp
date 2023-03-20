@@ -61,10 +61,13 @@ private:
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
+    int     welcomeClient(int i, int client_fd);
+    int     wrongPassword(int i, int client_fd);
 
 
     // Utils
     void printClients() const;
+    
 
 
     const char *port;

@@ -23,7 +23,7 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
     if (pos != std::string::npos)
     {
         end = pos + command.length();
-        while (buffer[i + end] != 13)
+        while (buffer[i + end] != 13 && buffer[i + end])
             i++;
     }
 
@@ -50,7 +50,6 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
         newClient->setFd(client_fd);
         clientsTryingToConnect.push_back(newClient);
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
-        std::cout << clientsTryingToConnect[0]->getPassword();
     }
     if (tmp.find("NICK ") != std::string::npos)
         addNick(client_fd, extractCommandContent(tmp, "NICK "));
@@ -80,35 +79,46 @@ void Server::addPassword(int client_fd, const std::string &pass)
     clientsTryingToConnect[i]->setPassword(pass);
 }
 
+
 int Server::handleConnection(int client_fd)
 {
     const std::string tmp(password);
-    const std::string sPort(port);
     int i = findClientByFd(client_fd);
 
-    std::cout << "ici " << tmp << "strcmp (tmp, passwd) = " << strcmp(password, clientsTryingToConnect[i]->getPassword().c_str()) << std::endl;
     if (!tmp.compare(clientsTryingToConnect[i]->getPassword()))
     {
-        const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
-                                          clientsTryingToConnect[i]->getNick() + " :Welcome to the server\r\n";
-        if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
-        {
-            std::cerr << "Send error\n";
-            return (-1);
-        }
-        clients.push_back(clientsTryingToConnect[i]);
-        clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
+        return (welcomeClient(i, client_fd));
     }
     else
     {
-        const std::string wrongPW = ":Or Wrong password, try again!\r\n";
-        if (send(client_fd, wrongPW.data(), wrongPW.size(), 0) < 0)
-        {
-            std::cerr << "Send error\n";
-            return (-1);
-        }
-        clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
-        return (1);
+        return (wrongPassword(i, client_fd));
     }
     return (0);
+}
+
+int Server::welcomeClient(int i, int client_fd)
+{
+    const std::string sPort(port);
+    const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
+                                      clientsTryingToConnect[i]->getNick() + " :Welcome to the server\r\n";
+    if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
+    {
+        std::cerr << "Send error\n";
+        return (-1);
+    }
+    clients.push_back(clientsTryingToConnect[i]);
+    clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
+    return (0);
+}
+
+int Server::wrongPassword(int i, int client_fd)
+{
+    const std::string wrongPW = ":Wrong password, try again!\r\n";
+    if (send(client_fd, wrongPW.data(), wrongPW.size(), 0) < 0)
+    {
+        std::cerr << "Send error\n";
+        return (-1);
+    }
+    clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
+    return (1);
 }
