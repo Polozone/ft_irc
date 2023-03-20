@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
+/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/16 11:08:42 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/20 09:39:30 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ class Client
 {
 private:
     // Data members
-    int               _fd;
+    int                     _fd;
     std::string             _nickname; 
     std::string             _username;
     std::string             _fullname;
     std::string             _hostname;
     short                   _mode;
-    bool                    _password;
     bool                    _authenticated;
     std::deque<std::string> _channelsJoined;
+    std::string             _password;
 
 public:
     // Constructors and Destructor
@@ -72,17 +72,17 @@ public:
     std::string             getFullname() const;
     std::string             getHostname() const;
     short                   getMode() const;
-    bool                    getPassword() const;
+    std::string             getPassword() const;
     bool                    getAuthenticated() const;
     std::deque<std::string> getChannelsJoined() const;
 
     // Setters
     void                    setFd(int fd);
-    void                    setNickname(std::string nickname);
-    void                    setUsername(std::string username);
-    void                    setFullname(std::string fullname);
-    void                    setHostname(std::string hostname);
-    void                    setPassword(bool pass);
+    void                    setNickname(const std::string &nickname);
+    void                    setUsername(const std::string &username);
+    void                    setFullname(const std::string &fullname);
+    void                    setHostname(const std::string &hostname);
+    void                    setPassword(const std::string &password);
     void                    setAuthenticated(bool authenticated);
 
     // Mode methods
@@ -93,6 +93,10 @@ public:
     // Channel methods
     bool                    addChannelJoined(std::string channelName);
     bool                    removeChannelJoined(std::string channelName);
+
+
+private:
+
 };
 
 // Overloaded output stream operator
