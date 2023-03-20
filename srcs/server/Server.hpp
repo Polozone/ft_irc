@@ -89,6 +89,8 @@ private:
     int     wrongPassword(int i, int client_fd);
     int         findConnectedClientByFd(int client_fd);
     void        printClientList();
+    void    addClientToList(Client *toAdd);
+
 
 
     // Utils

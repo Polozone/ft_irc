@@ -76,7 +76,7 @@ int Server::readExistingConnection(int i)
         if (!handleCtrlD(buffer))
         {
             std::string input(buffer);
-            setCommand(input);
+            setCommand(input, fds[i].fd);
             std::string tmp(buffer);
             std::cout << buffer << "\n";
             checkIfNewClient(buffer, fds[i].fd);

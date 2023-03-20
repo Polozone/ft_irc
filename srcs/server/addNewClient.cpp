@@ -41,6 +41,17 @@ int Server::findClientByFd(int client_fd) const
     return (-1);
 }
 
+int Server::findConnectedClientByFd(int client_fd)
+{
+    for (int i = 0; i < clients.size(); i++)
+    {
+        if (clients[i]->getFd() == client_fd)
+            return (i);
+    }
+    std::cerr << "Client Not Found By Fd\n";
+    return (-1);
+}
+
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
     std::string tmp(buffer);
