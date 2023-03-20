@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/20 09:46:04 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/20 10:08:41 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 //! CONSTRUCTORS
 Client::Client(void) : _nickname("*"), 
-			_username(""), _fullname(""), _hostname(NULL), 
+			_username(""), _fullname(""), _hostname(""), 
 			_mode(MOD_NONE),  _password(""), _authenticated(false), _channelsJoined() { }
 
 Client::Client(const int fd, std::string hostname) : _fd(fd), _nickname("*"), 
