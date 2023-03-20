@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/16 10:50:22 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/20 10:02:19 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,11 @@ int Server::readExistingConnection(int i)
         {
             std::string input(buffer);
             setCommand(input);
-            checkIfClient(buffer, fds[i].fd);
-            std::cout << buffer << "\n\n";
-            std::cout << "vec size: " << clientsTryingToConnect.size() << std::endl;
+            std::string tmp(buffer);
+            std::cout << buffer << "\n";
+            checkIfNewClient(buffer, fds[i].fd);
+            // if (tmp.find("printpls") != std::string::npos)
+            //     printClients();
             memset(buffer, 0, sizeof(buffer));
         }
     }
