@@ -76,8 +76,14 @@ int Server::launchServer() {
 
     getAddrinfo();
 
+    //?----(socket)initialize socket
+    //?----(fcntl)modify the socket to not block, even if there no data to read
+    //?----bind(assign) a ip and port to the socker
+    //?----listen, marck socket as passive in order to accept incoming connections 
     listen_sd = getListenerSock();
     
+    //?---create new poll instance to watch event
+    //? ---watch events to either stablish new connections or handle commands
     setPoll();
     
     freeaddrinfo(servinfo);
