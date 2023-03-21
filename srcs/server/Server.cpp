@@ -1,3 +1,4 @@
+
 #include "./Server.hpp"
 
 // CLASS INIT
@@ -72,7 +73,6 @@ int Server::getListenerSock() {
 }
 
 int Server::launchServer() {
-    struct addrinfo *servinfo;
 
     getAddrinfo();
 
@@ -85,8 +85,56 @@ int Server::launchServer() {
     //?---create new poll instance to watch event
     //? ---watch events to either stablish new connections or handle commands
     setPoll();
-    
+
     freeaddrinfo(servinfo);
     return (0);
 }
 
+void    Server::addToChannelList(Channel *toAdd)
+{
+    std::vector<Channel*>::iterator it;
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* tmp = *it;
+        if (tmp->getChannelName() == toAdd->getChannelName())
+            break ;
+    }
+    if (it == _channelList.end())
+        _channelList.push_back(toAdd);
+}
+
+void    Server::printChannelList()
+{
+    std::vector<Channel*>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* channel = *it;
+        std::cout << "channelName:" << channel->getChannelName() <<std::endl;
+    }
+}
+
+Channel*    Server::findChannelByName(std::string channelName)
+{
+    std::vector<Channel *>::iterator it;
+
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        if ((*it)->getChannelName() == channelName)
+            return (*it);
+    }
+    return (NULL);
+}
+
+// void    Server::addClientToList(Client *toAdd)
+// {
+//     clients.push_back(toAdd);
+// }
+
+void    Server::printClientList()
+{
+    std::map<int, Client *>::iterator it;
+
+    for (it = clients.begin(); it != clients.end(); ++it)
+        std::cout << it->second->getNickname() << std::endl;
+}

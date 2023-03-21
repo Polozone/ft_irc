@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/20 13:11:58 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/21 09:28:07 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int Server::handleCtrlD(const char *buffer)
     std::string tmp(buffer);
     if (detectEOF(buffer))
     {
+        std::cout << "EOF\n";
         concatenate = 1;
         concatenatedCmd += tmp;
         return (1);
@@ -41,11 +42,20 @@ int Server::handleCtrlD(const char *buffer)
     return (0);
 }
 
+void printStringInInt(const char *buffer)
+{
+    int i = 0;
+    while (buffer[i])
+    {
+        printf("%d\n", buffer[i]);
+        i++;
+    }
+}
+
 int Server::readExistingConnection(int i)
 {
     int status;
-    char buffer[1026] = {0};
-    std::cout << "passing by here readExistingConnection\n";
+    char buffer[4056] = {0};
 
     status = recv(fds[i].fd, buffer, sizeof(buffer), 0);
     if (status < 0)
@@ -60,17 +70,22 @@ int Server::readExistingConnection(int i)
     if (status == 0)
     {
         close_conn = TRUE;
-        return (0);
     }
     if (status > 0)
     {
         if (!handleCtrlD(buffer))
         {
+            std::string input(buffer);
+            setCommand(input, fds[i].fd);
+            std::string tmp(buffer);
             std::cout << buffer << "\n";
+            checkIfNewClient(buffer, fds[i].fd);
+            // if (tmp.find("printpls") != std::string::npos)
+            //     printClients();
             memset(buffer, 0, sizeof(buffer));
         }
-        return (0);
     }
+
     return (0);
 }
 
@@ -162,7 +177,7 @@ int Server::setPoll()
                 if (readExistingConnection(i) == -1)
                     break;
             }
-            
+
             if (close_conn)
                 closeConnection(i);
         }
@@ -170,4 +185,63 @@ int Server::setPoll()
     } while (end_server == FALSE);
 
     return (0);
+}
+
+void    Server::joinCommand(std::vector<std::string> command, int clientFd)
+{
+    std::vector<std::string> channelList;
+    std::vector<std::string> passwdList;
+    Client *client = clients[findConnectedClientByFd(clientFd)];
+
+    if (command[1].find(',') != std::string::npos)
+        channelList = split(command[1], ',');
+    else
+        channelList.push_back(command[1]);
+    if (command.size() > 2)
+    {
+        if (command[2].find(',') != std::string::npos)
+            passwdList = split(command[2], ',');
+        else
+            passwdList.push_back(command[2]);
+    }
+    std::vector<std::string>::iterator it;
+    size_t i = 0;
+    for (it = channelList.begin(); it != channelList.end(); ++it)
+    {
+        Channel *channel;
+        if ((channel = findChannelByName(channelList[i])) == NULL)
+        {
+            if (i < passwdList.size())
+                channel = new Channel(channelList[i], passwdList[i], client);
+            else
+                channel = new Channel(channelList[i], "", client);
+            addToChannelList(channel);
+        }
+        channel->addClientToChannel(clientFd, client);
+        channel->printClientList();
+        i++;
+    }
+    // printChannelList();
+}
+
+void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
+{
+    if (inputClient[0] == "JOIN")
+        joinCommand(inputClient, clientFd);
+    else if (inputClient[0] == "MODE")
+        parseModeCommand(inputClient, clientFd);
+    else
+        std::cout << "Command not found" << std::endl;
+}
+
+void    Server::setCommand(std::string &clientInput, int clientFd)
+{
+    std::vector<std::string> inputParsed;
+    if (clientInput.empty())
+        return ;
+    std::string withoutExtraSpace = removeExtraSpaces(clientInput);
+    inputParsed = split(withoutExtraSpace, ' ');
+    if (inputParsed.size() < 2)
+        return ;
+    callCommand(inputParsed, clientFd);
 }
