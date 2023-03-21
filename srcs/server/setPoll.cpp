@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/20 14:14:27 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/21 09:38:54 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int Server::readExistingConnection(int i)
             memset(buffer, 0, sizeof(buffer));
         }
     }
+
     return (0);
 }
 
@@ -102,8 +103,6 @@ int Server::acceptIncomingConnection()
             }
             return (-1);
         }
-
-        std::cout << "Connection accepted - " << new_sd << std::endl;
 
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
     } while (new_sd != -1);
@@ -134,6 +133,9 @@ int Server::setPoll()
 {
     int current_size;
 
+    //!----create poll instance assigning a fd to monitor\
+    //!----and what tipe of event we want to monitor
+    //!---- we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
@@ -143,13 +145,16 @@ int Server::setPoll()
         current_size = fds.size();
         for (int i = 0; i < current_size; i++)
         {
+            //! if no event 
             if (fds[i].revents == 0)
                 continue;
+            //! if the file descriptor has hang up
             if (fds[i].revents & POLLHUP)
             {
                 closeConnection(i);
                 continue;
             }
+            //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
                 printf("  Error! revents = %d\n", fds[i].revents);
@@ -158,11 +163,13 @@ int Server::setPoll()
             }
             if (fds[i].fd == listen_sd)
             {
+                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
+                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (readExistingConnection(i) == -1)
                     break;
             }

@@ -76,10 +76,16 @@ int Server::launchServer() {
 
     getAddrinfo();
 
+    //?----(socket)initialize socket
+    //?----(fcntl)modify the socket to not block, even if there no data to read
+    //?----bind(assign) a ip and port to the socker
+    //?----listen, marck socket as passive in order to accept incoming connections 
     listen_sd = getListenerSock();
     
+    //?---create new poll instance to watch event
+    //? ---watch events to either stablish new connections or handle commands
     setPoll();
-    
+
     freeaddrinfo(servinfo);
     return (0);
 }
@@ -120,15 +126,15 @@ Channel*    Server::findChannelByName(std::string channelName)
     return (NULL);
 }
 
-void    Server::addClientToList(Client *toAdd)
-{
-    clients.push_back(toAdd);
-}
+// void    Server::addClientToList(Client *toAdd)
+// {
+//     clients.push_back(toAdd);
+// }
 
 void    Server::printClientList()
 {
-    std::vector<Client *>::iterator it;
+    std::map<int, Client *>::iterator it;
 
     for (it = clients.begin(); it != clients.end(); ++it)
-        std::cout << (*it)->getNickname() << std::endl;
+        std::cout << it->second->getNickname() << std::endl;
 }

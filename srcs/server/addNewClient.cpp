@@ -32,34 +32,51 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
 
 int Server::findClientByFd(int client_fd) const
 {
-    for (int i = 0; i < clientsTryingToConnect.size(); i++)
+    try
     {
-        if (clientsTryingToConnect[i]->getFd() == client_fd)
-            return (i);
+        std::map<int , Client *>::const_iterator it = clients.find(client_fd); 
+        if (it == clients.end())
+            throw std::invalid_argument("Invalid client fd");
     }
-    std::cerr << "Client Not Found By Fd\n";
-    return (-1);
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error finding client: " << e.what() << '\n';
+    }
+    return (client_fd);
 }
 
 int Server::findConnectedClientByFd(int client_fd)
 {
-    for (int i = 0; i < clients.size(); i++)
+    try
     {
-        if (clients[i]->getFd() == client_fd)
-            return (i);
+        std::map<int , Client *>::iterator it = clients.find(client_fd); 
+        if (it == clients.end())
+            throw std::invalid_argument("Invalid client fd");
     }
-    std::cerr << "Client Not Found By Fd\n";
-    return (-1);
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error finding client: " << e.what() << '\n';
+    }
+    return (client_fd);
 }
 
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
+    Client *newClient;
+    //! Make sure the client_fd exits
+    if (clientsTryingToConnect.count(client_fd) == 0)
+    {
+        newClient = new Client;
+        newClient->setFd(client_fd);
+        clientsTryingToConnect[client_fd] = newClient;
+    }
     std::string tmp(buffer);
     if (tmp.find("PASS ") != std::string::npos)
     {
-        Client *newClient = new Client;
-        newClient->setFd(client_fd);
-        clientsTryingToConnect.push_back(newClient);
+        //----------------------------------------------------
+        //! we use a map instead a vector to store new clients trying to connect
+        clientsTryingToConnect[client_fd] = newClient;
+        //---------------------------------------------------
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
     }
     if (tmp.find("NICK ") != std::string::npos)
@@ -74,55 +91,75 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
 
 void Server::addNick(int client_fd, const std::string &nick)
 {
-    int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i]->setNickname(nick);
+    try {
+        //! Make sure the client_fd is valid
+        if (clientsTryingToConnect.count(client_fd) == 0)
+            throw std::invalid_argument("Invalid client_fd");
+
+        //! Set the nickname of the client with the given client_fd
+        clientsTryingToConnect[client_fd]->setNickname(nick);
+    } catch (const std::exception &e) {
+        std::cerr << "Error setting nickname: " << e.what() << std::endl;
+    }
 }
 
 void Server::addUser(int client_fd, const std::string &user)
 {
-    int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i]->setUsername(user);
+    try
+    {
+        //! Make sure the client_fd is valied
+        if (clientsTryingToConnect.count(client_fd) == 0)
+            throw std::invalid_argument("Invalid client_fd");
+        
+        //! Set the nickname of the client with the given client_fd
+        clientsTryingToConnect[client_fd]->setUsername(user);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error setting username: " << e.what() << std::endl;
+    }
+    
+    clientsTryingToConnect[client_fd]->setUsername(user);
 }
 
 void Server::addPassword(int client_fd, const std::string &pass)
 {
-    int i = findClientByFd(client_fd);
-    clientsTryingToConnect[i]->setPassword(pass);
+    clientsTryingToConnect[client_fd]->setPassword(pass);
 }
 
 
 int Server::handleConnection(int client_fd)
 {
     const std::string tmp(password);
-    int i = findClientByFd(client_fd);
 
-    if (!tmp.compare(clientsTryingToConnect[i]->getPassword()))
+    if (!tmp.compare(clientsTryingToConnect[client_fd]->getPassword()))
     {
-        return (welcomeClient(i, client_fd));
+        return (welcomeClient(client_fd));
     }
     else
     {
-        return (wrongPassword(i, client_fd));
+        return (wrongPassword(client_fd));
     }
     return (0);
 }
 
-int Server::welcomeClient(int i, int client_fd)
+int Server::welcomeClient(int client_fd)
 {
     const std::string sPort(port);
     const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
-                                      clientsTryingToConnect[i]->getNickname() + " :Welcome to the server\r\n";
+                                      clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
     if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
     {
         std::cerr << "Send error\n";
         return (-1);
     }
-    clients.push_back(clientsTryingToConnect[i]);
-    clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
+    //! map intead of vector 
+    clients[client_fd] = clientsTryingToConnect[client_fd];
+    clientsTryingToConnect.erase(client_fd);
     return (0);
 }
 
-int Server::wrongPassword(int i, int client_fd)
+int Server::wrongPassword(int client_fd)
 {
     const std::string wrongPW = ":Wrong password, try again!\r\n";
     if (send(client_fd, wrongPW.data(), wrongPW.size(), 0) < 0)
@@ -130,6 +167,6 @@ int Server::wrongPassword(int i, int client_fd)
         std::cerr << "Send error\n";
         return (-1);
     }
-    clientsTryingToConnect.erase(clientsTryingToConnect.begin() + i);
+    clientsTryingToConnect.erase(client_fd);
     return (1);
 }
