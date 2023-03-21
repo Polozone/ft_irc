@@ -181,7 +181,7 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 
     if (command.size() > 1)
         targetChannelName = command[1];
-    if ((targetedChannel = findChannelByName(targetChannelName)) == NULL)
+    if ((targetedChannel = findChannelByName(targetChannelName, clientFd)) == NULL)
     {
         std::cout << "Channel does not exist" << std::endl;
         return ;

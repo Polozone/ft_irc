@@ -125,7 +125,7 @@ void    Server::printChannelList()
     }
 }
 
-Channel*    Server::findChannelByName(std::string channelName)
+Channel*    Server::findChannelByName(std::string channelName, int fdClient)
 {
     std::vector<Channel *>::iterator it;
 
@@ -134,6 +134,7 @@ Channel*    Server::findChannelByName(std::string channelName)
         if ((*it)->getChannelName() == channelName)
             return (*it);
     }
+    // sendNumericReplies(fdClient, ERR_INVITEONLYCHAN());
     return (NULL);
 }
 

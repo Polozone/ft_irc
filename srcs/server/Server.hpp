@@ -62,7 +62,7 @@ private:
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
-    Channel*    findChannelByName(std::string channelName);
+    Channel*    findChannelByName(std::string channelName, int fdClient);
     
     // Commands
 

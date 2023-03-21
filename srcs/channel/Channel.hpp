@@ -48,6 +48,9 @@ class Channel {
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
         bool                        isClientExist(std::string &clientName);
+        bool                        isClientBan(std::string& clientName);
+
+        Client *                    findClientByFd(int fd);
 
         void                        printClientList();
         void                        printOperators();

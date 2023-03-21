@@ -92,3 +92,11 @@ void    Channel::printSpeakList()
         std::cout << *_it << " ";
     std::cout << std::endl;
 }
+
+Client * Channel::findClientByFd(int fd)
+{
+    _itm = _clients.find(fd);
+    if (_itm != _clients.end())
+        return _itm->second;
+    return (NULL);
+}

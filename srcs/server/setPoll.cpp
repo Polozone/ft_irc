@@ -199,7 +199,7 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd, Clie
     for (it = channelList.begin(); it != channelList.end(); ++it)
     {
         Channel *channel;
-        if ((channel = findChannelByName(channelList[i])) == NULL)
+        if ((channel = findChannelByName(channelList[i], clientFd)) == NULL)
         {
             if (i < passwdList.size())
                 channel = new Channel(channelList[i], passwdList[i], targetedClient);
