@@ -27,9 +27,6 @@
 #define TRUE 1
 #define FALSE 0
 
-int setPoll(int listener_fd);
-int welcomeClient(int fd);
-
 class Server
 {
 
