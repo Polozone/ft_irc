@@ -18,14 +18,18 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <sstream>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
+#include "numeric_replies.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
 #define TRUE 1
 #define FALSE 0
+
+class Channel;
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
@@ -63,9 +67,9 @@ private:
     // Commands
 
     void        setCommand(std::string &clientInput, int clientFd);
-    void        callCommand(std::vector<std::string> inputClient, int clientFd);
+    void        callCommand(std::vector<std::string> inputClient, int clientFd, Client* targetedClient);
 
-    void        joinCommand(std::vector<std::string> command, int clientFd);
+    void        joinCommand(std::vector<std::string> command, int clientFd, Client* targetedClient);
 
     // ModeCommand
 
@@ -74,9 +78,13 @@ private:
     void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
     void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modePflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+
+
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
@@ -87,14 +95,14 @@ private:
     int     handleConnection(int client_fd);
     int     welcomeClient(int i, int client_fd);
     int     wrongPassword(int i, int client_fd);
-    int         findConnectedClientByFd(int client_fd);
-    void        printClientList();
+    int     findConnectedClientByFd(int client_fd);
+    void    printClientList();
     void    addClientToList(Client *toAdd);
 
 
 
     // Utils
-    void printClients() const;
+    void        printClients() const;
     
 
     const char                  *port;
@@ -107,7 +115,7 @@ private:
     int                         concatenate;
     std::string                 concatenatedCmd;
     std::vector<Client*>        clients;
-    std::vector<Client *>       clientsTryingToConnect;
+    std::vector<Client*>        clientsTryingToConnect;
     std::vector<Channel*>       _channelList;
 
 };
@@ -117,3 +125,4 @@ int handleServerErrors(const char *str, int *sd);
 int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
 const std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void        sendNumericReplies(int fd, std::string message);

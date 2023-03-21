@@ -35,10 +35,15 @@ void    Channel::printOperators()
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
-    if ( _nbrClientsConnected < _maxClients)
+    if (_isInviteOnly)
+        sendNumericReplies(fdClient, ERR_NEEDMOREPARAMS(clientToAdd->getNickname()));
+    else
     {
-        _clients.insert(std::make_pair(fdClient, clientToAdd));
-        _nbrClientsConnected++;
+        if ( _nbrClientsConnected < _maxClients)
+        {
+            _clients.insert(std::make_pair(fdClient, clientToAdd));
+            _nbrClientsConnected++;
+        }
     }
 }
 

@@ -176,11 +176,11 @@ int Server::setPoll()
     return (0);
 }
 
-void    Server::joinCommand(std::vector<std::string> command, int clientFd)
+void    Server::joinCommand(std::vector<std::string> command, int clientFd, Client *targetedClient)
 {
     std::vector<std::string> channelList;
     std::vector<std::string> passwdList;
-    Client *client = clients[findConnectedClientByFd(clientFd)];
+
 
     if (command[1].find(',') != std::string::npos)
         channelList = split(command[1], ',');
@@ -201,22 +201,21 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
         if ((channel = findChannelByName(channelList[i])) == NULL)
         {
             if (i < passwdList.size())
-                channel = new Channel(channelList[i], passwdList[i], client);
+                channel = new Channel(channelList[i], passwdList[i], targetedClient);
             else
-                channel = new Channel(channelList[i], "", client);
-            addToChannelList(channel);
+                channel = new Channel(channelList[i], "", targetedClient);
         }
-        channel->addClientToChannel(clientFd, client);
+        channel->addClientToChannel(clientFd, targetedClient);
+        addToChannelList(channel);
         channel->printClientList();
         i++;
     }
-    // printChannelList();
 }
 
-void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
+void    Server::callCommand(std::vector<std::string> inputClient, int clientFd, Client *targetedClient)
 {
     if (inputClient[0] == "JOIN")
-        joinCommand(inputClient, clientFd);
+        joinCommand(inputClient, clientFd, targetedClient);
     else if (inputClient[0] == "MODE")
         parseModeCommand(inputClient, clientFd);
     else
@@ -226,11 +225,18 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
 void    Server::setCommand(std::string &clientInput, int clientFd)
 {
     std::vector<std::string> inputParsed;
+    Client *client = clients[findConnectedClientByFd(clientFd)];
+
     if (clientInput.empty())
         return ;
+
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
+
     if (inputParsed.size() < 2)
+    {
+        sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(client->getNickname()));
         return ;
-    callCommand(inputParsed, clientFd);
+    }
+    callCommand(inputParsed, clientFd, client);
 }
