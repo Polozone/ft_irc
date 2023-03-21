@@ -93,8 +93,8 @@ private:
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
-    int     welcomeClient(int i, int client_fd);
-    int     wrongPassword(int i, int client_fd);
+    int     welcomeClient(int client_fd);
+    int     wrongPassword(int client_fd);
     int     findConnectedClientByFd(int client_fd);
     void    printClientList();
     void    addClientToList(Client *toAdd);
@@ -114,9 +114,9 @@ private:
     struct addrinfo *           servinfo;
     int                         concatenate;
     std::string                 concatenatedCmd;
-    std::vector<Client*>        clients;
-    std::vector<Client*>        clientsTryingToConnect;
-    std::vector<Channel*>       _channelList;
+    std::map<int, Client *>        clients;
+    std::map<int, Client *>       clientsTryingToConnect;
+    std::vector<Channel*>          _channelList;
 
 };
 
