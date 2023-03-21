@@ -11,12 +11,17 @@
 
 # define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid"
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
+# define ERR_NOSUCHCHANNEL(nickname) ":localhost/" + nickname + "number of params invalid"
+# define ERR_CHANNELISFULL(channel) ":localhost/" + channel + " :Cannot join channel (+l)"
+# define RPL_TOPIC(channel, topic) ":localhost/" + channel + " :" + topic
+
+#define ERR_CHANOPRIVSNEEDED(channel) ":localhost/" + channel + " :You're not channel operator"
+
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              
 // # define ERR_BADCHANNELKEY(nickname) ":localhost/" +   + nickname + "number of params invalid"
 // # define ERR_CHANNELISFULL(nickname) ":localhost/" +   + nickname + "number of params invalid"               
 // # define ERR_BADCHANMASK(nickname) ":localhost/" +   + nickname + "number of params invalid"
-// # define ERR_NOSUCHCHANNEL(nickname) ":localhost/" +   + nickname + "number of params invalid"               
 // # define ERR_TOOMANYCHANNELS(nickname) ":localhost/" +   + nickname + "number of params invalid"
 // # define RPL_TOPIC(nickname) ":localhost/" +   + nickname + "number of params invalid"

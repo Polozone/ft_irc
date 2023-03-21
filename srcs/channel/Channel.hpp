@@ -44,11 +44,13 @@ class Channel {
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
         void                        removeClientAllowed(std::string &nameDisallowed);
+        void                        addInvitedClient(std::string toAdd);
 
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
+        bool                        isClientIsInvited(std::string &clientName);
 
         Client *                    findClientByFd(int fd);
 
@@ -66,6 +68,7 @@ class Channel {
         std::string                         _channelName;
         std::string                         _passwd;
         std::vector<std::string>            _privateClientAllowed;
+        std::vector<std::string>            _invitedClient;
         Client *                            _creator;
 
         std::vector<std::string>            _canSpeakList;

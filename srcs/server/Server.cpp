@@ -5,24 +5,25 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
-    Client *name = new Client(4, "hostnamectl");
-    Client *name2 = new Client(5, "hostnamectl2");
-    Client *name3 = new Client(6, "hostnamectl3");
-    name->setNickname("Paul");
-    name2->setNickname("Jean");
-    name3->setNickname("Jacques");
-    addClientToList(name);
-    addClientToList(name2);
-    addClientToList(name3);
+    Server::launchServer();
+    // Client *name = new Client(4, "hostnamectl");
+    // Client *name2 = new Client(5, "hostnamectl2");
+    // Client *name3 = new Client(6, "hostnamectl3");
+    // name->setNickname("Paul");
+    // name2->setNickname("Jean");
+    // name3->setNickname("Jacques");
+    // addClientToList(name);
+    // addClientToList(name2);
+    // addClientToList(name3);
     // printClientList();
     // Server::launchServer();
-    std::string input;
-        std::getline(std::cin, input);
-        setCommand(input, 4);
-        std::getline(std::cin, input);
-        setCommand(input, 5);
-        std::getline(std::cin, input);
-        setCommand(input, 6);
+    // std::string input;
+    // std::getline(std::cin, input);
+    // setCommand(input, 4);
+    // std::getline(std::cin, input);
+    // setCommand(input, 5);
+    // std::getline(std::cin, input);
+    // setCommand(input, 6);
 }
 
 Server::~Server() {}
@@ -93,10 +94,16 @@ int Server::launchServer() {
 
     getAddrinfo();
 
+    //?----(socket)initialize socket
+    //?----(fcntl)modify the socket to not block, even if there no data to read
+    //?----bind(assign) a ip and port to the socker
+    //?----listen, marck socket as passive in order to accept incoming connections 
     listen_sd = getListenerSock();
     
+    //?---create new poll instance to watch event
+    //? ---watch events to either stablish new connections or handle commands
     setPoll();
-    
+
     freeaddrinfo(servinfo);
     return (0);
 }
@@ -134,21 +141,25 @@ Channel*    Server::findChannelByName(std::string channelName, int fdClient)
         if ((*it)->getChannelName() == channelName)
             return (*it);
     }
-    // sendNumericReplies(fdClient, ERR_INVITEONLYCHAN());
+    std::map<int, Client*>::iterator _it = clients.find(2);
+    if (_it != clients.end()) {
+        Client* tmp = _it->second;
+    sendNumericReplies(fdClient, ERR_NOSUCHCHANNEL(tmp->getNickname()));
+    }
     return (NULL);
 }
 
 void    Server::addClientToList(Client *toAdd)
 {
-    clients.push_back(toAdd);
+    clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
 }
 
 void    Server::printClientList()
 {
-    std::vector<Client *>::iterator it;
+    std::map<int, Client *>::iterator it;
 
     for (it = clients.begin(); it != clients.end(); ++it)
-        std::cout << (*it)->getNickname() << std::endl;
+        std::cout << it->second->getNickname() << std::endl;
 }
 
 void    sendNumericReplies(int fd, std::string message)

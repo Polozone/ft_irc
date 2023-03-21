@@ -36,13 +36,18 @@ void    Channel::printOperators()
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
     if (_isInviteOnly)
-        sendNumericReplies(fdClient, ERR_NEEDMOREPARAMS(clientToAdd->getNickname()));
+        sendNumericReplies(fdClient, ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
     else
     {
         if ( _nbrClientsConnected < _maxClients)
         {
             _clients.insert(std::make_pair(fdClient, clientToAdd));
             _nbrClientsConnected++;
+            sendNumericReplies(fdClient, RPL_TOPIC(_channelName, _topicContent));
+        }
+        else
+        {
+            sendNumericReplies(fdClient, ERR_CHANNELISFULL(_channelName));
         }
     }
 }
@@ -99,4 +104,19 @@ Client * Channel::findClientByFd(int fd)
     if (_itm != _clients.end())
         return _itm->second;
     return (NULL);
+}
+
+void    Channel::addInvitedClient(std::string toAdd)
+{
+    _invitedClient.push_back(toAdd);
+}
+
+bool    Channel::isClientIsInvited(std::string &clientName)
+{
+    for (_it = _invitedClient.begin(); _it != _invitedClient.end(); ++_it)
+    {
+        if (*_it == clientName)
+            return (true);
+    }
+    return (false);
 }

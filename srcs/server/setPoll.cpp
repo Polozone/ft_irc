@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/20 10:02:19 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/21 09:38:54 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int Server::handleCtrlD(const char *buffer)
     std::string tmp(buffer);
     if (detectEOF(buffer))
     {
-        std::cout << "EOF\n";
         concatenate = 1;
         concatenatedCmd += tmp;
         return (1);
@@ -85,6 +84,7 @@ int Server::readExistingConnection(int i)
             memset(buffer, 0, sizeof(buffer));
         }
     }
+
     return (0);
 }
 
@@ -103,8 +103,6 @@ int Server::acceptIncomingConnection()
             }
             return (-1);
         }
-
-        std::cout << "Connection accepted - " << new_sd << std::endl;
 
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
     } while (new_sd != -1);
@@ -135,6 +133,9 @@ int Server::setPoll()
 {
     int current_size;
 
+    //!----create poll instance assigning a fd to monitor\
+    //!----and what tipe of event we want to monitor
+    //!---- we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
@@ -144,13 +145,16 @@ int Server::setPoll()
         current_size = fds.size();
         for (int i = 0; i < current_size; i++)
         {
+            //! if no event 
             if (fds[i].revents == 0)
                 continue;
+            //! if the file descriptor has hang up
             if (fds[i].revents & POLLHUP)
             {
                 closeConnection(i);
                 continue;
             }
+            //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
                 printf("  Error! revents = %d\n", fds[i].revents);
@@ -159,11 +163,13 @@ int Server::setPoll()
             }
             if (fds[i].fd == listen_sd)
             {
+                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
+                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (readExistingConnection(i) == -1)
                     break;
             }
@@ -219,6 +225,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd, 
         joinCommand(inputClient, clientFd, targetedClient);
     else if (inputClient[0] == "MODE")
         parseModeCommand(inputClient, clientFd);
+    // else if (inputClient[0] == "INVITE")
+    //     parseInviteCommand(inputClient, clientFd);
     else
         std::cout << "Command not found" << std::endl;
 }
@@ -226,6 +234,11 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd, 
 void    Server::setCommand(std::string &clientInput, int clientFd)
 {
     std::vector<std::string> inputParsed;
+
+    for (_it = clients.begin(); _it != clients.end(); ++_it)
+    {
+        std::cout << "fd == " << (*_it).second->getFd() << std::endl;
+    }
     Client *client = clients[findConnectedClientByFd(clientFd)];
 
     if (clientInput.empty())

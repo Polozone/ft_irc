@@ -24,7 +24,7 @@
 #include "../utils/string_utils.hpp"
 #include "numeric_replies.hpp"
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "0.0.0.0"
 
 #define TRUE 1
 #define FALSE 0
@@ -93,8 +93,8 @@ private:
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
-    int     welcomeClient(int i, int client_fd);
-    int     wrongPassword(int i, int client_fd);
+    int     welcomeClient(int client_fd);
+    int     wrongPassword(int client_fd);
     int     findConnectedClientByFd(int client_fd);
     void    printClientList();
     void    addClientToList(Client *toAdd);
@@ -114,8 +114,9 @@ private:
     struct addrinfo *           servinfo;
     int                         concatenate;
     std::string                 concatenatedCmd;
-    std::vector<Client*>        clients;
-    std::vector<Client*>        clientsTryingToConnect;
+    std::map<int, Client*>::iterator _it;
+    std::map<int, Client *>     clients;
+    std::map<int, Client *>     clientsTryingToConnect;
     std::vector<Channel*>       _channelList;
 
 };
