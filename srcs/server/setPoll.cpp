@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/21 09:28:07 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/21 09:33:18 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,6 @@ int Server::acceptIncomingConnection()
             }
             return (-1);
         }
-
-        std::cout << "Connection accepted - " << new_sd << std::endl;
-        std::cout << "passing by accepting connection\n";
 
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
     } while (new_sd != -1);
