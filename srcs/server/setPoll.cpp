@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/20 10:02:19 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/20 14:14:27 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int Server::handleCtrlD(const char *buffer)
     std::string tmp(buffer);
     if (detectEOF(buffer))
     {
-        std::cout << "EOF\n";
         concatenate = 1;
         concatenatedCmd += tmp;
         return (1);

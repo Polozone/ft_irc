@@ -64,7 +64,6 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     }
     if (tmp.find("NICK ") != std::string::npos)
         addNick(client_fd, extractCommandContent(tmp, "NICK "));
-    printf("3\n");
     if (tmp.find("USER ") != std::string::npos)
     {
         addUser(client_fd, extractCommandContent(tmp, "USER "));
