@@ -6,6 +6,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
         joinCommand(inputClient, clientFd);
     else if (inputClient[0] == "MODE")
         parseModeCommand(inputClient, clientFd);
+    else if (inputClient[0] == "NICK")
+        nickCommand(clientFd, inputClient[1]);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
