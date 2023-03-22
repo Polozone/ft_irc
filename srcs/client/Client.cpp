@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/20 10:08:41 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/22 15:01:54 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,27 @@ bool Client::removeChannelJoined(std::string channelName) {
 		}
 	}
 	return false;
+}
+
+void Client::sendMessage(const std::string &message)
+{
+	std::string full_message = message + "\r\n"; // Add CRLF to the message as per the IRC protocol
+	ssize_t bytes_sent = 0;
+	ssize_t total_bytes_sent = 0;
+	const char *buffer = full_message.c_str();
+	size_t buffer_length = full_message.length();
+
+	// Send the message to the client through the client's socket (client_fd_)
+	while (total_bytes_sent < buffer_length)
+	{
+		bytes_sent = send(_fd, buffer + total_bytes_sent, buffer_length - total_bytes_sent, 0);
+		if (bytes_sent == -1)
+		{
+			std::cerr << "Error sending information to : " << _nickname << "\n";
+			break;
+		}
+		total_bytes_sent += bytes_sent;
+	}
 }
 
 //! OSTREAM 
