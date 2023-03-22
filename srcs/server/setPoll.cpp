@@ -235,10 +235,11 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
 {
     std::vector<std::string> inputParsed;
 
-    for (_it = clients.begin(); _it != clients.end(); ++_it)
-    {
-        std::cout << "fd == " << (*_it).second->getFd() << std::endl;
-    }
+    // for (_it = clients.begin(); _it != clients.end(); ++_it)
+    // {
+    //     std::cout << "fd == " << (*_it).second->getFd() << std::endl;
+    // }
+    dprintf(2, "test\n");
     Client *client = clients[findConnectedClientByFd(clientFd)];
 
     if (clientInput.empty())
