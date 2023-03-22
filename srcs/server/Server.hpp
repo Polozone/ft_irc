@@ -96,7 +96,7 @@ private:
 
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
-    int         checkIfNickAvailable(int client_fd, const std::string &nick);
+    int         checkIfNickAvailable(const std::string &nick) const;
 
     // ************************************
     // |           END COMMANDS           |
@@ -104,7 +104,6 @@ private:
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
-    int     findClientByFd(int client_fd) const;
     void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
@@ -118,6 +117,8 @@ private:
 
     // Utils
     void    printClientList();
+    int     findClientByFd(int client_fd) const;
+    Client  &getClientByFd(int client_fd) const;
     
 
     const char                  *port;

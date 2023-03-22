@@ -21,11 +21,10 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     Client *newClient;
     //! Make sure the client_fd exits
     if (clients.count(client_fd))
-        return (0);
+        return (1);
     if (clientsTryingToConnect.count(client_fd) == 0)
     {
         printf("New client\n");
-    
         newClient = new Client;
         newClient->setFd(client_fd);
         clientsTryingToConnect[client_fd] = newClient;
@@ -41,11 +40,7 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     }
     if (tmp.find("NICK ") != std::string::npos)
     {
-        if (!checkIfNickAvailable(client_fd, extractCommandContent(tmp, "NICK ")))
-        {
-            std::cout << "je suis la " << clientsTryingToConnect[client_fd]->getNickname() << std::endl;
-            addNick(client_fd, extractCommandContent(tmp, "NICK "));
-        }    
+        nickCommand(client_fd, extractCommandContent(buffer, "NICK "));
     }
     if (tmp.find("USER ") != std::string::npos)
     {
@@ -120,8 +115,10 @@ int Server::welcomeClient(int client_fd)
         return (-1);
     }
     //! map intead of vector 
+    std::cout << "Map size 1: "<< clientsTryingToConnect.size() << std::endl;
     clients[client_fd] = clientsTryingToConnect[client_fd];
     clientsTryingToConnect.erase(client_fd);
+    std::cout << "Map size 2: "<< clientsTryingToConnect.size() << std::endl;
     return (0);
 }
 
