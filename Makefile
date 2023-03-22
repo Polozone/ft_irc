@@ -27,7 +27,7 @@ CFLAGS	=	-std=c++98 -g #-Wall -Wextra -Werror
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-%.o:		%.cpp $(HEADERS) Makefile
+%.o:		%.cpp $(HEADER) Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
