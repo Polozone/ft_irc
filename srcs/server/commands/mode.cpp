@@ -1,5 +1,5 @@
 
-#include "./Server.hpp"
+#include "../Server.hpp"
 
 static bool   isFlagNeedArgs(char flag)
 {

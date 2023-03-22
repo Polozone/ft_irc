@@ -1,4 +1,4 @@
-#include "./Server.hpp"
+#include "../server/Server.hpp"
 
 int handleServerErrors(const char *str, int *sd) {
     perror(str);
@@ -27,4 +27,19 @@ struct pollfd createPollFdNode(int sd, int event)
         .events = event};
 
     return (pollFdNode);
+}
+
+int Server::findConnectedClientByFd(int client_fd)
+{
+    try
+    {
+        std::map<int , Client *>::iterator it = clients.find(client_fd); 
+        if (it == clients.end())
+            throw std::invalid_argument("Invalid client fd");
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error finding client: " << e.what() << '\n';
+    }
+    return (client_fd);
 }

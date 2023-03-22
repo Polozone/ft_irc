@@ -136,5 +136,8 @@ void    Server::printClientList()
     std::map<int, Client *>::iterator it;
 
     for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        std::cout << it->first << std::endl;
         std::cout << it->second->getNickname() << std::endl;
+    }
 }

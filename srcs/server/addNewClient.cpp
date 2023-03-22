@@ -1,19 +1,5 @@
 #include "./Server.hpp"
 
-static int commandNumber(const char *buffer)
-{
-    int i = 0;
-    int cmd = 0;
-
-    while (buffer[i])
-    {
-        if (buffer[i] == 13 && buffer[i + 1] == 10)
-            cmd++;
-        i++;
-    }
-    return (cmd);
-}
-
 const std::string extractCommandContent(const std::string &buffer, const std::string &command)
 {
     size_t pos = buffer.find(command);
@@ -30,42 +16,16 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
     return (buffer.substr(end, i));
 }
 
-int Server::findClientByFd(int client_fd) const
-{
-    try
-    {
-        std::map<int , Client *>::const_iterator it = clients.find(client_fd); 
-        if (it == clients.end())
-            throw std::invalid_argument("Invalid client fd");
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "Error finding client: " << e.what() << '\n';
-    }
-    return (client_fd);
-}
-
-int Server::findConnectedClientByFd(int client_fd)
-{
-    try
-    {
-        std::map<int , Client *>::iterator it = clients.find(client_fd); 
-        if (it == clients.end())
-            throw std::invalid_argument("Invalid client fd");
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << "Error finding client: " << e.what() << '\n';
-    }
-    return (client_fd);
-}
-
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
     Client *newClient;
     //! Make sure the client_fd exits
+    if (clients.count(client_fd))
+        return (0);
     if (clientsTryingToConnect.count(client_fd) == 0)
     {
+        printf("New client\n");
+    
         newClient = new Client;
         newClient->setFd(client_fd);
         clientsTryingToConnect[client_fd] = newClient;
@@ -80,7 +40,13 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
     }
     if (tmp.find("NICK ") != std::string::npos)
-        addNick(client_fd, extractCommandContent(tmp, "NICK "));
+    {
+        if (!checkIfNickAvailable(client_fd, extractCommandContent(tmp, "NICK ")))
+        {
+            std::cout << "je suis la " << clientsTryingToConnect[client_fd]->getNickname() << std::endl;
+            addNick(client_fd, extractCommandContent(tmp, "NICK "));
+        }    
+    }
     if (tmp.find("USER ") != std::string::npos)
     {
         addUser(client_fd, extractCommandContent(tmp, "USER "));
