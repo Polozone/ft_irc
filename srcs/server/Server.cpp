@@ -142,11 +142,3 @@ void    Server::printClientList()
     }
 }
 
-void    sendNumericReplies(int fd, std::string message)
-{
-    const char * casted_message = message.c_str();
-    if (send(fd, casted_message, message.size(), 0) == -1){
-        perror("send() failed");
-        return ;
-    }
-}

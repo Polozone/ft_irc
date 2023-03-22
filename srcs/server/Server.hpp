@@ -139,4 +139,4 @@ int handleServerErrors(const char *str, int *sd);
 int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
 const std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void        sendNumericReplies(int fd, std::string message);
+void    sendNumericReplies(int fd, const std::string &message);

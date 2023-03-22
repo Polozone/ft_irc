@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 10:59:09 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 13:57:36 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/22 14:26:20 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int Server::checkIfNickAvailable(const std::string &nick) const
     {
         if (nick == it->second->getNickname())
         {
-            std::cout << "Nick already in use\n";
-            std::cout << "Have to send numeric reply\n";
             return (1);
         }
     }
@@ -34,13 +32,17 @@ int Server::nickCommand(int client_fd, const std::string &nick)
     {
         getClientByFd(client_fd).setNickname(nick);
         const std::string sPort(port);
-        const std::string welcomeClient = ":localhost/" + sPort + " 001 " + 
-                getClientByFd(client_fd).getNickname() + " :Nick setup\r\n";
+        const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
+                                          getClientByFd(client_fd).getNickname() + " :Nick setup\r\n";
         if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
         {
             std::cerr << "Send error\n";
             return (-1);
         }
+    }
+    else
+    {
+        sendNumericReplies(client_fd, ERR_NICKNAMEINUSE(getClientByFd(client_fd).getNickname()));
     }
     return (0);
 }
