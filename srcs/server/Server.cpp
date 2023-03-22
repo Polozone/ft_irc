@@ -141,11 +141,11 @@ Channel*    Server::findChannelByName(std::string channelName, int fdClient)
         if ((*it)->getChannelName() == channelName)
             return (*it);
     }
-    std::map<int, Client*>::iterator _it = clients.find(2);
-    if (_it != clients.end()) {
-        Client* tmp = _it->second;
-    sendNumericReplies(fdClient, ERR_NOSUCHCHANNEL(tmp->getNickname()));
-    }
+    // std::map<int, Client*>::iterator _it = clients.find(2);
+    // if (_it != clients.end()) {
+    //     Client* tmp = _it->second;
+    //     sendNumericReplies(fdClient, ERR_NOSUCHCHANNEL(tmp->getNickname()));
+    // }
     return (NULL);
 }
 

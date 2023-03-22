@@ -13,7 +13,7 @@
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
 # define ERR_NOSUCHCHANNEL(nickname) ":localhost/" + nickname + "number of params invalid"
 # define ERR_CHANNELISFULL(channel) ":localhost/" + channel + " :Cannot join channel (+l)"
-# define RPL_TOPIC(channel, topic) ":localhost/" + channel + " :" + topic
+# define RPL_TOPIC(channel, topic) ":localhost/ 332" + channel + " :" + topic
 
 #define ERR_CHANOPRIVSNEEDED(channel) ":localhost/" + channel + " :You're not channel operator"
 

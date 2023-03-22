@@ -43,6 +43,7 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
         {
             _clients.insert(std::make_pair(fdClient, clientToAdd));
             _nbrClientsConnected++;
+            dprintf(fdClient, "test\n");
             sendNumericReplies(fdClient, RPL_TOPIC(_channelName, _topicContent));
         }
         else
