@@ -40,6 +40,7 @@ int Server::findConnectedClientByFd(int client_fd)
     catch(const std::exception& e)
     {
         std::cerr << "Error finding client: " << e.what() << '\n';
+        return (-1);
     }
     return (client_fd);
 }
