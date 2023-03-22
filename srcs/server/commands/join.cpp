@@ -6,7 +6,6 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
     std::vector<std::string> passwdList;
     Client *client = clients[isValidFd(clientFd)];
 
-
     if (command[1].find(',') != std::string::npos)
         channelList = split(command[1], ',');
     else

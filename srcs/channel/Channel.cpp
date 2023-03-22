@@ -8,7 +8,7 @@ Channel::Channel()
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
     : _channelName(channelName), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),
-    _topic(""), _maxClients(1000), _isModerate(false), _isVoice(false)
+    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false)
 {}
 
 void Channel::removeOperator(std::string &opName)
@@ -43,8 +43,10 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
         {
             _clients.insert(std::make_pair(fdClient, clientToAdd));
             _nbrClientsConnected++;
-            dprintf(fdClient, "test\n");
             sendNumericReplies(fdClient, RPL_TOPIC(_channelName, _topicContent));
+            sendNumericReplies(fdClient, RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
+            std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
+            sendNumericReplies(fdClient, message);
         }
         else
         {
