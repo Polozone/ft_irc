@@ -4,8 +4,7 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
 {
     std::vector<std::string> channelList;
     std::vector<std::string> passwdList;
-    dprintf(2, "index == %d\n", findConnectedClientByFd(clientFd));
-    Client *client = clients[findConnectedClientByFd(clientFd)];
+    Client *client = clients[isValidFd(clientFd)];
 
 
     if (command[1].find(',') != std::string::npos)

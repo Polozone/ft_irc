@@ -92,11 +92,9 @@ private:
     void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
 
-
-
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
-    int         checkIfNickAvailable(int client_fd, const std::string &nick);
+    int         checkIfNickAvailable(const std::string &nick) const;
 
     // ************************************
     // |           END COMMANDS           |
@@ -104,20 +102,21 @@ private:
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
-    int     findClientByFd(int client_fd) const;
     void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
     int     welcomeClient(int client_fd);
     int     wrongPassword(int client_fd);
-    int     findConnectedClientByFd(int client_fd);
+    int     isValidFd(int client_fd) const;
     void    addClientToList(Client *toAdd);
 
 
 
     // Utils
     void    printClientList();
+    int     findClientByFd(int client_fd) const;
+    Client  &getClientByFd(int client_fd) const;
     
 
     const char                  *port;
