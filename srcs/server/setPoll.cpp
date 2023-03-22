@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/21 09:38:54 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/22 08:48:39 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int Server::readExistingConnection(int i)
             std::string tmp(buffer);
             std::cout << buffer << "\n";
             checkIfNewClient(buffer, fds[i].fd);
-            // if (tmp.find("printpls") != std::string::npos)
-            //     printClients();
+            if (tmp.find("printpls") != std::string::npos)
+                printClientList();
             memset(buffer, 0, sizeof(buffer));
         }
     }
@@ -181,77 +181,4 @@ int Server::setPoll()
     } while (end_server == FALSE);
 
     return (0);
-}
-
-void    Server::joinCommand(std::vector<std::string> command, int clientFd, Client *targetedClient)
-{
-    std::vector<std::string> channelList;
-    std::vector<std::string> passwdList;
-
-
-    if (command[1].find(',') != std::string::npos)
-        channelList = split(command[1], ',');
-    else
-        channelList.push_back(command[1]);
-    if (command.size() > 2)
-    {
-        if (command[2].find(',') != std::string::npos)
-            passwdList = split(command[2], ',');
-        else
-            passwdList.push_back(command[2]);
-    }
-    std::vector<std::string>::iterator it;
-    size_t i = 0;
-    for (it = channelList.begin(); it != channelList.end(); ++it)
-    {
-        Channel *channel;
-        if ((channel = findChannelByName(channelList[i], clientFd)) == NULL)
-        {
-            if (i < passwdList.size())
-                channel = new Channel(channelList[i], passwdList[i], targetedClient);
-            else
-                channel = new Channel(channelList[i], "", targetedClient);
-        }
-        channel->addClientToChannel(clientFd, targetedClient);
-        addToChannelList(channel);
-        channel->printClientList();
-        i++;
-    }
-}
-
-void    Server::callCommand(std::vector<std::string> inputClient, int clientFd, Client *targetedClient)
-{
-    if (inputClient[0] == "JOIN")
-        joinCommand(inputClient, clientFd, targetedClient);
-    else if (inputClient[0] == "MODE")
-        parseModeCommand(inputClient, clientFd);
-    // else if (inputClient[0] == "INVITE")
-    //     parseInviteCommand(inputClient, clientFd);
-    else
-        std::cout << "Command not found" << std::endl;
-}
-
-void    Server::setCommand(std::string &clientInput, int clientFd)
-{
-    std::vector<std::string> inputParsed;
-
-    // for (_it = clients.begin(); _it != clients.end(); ++_it)
-    // {
-    //     std::cout << "fd == " << (*_it).second->getFd() << std::endl;
-    // }
-    dprintf(2, "test\n");
-    Client *client = clients[findConnectedClientByFd(clientFd)];
-
-    if (clientInput.empty())
-        return ;
-
-    std::string withoutExtraSpace = removeExtraSpaces(clientInput);
-    inputParsed = split(withoutExtraSpace, ' ');
-
-    if (inputParsed.size() < 2)
-    {
-        sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(client->getNickname()));
-        return ;
-    }
-    callCommand(inputParsed, clientFd, client);
 }

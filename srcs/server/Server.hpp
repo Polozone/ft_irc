@@ -66,13 +66,21 @@ private:
     
     // Commands
 
+
+    // ************************************
+    // |                                  |
+    // |             COMMANDS             |
+    // |                                  |
+    // ************************************
+
+    // Init commands
     void        setCommand(std::string &clientInput, int clientFd);
-    void        callCommand(std::vector<std::string> inputClient, int clientFd, Client* targetedClient);
-
-    void        joinCommand(std::vector<std::string> command, int clientFd, Client* targetedClient);
-
-    // ModeCommand
-
+    void        callCommand(std::vector<std::string> inputClient, int clientFd);
+    
+    // JOIN
+    void        joinCommand(std::vector<std::string> command, int clientFd);
+    
+    // MODE
     void        parseModeCommand(std::vector<std::string> command, int clientFd);
     void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
     void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
@@ -86,6 +94,14 @@ private:
 
 
 
+    // NICK
+    int         nickCommand(int client_fd, const std::string &nick);
+    int         checkIfNickAvailable(int client_fd, const std::string &nick);
+
+    // ************************************
+    // |           END COMMANDS           |
+    // ************************************
+
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
     int     findClientByFd(int client_fd) const;
@@ -96,13 +112,12 @@ private:
     int     welcomeClient(int client_fd);
     int     wrongPassword(int client_fd);
     int     findConnectedClientByFd(int client_fd);
-    void    printClientList();
     void    addClientToList(Client *toAdd);
 
 
 
     // Utils
-    void        printClients() const;
+    void    printClientList();
     
 
     const char                  *port;

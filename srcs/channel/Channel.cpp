@@ -86,8 +86,9 @@ bool    Channel::isClientExist(std::string &clientName)
 
 void    Channel::printClientList()
 {
+    std::cout << "Client list: ";
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
-        std::cout << (_itm)->second->getNickname() << " ";
+        std::cout  << (_itm)->second->getNickname() << " ";
     std::cout << std::endl;
 }
 

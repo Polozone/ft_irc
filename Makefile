@@ -6,14 +6,15 @@
 #    By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/10 10:22:05 by theodeville       #+#    #+#              #
-#    Updated: 2023/03/10 10:27:07 by theodeville      ###   ########.fr        #
+#    Updated: 2023/03/22 08:45:22 by theodeville      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-include srcs/server/config/server.mk
-include srcs/client/config/client.mk
-include srcs/channel/config/channel.mk
-include srcs/utils/config/utils.mk
+include srcs/config/server.mk
+include srcs/config/client.mk
+include srcs/config/channel.mk
+include srcs/config/utils.mk
+include srcs/config/commands.mk
 
 
 NAME	= ircserv
@@ -26,7 +27,7 @@ CFLAGS	=	-std=c++98 -g #-Wall -Wextra -Werror
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-%.o:		%.cpp $(HEADERS) Makefile
+%.o:		%.cpp $(HEADER) Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
