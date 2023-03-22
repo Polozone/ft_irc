@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/20 09:39:30 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/22 14:54:27 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <deque>
 # include <ctime>
 # include <map>
+// send function
+#include <sys/types.h>
+#include <sys/socket.h>
 
 //!   The available modes are:
 //		none												=> 0	0000 0000
@@ -84,6 +87,9 @@ public:
     void                    setHostname(const std::string &hostname);
     void                    setPassword(const std::string &password);
     void                    setAuthenticated(bool authenticated);
+
+    // General Methods
+    void sendMessage(const std::string &message);
 
     // Mode methods
     void                    addMode(short mode);

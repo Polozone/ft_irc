@@ -47,7 +47,7 @@ private:
 
     Server &operator=(const Server &rhs);
 
-    // Server setup
+// Server setup
     int         launchServer();
     int         getAddrinfo();
     int         getListenerSock();
@@ -96,9 +96,13 @@ private:
     int         nickCommand(int client_fd, const std::string &nick);
     int         checkIfNickAvailable(const std::string &nick) const;
 
+    // PRIVMSG
+    void PrivmsgCommand(Client& client, const std::vector<std::string>& args);
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************
+
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
