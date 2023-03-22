@@ -18,14 +18,21 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <sstream>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
+#include "numeric_replies.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 
 #define TRUE 1
 #define FALSE 0
+
+class Channel;
+
+int setPoll(int listener_fd);
+int welcomeClient(int fd);
 
 class Server
 {
@@ -79,9 +86,13 @@ private:
     void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
     void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modePflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+
+
 
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
@@ -129,3 +140,4 @@ int handleServerErrors(const char *str, int *sd);
 int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
 const std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void        sendNumericReplies(int fd, std::string message);
