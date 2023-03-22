@@ -115,10 +115,8 @@ int Server::welcomeClient(int client_fd)
         return (-1);
     }
     //! map intead of vector 
-    std::cout << "Map size 1: "<< clientsTryingToConnect.size() << std::endl;
     clients[client_fd] = clientsTryingToConnect[client_fd];
     clientsTryingToConnect.erase(client_fd);
-    std::cout << "Map size 2: "<< clientsTryingToConnect.size() << std::endl;
     return (0);
 }
 
