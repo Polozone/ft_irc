@@ -8,7 +8,7 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
         parseModeCommand(inputClient, clientFd);
     else if (inputClient[0] == "NICK")
         nickCommand(clientFd, inputClient[1]);
-    else if (inputClient[0] == "MSG")
+    else if (inputClient[0] == "PRIVMSG")
         msgCommand(getClientByFd(clientFd), inputClient);
 }
 
