@@ -99,7 +99,7 @@ private:
     int         checkIfNickAvailable(const std::string &nick) const;
 
     // PRIVMSG
-void            msgCommand(Client &client, std::vector<std::string> args);
+void            privmsgCommand(Client &client, std::vector<std::string> args);
 
     // ************************************
     // |           END COMMANDS           |

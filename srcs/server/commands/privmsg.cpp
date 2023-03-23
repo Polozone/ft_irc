@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msg.cpp                                            :+:      :+:    :+:   */
+/*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:47:54 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/23 15:32:30 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/23 17:06:20 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 
-void Server::msgCommand(Client &client, std::vector<std::string> args)
+void Server::privmsgCommand(Client &client, std::vector<std::string> args)
 {
     if (args.size() < 2)
     {

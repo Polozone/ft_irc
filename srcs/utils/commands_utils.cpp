@@ -9,7 +9,7 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
     else if (inputClient[0] == "NICK")
         nickCommand(clientFd, inputClient[1]);
     else if (inputClient[0] == "PRIVMSG")
-        msgCommand(getClientByFd(clientFd), inputClient);
+        privmsgCommand(getClientByFd(clientFd), inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
