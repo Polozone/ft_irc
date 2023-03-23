@@ -20,14 +20,14 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
     Client *newClient;
     //! Make sure the client_fd exits
-    if (clients.count(client_fd))
+    if (_clients.count(client_fd))
         return (1);
-    if (clientsTryingToConnect.count(client_fd) == 0)
+    if (_clientsTryingToConnect.count(client_fd) == 0)
     {
         printf("New client\n");
         newClient = new Client;
         newClient->setFd(client_fd);
-        clientsTryingToConnect[client_fd] = newClient;
+        _clientsTryingToConnect[client_fd] = newClient;
     }
     std::string tmp(buffer);
     if (tmp.find("PASS ") != std::string::npos)
@@ -37,7 +37,7 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
         // IN FILE setPoll.cpp
         // //----------------------------------------------------
         // //! we use a map instead a vector to store new clients trying to connect
-        // clientsTryingToConnect[client_fd] = newClient;
+        // _clientsTryingToConnect[client_fd] = newClient;
         // //---------------------------------------------------
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
     }
@@ -57,11 +57,11 @@ void Server::addNick(int client_fd, const std::string &nick)
 {
     try {
         //! Make sure the client_fd is valid
-        if (clientsTryingToConnect.count(client_fd) == 0)
+        if (_clientsTryingToConnect.count(client_fd) == 0)
             throw std::invalid_argument("Invalid client_fd");
 
         //! Set the nickname of the client with the given client_fd
-        clientsTryingToConnect[client_fd]->setNickname(nick);
+        _clientsTryingToConnect[client_fd]->setNickname(nick);
     } catch (const std::exception &e) {
         std::cerr << "Error setting nickname: " << e.what() << std::endl;
     }
@@ -72,23 +72,23 @@ void Server::addUser(int client_fd, const std::string &user)
     try
     {
         //! Make sure the client_fd is valied
-        if (clientsTryingToConnect.count(client_fd) == 0)
+        if (_clientsTryingToConnect.count(client_fd) == 0)
             throw std::invalid_argument("Invalid client_fd");
         
         //! Set the nickname of the client with the given client_fd
-        clientsTryingToConnect[client_fd]->setUsername(user);
+        _clientsTryingToConnect[client_fd]->setUsername(user);
     }
     catch(const std::exception& e)
     {
         std::cerr << "Error setting username: " << e.what() << std::endl;
     }
     
-    clientsTryingToConnect[client_fd]->setUsername(user);
+    _clientsTryingToConnect[client_fd]->setUsername(user);
 }
 
 void Server::addPassword(int client_fd, const std::string &pass)
 {
-    clientsTryingToConnect[client_fd]->setPassword(pass);
+    _clientsTryingToConnect[client_fd]->setPassword(pass);
 }
 
 
@@ -96,7 +96,7 @@ int Server::handleConnection(int client_fd)
 {
     const std::string tmp(password);
 
-    if (!tmp.compare(clientsTryingToConnect[client_fd]->getPassword()))
+    if (!tmp.compare(_clientsTryingToConnect[client_fd]->getPassword()))
     {
         return (welcomeClient(client_fd));
     }
@@ -111,15 +111,15 @@ int Server::welcomeClient(int client_fd)
 {
     const std::string sPort(port);
     const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
-                                      clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
+                                      _clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
     if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
     {
         std::cerr << "Send error\n";
         return (-1);
     }
     //! map intead of vector 
-    clients[client_fd] = clientsTryingToConnect[client_fd];
-    clientsTryingToConnect.erase(client_fd);
+    _clients[client_fd] = _clientsTryingToConnect[client_fd];
+    _clientsTryingToConnect.erase(client_fd);
     return (0);
 }
 
@@ -131,6 +131,6 @@ int Server::wrongPassword(int client_fd)
         std::cerr << "Send error\n";
         return (-1);
     }
-    clientsTryingToConnect.erase(client_fd);
+    _clientsTryingToConnect.erase(client_fd);
     return (1);
 }

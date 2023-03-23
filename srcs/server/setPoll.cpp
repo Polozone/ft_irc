@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/23 08:42:43 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/23 12:14:39 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ int Server::acceptIncomingConnection()
         // Get the local address and port of the new socket descriptor
         getsockname(new_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
 
-        // Create a new client object and add it to the clientsTryingToConnect map
-        this->clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
+        // Create a new client object and add it to the _clientsTryingToConnect map
+        this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
 
         // Add a new pollfd structure to the fds vector for the new socket descriptor
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));

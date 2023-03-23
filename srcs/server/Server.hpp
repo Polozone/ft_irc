@@ -25,12 +25,13 @@
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "0.0.0.0"
 
 #define TRUE 1
 #define FALSE 0
 
 class Channel;
+class Client;
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
@@ -98,7 +99,7 @@ private:
     int         checkIfNickAvailable(const std::string &nick) const;
 
     // PRIVMSG
-    void PrivmsgCommand(Client& client, const std::vector<std::string>& args);
+void            msgCommand(Client &client, std::vector<std::string> args);
 
     // ************************************
     // |           END COMMANDS           |
@@ -122,7 +123,7 @@ private:
     void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    
+    Client *findClientByNick(const std::string &nickname);
 
     const char                  *port;
     const char                  *password;
@@ -133,9 +134,10 @@ private:
     struct addrinfo *           servinfo;
     int                         concatenate;
     std::string                 concatenatedCmd;
-    std::map<int, Client *>        clients;
-    std::map<int, Client *>       clientsTryingToConnect;
-    std::vector<Channel*>          _channelList;
+    std::map<int, Client*>::iterator _it;
+    std::map<int, Client *>     _clients;
+    std::map<int, Client *>     _clientsTryingToConnect;
+    std::vector<Channel*>       _channelList;
 
 };
 

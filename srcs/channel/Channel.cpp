@@ -8,7 +8,7 @@ Channel::Channel()
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
     : _channelName(channelName), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),
-    _topic(""), _maxClients(1000), _isModerate(false), _isVoice(false)
+    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false)
 {}
 
 void Channel::removeOperator(std::string &opName)
@@ -37,13 +37,22 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
 
     if (_isInviteOnly)
-        sendNumericReplies(fdClient, ERR_NEEDMOREPARAMS(clientToAdd->getNickname()));
+        clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
     else
     {
         if ( _nbrClientsConnected < _maxClients)
         {
             _clients.insert(std::make_pair(fdClient, clientToAdd));
             _nbrClientsConnected++;
+            clientToAdd->sendMessage(RPL_TOPIC(_channelName, _topicContent));
+            clientToAdd->sendMessage(RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
+            std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
+            sendToAllClients(message);
+            // clientToAdd->sendMessage(message);
+        }
+        else
+        {
+            clientToAdd->sendMessage(ERR_CHANNELISFULL(_channelName));
         }
     }
 }
@@ -95,23 +104,33 @@ void    Channel::printSpeakList()
     std::cout << std::endl;
 }
 
-//! This function finds a client with a given file descriptor in the map of clients for a given channel
-Client *Channel::findClient(int client_fd)
+Client * Channel::findClientByFd(int fd)
 {
-    std::map<int, Client *>::iterator result; // Declare an iterator for the map
-
-    try
-    {
-        // If the client_fd is not in the map, throw an exception
-        if (_clients.count(client_fd) == 0)
-            throw std::invalid_argument("Client not found in Channel " + this->_topicContent);
-
-        result = _clients.find(client_fd); // Find the client with the given client_fd
-        return (result->second);           // Return a pointer to the client
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "Error setting nickname: " << e.what() << std::endl;
-    }
+    _itm = _clients.find(fd);
+    if (_itm != _clients.end())
+        return _itm->second;
     return (NULL);
+}
+
+void    Channel::addInvitedClient(std::string toAdd)
+{
+    _invitedClient.push_back(toAdd);
+}
+
+bool    Channel::isClientIsInvited(std::string &clientName)
+{
+    for (_it = _invitedClient.begin(); _it != _invitedClient.end(); ++_it)
+    {
+        if (*_it == clientName)
+            return (true);
+    }
+    return (false);
+}
+
+void Channel::sendToAllClients(std::string &message)
+{
+    for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
+    {
+        (*_itm).second->sendMessage(message);
+    }
 }

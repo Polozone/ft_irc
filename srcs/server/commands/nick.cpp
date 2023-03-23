@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 10:59:09 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 13:57:36 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/23 14:03:35 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int Server::checkIfNickAvailable(const std::string &nick) const
 {
-    for (std::map<int, Client *>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+    for (std::map<int, Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (nick == it->second->getNickname())
         {

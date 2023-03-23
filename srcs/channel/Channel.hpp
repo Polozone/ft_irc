@@ -47,9 +47,17 @@ class Channel {
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
         void                        removeClientAllowed(std::string &nameDisallowed);
+        void                        addInvitedClient(std::string toAdd);
+
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
         bool                        isClientExist(std::string &clientName);
+        bool                        isClientBan(std::string& clientName);
+        bool                        isClientIsInvited(std::string &clientName);
+
+        void                        sendToAllClients(std::string &message);
+
+        Client *                    findClientByFd(int fd);
 
         //tools
         void                        printClientList();
@@ -63,15 +71,16 @@ class Channel {
         std::vector<std::string>::iterator  _it;
         std::map<int, Client*>::iterator    _itm;
         std::map<int, Client*>              _clients;
-        std::vector<std::string>            _operators;
         std::string                         _channelName;
         std::string                         _passwd;
-        std::vector<std::string>            _privateClientAllowed;
         Client *                            _creator;
 
+        std::vector<std::string>            _operators;
+        std::vector<std::string>            _privateClientAllowed;
+        std::vector<std::string>            _invitedClient;
         std::vector<std::string>            _canSpeakList;
-        int                                 _nbrClientsConnected;
 
+        int                                 _nbrClientsConnected;
         bool                                _isPrivate; // -p  -> dont list channel form outside with /list
         bool                                _isSecret;  // -s -> idem
         bool                                _isInviteOnly; // -i -> user accepted if they were invited by operators
