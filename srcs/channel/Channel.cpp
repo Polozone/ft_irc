@@ -35,6 +35,7 @@ void    Channel::printOperators()
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
+
     if (_isInviteOnly)
         sendNumericReplies(fdClient, ERR_NEEDMOREPARAMS(clientToAdd->getNickname()));
     else
@@ -92,4 +93,25 @@ void    Channel::printSpeakList()
     for (_it = _canSpeakList.begin(); _it != _canSpeakList.end(); ++_it)
         std::cout << *_it << " ";
     std::cout << std::endl;
+}
+
+//! This function finds a client with a given file descriptor in the map of clients for a given channel
+Client *Channel::findClient(int client_fd)
+{
+    std::map<int, Client *>::iterator result; // Declare an iterator for the map
+
+    try
+    {
+        // If the client_fd is not in the map, throw an exception
+        if (_clients.count(client_fd) == 0)
+            throw std::invalid_argument("Client not found in Channel " + this->_topicContent);
+
+        result = _clients.find(client_fd); // Find the client with the given client_fd
+        return (result->second);           // Return a pointer to the client
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error setting nickname: " << e.what() << std::endl;
+    }
+    return (NULL);
 }

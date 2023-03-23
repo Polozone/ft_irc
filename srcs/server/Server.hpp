@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -19,10 +20,10 @@
 #include <algorithm>
 #include <map>
 #include <sstream>
+#include <cstddef>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
-#include "numeric_replies.hpp"
 
 #define SERVER_ADDR "127.0.0.1"
 

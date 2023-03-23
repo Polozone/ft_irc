@@ -32,10 +32,13 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     std::string tmp(buffer);
     if (tmp.find("PASS ") != std::string::npos)
     {
-        //----------------------------------------------------
-        //! we use a map instead a vector to store new clients trying to connect
-        clientsTryingToConnect[client_fd] = newClient;
-        //---------------------------------------------------
+        // NO NEED TO DO THIS ANY MORE AS IT IS ALREADY
+        // IMPLEMENTED IN FUNCTION acceptIncomingConnection()
+        // IN FILE setPoll.cpp
+        // //----------------------------------------------------
+        // //! we use a map instead a vector to store new clients trying to connect
+        // clientsTryingToConnect[client_fd] = newClient;
+        // //---------------------------------------------------
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
     }
     if (tmp.find("NICK ") != std::string::npos)
