@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/22 15:01:54 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/23 16:14:49 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void Client::sendMessage(const std::string &message)
 		}
 		total_bytes_sent += bytes_sent;
 	}
+	std::cout << buffer << "\n";
 }
 
 //! OSTREAM 

@@ -36,22 +36,24 @@ void    Channel::printOperators()
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
+
     if (_isInviteOnly)
-        sendNumericReplies(fdClient, ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
+        clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
     else
     {
         if ( _nbrClientsConnected < _maxClients)
         {
             _clients.insert(std::make_pair(fdClient, clientToAdd));
-            sendNumericReplies(fdClient, RPL_TOPIC(_channelName, _topicContent));
-            sendNumericReplies(fdClient, RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
+            _nbrClientsConnected++;
+            clientToAdd->sendMessage(RPL_TOPIC(_channelName, _topicContent));
+            clientToAdd->sendMessage(RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
             std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
             sendToAllClients(message);
-            _nbrClientsConnected++;
+            // clientToAdd->sendMessage(message);
         }
         else
         {
-            sendNumericReplies(fdClient, ERR_CHANNELISFULL(_channelName));
+            clientToAdd->sendMessage(ERR_CHANNELISFULL(_channelName));
         }
     }
 }
@@ -130,6 +132,6 @@ void Channel::sendToAllClients(std::string &message)
 {
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
     {
-        sendNumericReplies((*_itm).second->getFd(), message);
+        (*_itm).second->sendMessage(message);
     }
 }

@@ -40,6 +40,33 @@ int Server::getAddrinfo() {
     return (0);
 }
 
+//! find client by FD
+int Server::findClientByFd(int client_fd) const
+{
+    try
+    {
+        std::map<int, Client *>::const_iterator _const_it = _clients.find(client_fd);
+        if (_const_it == _clients.end())
+            throw std::invalid_argument("Invalid client fd");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error finding client: " << e.what() << '\n';
+    }
+    return (client_fd);
+}
+
+//! find client by nickname
+Client *Server::findClientByNick(const std::string &nickname)
+{
+    for (_it = _clients.begin(); _it != _clients.end(); ++_it)
+    {
+        if (_it->second->getNickname() == nickname)
+            return _it->second;
+    }
+    return 0; //standard c++98
+}
+
 int Server::getListenerSock() {
     int status;
     int on = 1;
@@ -101,7 +128,7 @@ void    Server::printChannelList()
     }
 }
 
-Channel*    Server::findChannelByName(std::string channelName, int fdClient)
+Channel*    Server::findChannelByName(std::string channelName)
 {
     std::vector<Channel *>::iterator it;
 
@@ -110,8 +137,8 @@ Channel*    Server::findChannelByName(std::string channelName, int fdClient)
         if ((*it)->getChannelName() == channelName)
             return (*it);
     }
-    // std::map<int, Client*>::iterator _it = clients.find(2);
-    // if (_it != clients.end()) {
+    // std::map<int, Client*>::iterator _it = _clients.find(2);
+    // if (_it != _clients.end()) {
     //     Client* tmp = _it->second;
     //     sendNumericReplies(fdClient, ERR_NOSUCHCHANNEL(tmp->getNickname()));
     // }
@@ -120,14 +147,14 @@ Channel*    Server::findChannelByName(std::string channelName, int fdClient)
 
 void    Server::addClientToList(Client *toAdd)
 {
-    clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
+    _clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
 }
 
 void    Server::printClientList()
 {
     std::map<int, Client *>::iterator it;
 
-    for (it = clients.begin(); it != clients.end(); ++it)
+    for (it = _clients.begin(); it != _clients.end(); ++it)
     {
         std::cout << it->first << std::endl;
         std::cout << it->second->getNickname() << std::endl;

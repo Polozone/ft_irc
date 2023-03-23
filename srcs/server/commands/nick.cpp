@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 10:59:09 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 14:26:20 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/23 17:23:13 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int Server::checkIfNickAvailable(const std::string &nick) const
 {
-    for (std::map<int, Client *>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+    for (std::map<int, Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (nick == it->second->getNickname())
         {
@@ -26,6 +26,8 @@ int Server::checkIfNickAvailable(const std::string &nick) const
 
 int Server::nickCommand(int client_fd, const std::string &nick)
 {
+    Client  &target = getClientByFd(client_fd);
+
     if (isValidFd(client_fd) == -1)
         return (-1);
     if (!checkIfNickAvailable(nick))
@@ -42,7 +44,7 @@ int Server::nickCommand(int client_fd, const std::string &nick)
     }
     else
     {
-        sendNumericReplies(client_fd, ERR_NICKNAMEINUSE(getClientByFd(client_fd).getNickname()));
+       target.sendMessage(ERR_NICKNAMEINUSE(getClientByFd(client_fd).getNickname()));
     }
     return (0);
 }

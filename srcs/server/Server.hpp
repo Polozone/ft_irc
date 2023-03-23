@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -19,10 +20,10 @@
 #include <algorithm>
 #include <map>
 #include <sstream>
+#include <cstddef>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
-#include "numeric_replies.hpp"
 
 #define SERVER_ADDR "0.0.0.0"
 
@@ -30,6 +31,7 @@
 #define FALSE 0
 
 class Channel;
+class Client;
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
@@ -62,7 +64,7 @@ private:
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
-    Channel*    findChannelByName(std::string channelName, int fdClient);
+    Channel*    findChannelByName(std::string channelName);
     
     // Commands
 
@@ -100,7 +102,7 @@ private:
     int         checkIfNickAvailable(const std::string &nick) const;
 
     // PRIVMSG
-    void PrivmsgCommand(Client& client, const std::vector<std::string>& args);
+void            privmsgCommand(Client &client, std::vector<std::string> args);
 
     // ************************************
     // |           END COMMANDS           |
@@ -124,7 +126,7 @@ private:
     void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    
+    Client *findClientByNick(const std::string &nickname);
 
     const char                  *port;
     const char                  *password;
@@ -136,8 +138,8 @@ private:
     int                         concatenate;
     std::string                 concatenatedCmd;
     std::map<int, Client*>::iterator _it;
-    std::map<int, Client *>     clients;
-    std::map<int, Client *>     clientsTryingToConnect;
+    std::map<int, Client *>     _clients;
+    std::map<int, Client *>     _clientsTryingToConnect;
     std::vector<Channel*>       _channelList;
 
 };

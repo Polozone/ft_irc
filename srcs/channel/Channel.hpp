@@ -5,8 +5,9 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstddef>
 #include "../client/Client.hpp"
-#include "../server/numeric_replies.hpp"
+#include "../server/numericReplies.hpp"
 
 class Server;
 
@@ -17,6 +18,7 @@ class Channel {
         Channel(std::string name, std::string passwd, Client * creator);
 
 
+        //Getters 
         std::string                 getPasswd(){return _passwd;};
         std::string                 getChannelName(){return _channelName;};
         bool                        getPrivateStatus(){return _isPrivate;};
@@ -25,6 +27,7 @@ class Channel {
         bool                        getTopicStatus(){return _topic;};
         int                         getMaxClient(){return _maxClients;};
 
+        // Setters
         void                        setPasswd(std::string &passwd){_passwd = passwd;};
         void                        setChannelName(std::string &channelName){_channelName = channelName;};
         void                        setPrivateStatus(bool status){_isPrivate = status;};
@@ -37,7 +40,6 @@ class Channel {
 
         void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
-
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
@@ -54,9 +56,11 @@ class Channel {
 
         Client *                    findClientByFd(int fd);
 
+        //tools
         void                        printClientList();
         void                        printOperators();
         void                        printSpeakList();
+        Client                      *findClient(int client_fd);
 
     private:
         Channel();
