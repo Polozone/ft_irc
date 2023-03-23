@@ -1,6 +1,6 @@
 #include "../server/Server.hpp"
 
-void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
+void    Server::callCommand(std::vector<std::string> inputClient, const std::string rawClientInput, int clientFd)
 {
     if (inputClient[0] == "JOIN")
         joinCommand(inputClient, clientFd);
@@ -8,6 +8,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
         parseModeCommand(inputClient, clientFd);
     else if (inputClient[0] == "NICK")
         nickCommand(clientFd, inputClient[1]);
+    else if (inputClient[0] == "PING")
+        pingCommand(clientFd, rawClientInput);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
@@ -24,7 +26,5 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
     {
         sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(inputParsed[0]));
         return ;
-    }
-
-    callCommand(inputParsed, clientFd);
+    callCommand(inputParsed, clientInput, clientFd);
 }

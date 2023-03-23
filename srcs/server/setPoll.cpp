@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 09:20:47 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/22 16:52:36 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int Server::readExistingConnection(int i)
         if (!handleCtrlD(buffer))
         {
             std::string input(buffer);
+            addCarriageReturn(buffer);
             if (checkIfNewClient(buffer, fds[i].fd))
             {
                 dprintf(2, "before set command()\n");

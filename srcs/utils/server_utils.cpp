@@ -83,3 +83,25 @@ Client &Server::getClientByFd(int client_fd) const
     }
     return (*it->second);
 }
+
+void    sendNumericReplies(int fd, const std::string &message)
+{
+    const char * casted_message = message.c_str();
+    if (send(fd, casted_message, message.size(), 0) == -1){
+        perror("send() failed");
+        return ;
+    }
+}
+
+const char *addCarriageReturn(const char *buffer)
+{
+    std::string tmp(buffer);
+
+    if (tmp.find("\r\n") != std::string::npos)
+        return (buffer);
+    const std::string carriageReturn("\r\n");
+    tmp.append(carriageReturn);
+
+    const char *newBuffer = tmp.c_str();
+    return (newBuffer);
+}
