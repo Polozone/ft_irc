@@ -26,5 +26,6 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
     {
         sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(inputParsed[0]));
         return ;
+    }
     callCommand(inputParsed, clientInput, clientFd);
 }

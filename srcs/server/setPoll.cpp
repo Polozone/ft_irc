@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 16:52:36 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/23 16:11:58 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int Server::readExistingConnection(int i)
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            // std::cout << buffer << "\n";
+            std::cout << buffer << "\n";
             if (tmp.find("printpls") != std::string::npos)
                 printClientList();
             memset(buffer, 0, sizeof(buffer));

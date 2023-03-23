@@ -34,3 +34,16 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
         i++;
     }
 }
+
+void    Server::addToChannelList(Channel *toAdd)
+{
+    std::vector<Channel*>::iterator it;
+    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    {
+        Channel* tmp = *it;
+        if (tmp->getChannelName() == toAdd->getChannelName())
+            break ;
+    }
+    if (it == _channelList.end())
+        _channelList.push_back(toAdd);
+}
