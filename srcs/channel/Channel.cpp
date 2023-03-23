@@ -46,7 +46,8 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
             sendNumericReplies(fdClient, RPL_TOPIC(_channelName, _topicContent));
             sendNumericReplies(fdClient, RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
             std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
-            sendNumericReplies(fdClient, message);
+            sendToAllClients(message);
+            // sendNumericReplies(fdClient, message);
         }
         else
         {
@@ -123,4 +124,12 @@ bool    Channel::isClientIsInvited(std::string &clientName)
             return (true);
     }
     return (false);
+}
+
+void Channel::sendToAllClients(std::string &message)
+{
+    for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
+    {
+        sendNumericReplies((*_itm).second->getFd(), message);
+    }
 }

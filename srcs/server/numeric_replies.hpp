@@ -10,15 +10,9 @@
 # define ERR_NOSUCHCHANNEL(nickname) ":localhost " + nickname + "number of params invalid\r\n"
 # define ERR_CHANNELISFULL(channel) ":localhost " + channel + " :Cannot join channel (+l)\r\n"
 # define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic + "\r\n"
-// # define RPL_TOPIC(nickname) ":localhost 332 " + nickname + "\r\n"
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":" + "awd awdd ddwa cawca" + "\r\n"
-
-//   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-
-
 # define ERR_CHANOPRIVSNEEDED(channel) ":localhost/" + channel + " :You're not channel operator\r\n"
 
-# define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use\r\n"
 
 
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
