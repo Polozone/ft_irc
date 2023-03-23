@@ -16,10 +16,16 @@ void Channel::removeOperator(std::string &opName)
     size_t  index = 0;
 
     for (_it = _operators.begin(); _it != _operators.end(); ++_it)
+    {
         if (*_it == opName)
-            break ;
-    if (_it != _operators.end())
-        _operators.erase(_operators.begin() + index);
+        {
+            _operators.erase(_operators.begin() + index);
+            return ;
+        }
+    }
+    //         break ;
+    // if (_it != _operators.end())
+    //     _operators.erase(_operators.begin() + index);
 }
 
 void Channel::addOperator(std::string opName)
@@ -132,4 +138,14 @@ void Channel::sendToAllClients(std::string &message)
     {
         sendNumericReplies((*_itm).second->getFd(), message);
     }
+}
+
+bool    Channel::isOperator(std::string clientName)
+{
+    for (_it = _operators.begin(); _it != _operators.end(); ++_it)
+    {
+        if (*_it == clientName)
+            return (true);
+    }
+    return (false);
 }

@@ -49,6 +49,7 @@ class Channel {
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
+        bool                        isOperator(std::string clientName);
 
         void                        sendToAllClients(std::string &message);
 
