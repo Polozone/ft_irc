@@ -102,6 +102,9 @@ private:
     // PRIVMSG
     void PrivmsgCommand(Client& client, const std::vector<std::string>& args);
 
+    // PART
+    int partCommand();
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************

@@ -16,7 +16,7 @@ class Channel {
 
         Channel(std::string name, std::string passwd, Client * creator);
 
-
+        // GETTERS
         std::string                 getPasswd(){return _passwd;};
         std::string                 getChannelName(){return _channelName;};
         bool                        getPrivateStatus(){return _isPrivate;};
@@ -25,6 +25,7 @@ class Channel {
         bool                        getTopicStatus(){return _topic;};
         int                         getMaxClient(){return _maxClients;};
 
+        // SETTERS
         void                        setPasswd(std::string &passwd){_passwd = passwd;};
         void                        setChannelName(std::string &channelName){_channelName = channelName;};
         void                        setPrivateStatus(bool status){_isPrivate = status;};
@@ -72,7 +73,7 @@ class Channel {
         std::vector<std::string>            _privateClientAllowed;
         std::vector<std::string>            _invitedClient;
         std::vector<std::string>            _canSpeakList;
-
+        
         int                                 _nbrClientsConnected;
         bool                                _isPrivate; // -p  -> dont list channel form outside with /list
         bool                                _isSecret;  // -s -> idem
