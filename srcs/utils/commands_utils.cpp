@@ -18,6 +18,8 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
     if (inputParsed.size() < 2)
+    {
         return ;
+    }
     callCommand(inputParsed, clientFd);
 }

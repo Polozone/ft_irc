@@ -16,6 +16,21 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
     return (buffer.substr(end, i));
 }
 
+int Server::findClientByFd(int client_fd) const
+{
+    try
+    {
+        std::map<int , Client *>::const_iterator it = clients.find(client_fd);
+        if (it == clients.end())
+            throw std::invalid_argument("Invalid client fd");
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error finding client: " << e.what() << '\n';
+    }
+    return (client_fd);
+}
+
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
     Client *newClient;

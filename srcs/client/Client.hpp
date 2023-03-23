@@ -49,7 +49,7 @@ class Client
 private:
     // Data members
     int                     _fd;
-    std::string             _nickname; 
+    std::string             _nickname;
     std::string             _username;
     std::string             _fullname;
     std::string             _hostname;

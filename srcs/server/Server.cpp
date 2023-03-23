@@ -6,6 +6,24 @@ Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
     Server::launchServer();
+    // Client *name = new Client(4, "hostnamectl");
+    // Client *name2 = new Client(5, "hostnamectl2");
+    // Client *name3 = new Client(6, "hostnamectl3");
+    // name->setNickname("Paul");
+    // name2->setNickname("Jean");
+    // name3->setNickname("Jacques");
+    // addClientToList(name);
+    // addClientToList(name2);
+    // addClientToList(name3);
+    // printClientList();
+    // Server::launchServer();
+    // std::string input;
+    // std::getline(std::cin, input);
+    // setCommand(input, 4);
+    // std::getline(std::cin, input);
+    // setCommand(input, 5);
+    // std::getline(std::cin, input);
+    // setCommand(input, 6);
 }
 
 Server::~Server() {}
@@ -114,7 +132,7 @@ void    Server::printChannelList()
     }
 }
 
-Channel*    Server::findChannelByName(std::string channelName)
+Channel*    Server::findChannelByName(std::string channelName, int fdClient)
 {
     std::vector<Channel *>::iterator it;
 
@@ -123,13 +141,18 @@ Channel*    Server::findChannelByName(std::string channelName)
         if ((*it)->getChannelName() == channelName)
             return (*it);
     }
+    // std::map<int, Client*>::iterator _it = clients.find(2);
+    // if (_it != clients.end()) {
+    //     Client* tmp = _it->second;
+    //     sendNumericReplies(fdClient, ERR_NOSUCHCHANNEL(tmp->getNickname()));
+    // }
     return (NULL);
 }
 
-// void    Server::addClientToList(Client *toAdd)
-// {
-//     clients.push_back(toAdd);
-// }
+void    Server::addClientToList(Client *toAdd)
+{
+    clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
+}
 
 void    Server::printClientList()
 {

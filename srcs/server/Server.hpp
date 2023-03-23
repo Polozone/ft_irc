@@ -24,7 +24,7 @@
 #include "../utils/string_utils.hpp"
 #include "numeric_replies.hpp"
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "0.0.0.0"
 
 #define TRUE 1
 #define FALSE 0
@@ -62,7 +62,7 @@ private:
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
-    Channel*    findChannelByName(std::string channelName);
+    Channel*    findChannelByName(std::string channelName, int fdClient);
     
     // Commands
 
@@ -132,9 +132,10 @@ private:
     struct addrinfo *           servinfo;
     int                         concatenate;
     std::string                 concatenatedCmd;
-    std::map<int, Client *>        clients;
-    std::map<int, Client *>       clientsTryingToConnect;
-    std::vector<Channel*>          _channelList;
+    std::map<int, Client*>::iterator _it;
+    std::map<int, Client *>     clients;
+    std::map<int, Client *>     clientsTryingToConnect;
+    std::vector<Channel*>       _channelList;
 
 };
 
