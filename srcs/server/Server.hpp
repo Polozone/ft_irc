@@ -75,7 +75,7 @@ private:
 
     // Init commands
     void        setCommand(std::string &clientInput, int clientFd);
-    void        callCommand(std::vector<std::string> inputClient, int clientFd);
+    void        callCommand(std::vector<std::string> inputClient, const std::string rawClientInput, int clientFd);
     
     // JOIN
     void        joinCommand(std::vector<std::string> command, int clientFd);
@@ -91,6 +91,9 @@ private:
     void        modePflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+
+    // PONG - PONG
+    int         pingCommand(int client_fd, const std::string &token) const;
 
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
@@ -140,3 +143,4 @@ int detectEOF(const char *str);
 struct pollfd createPollFdNode(int sd, int event);
 const std::string extractCommandContent(const std::string &buffer, const std::string &command);
 void    sendNumericReplies(int fd, const std::string &message);
+const char *addCarriageReturn(const char *buffer);
