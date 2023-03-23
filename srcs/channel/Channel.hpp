@@ -15,9 +15,7 @@ class Channel {
     public:
 
         Channel(std::string name, std::string passwd, Client * creator);
-        Channel(std::string name, std::string passwd, Client * creator,
-                bool isPrivate, bool _isSecret, bool _isInviteOnly,
-                std::string _topic, int _maxClients);
+
 
         std::string                 getPasswd(){return _passwd;};
         std::string                 getChannelName(){return _channelName;};
@@ -37,7 +35,7 @@ class Channel {
         void                        setStatusModerate(bool status){_isModerate = status;};                        
         void                        setTopicContent(std::string content){_topicContent = content;};
 
-        void                        addOperator(std::string &opName);
+        void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
 
         void                        addClientToChannel(int fdClient, Client *clientToAdd);

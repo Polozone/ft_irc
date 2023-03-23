@@ -31,8 +31,6 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
             addToChannelList(channel);
         }
         channel->addClientToChannel(clientFd, client);
-        channel->printClientList();
         i++;
     }
-    // printChannelList();
 }

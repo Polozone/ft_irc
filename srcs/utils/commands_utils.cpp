@@ -13,13 +13,18 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
 void    Server::setCommand(std::string &clientInput, int clientFd)
 {
     std::vector<std::string> inputParsed;
+
     if (clientInput.empty())
         return ;
+
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
+
     if (inputParsed.size() < 2)
     {
+        sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(inputParsed[0]));
         return ;
     }
+
     callCommand(inputParsed, clientFd);
 }

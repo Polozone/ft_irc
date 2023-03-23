@@ -5,7 +5,7 @@
 
 //------------------*ERROR-JOIN-----------------------
 
-# define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid\r\n"
+# define ERR_NEEDMOREPARAMS(command) ":localhost 461 " + command + " :not enough parameters\r\n"
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)\r\n"
 # define ERR_NOSUCHCHANNEL(nickname) ":localhost " + nickname + "number of params invalid\r\n"
 # define ERR_CHANNELISFULL(channel) ":localhost " + channel + " :Cannot join channel (+l)\r\n"
@@ -14,7 +14,7 @@
 # define ERR_CHANOPRIVSNEEDED(channel) ":localhost/" + channel + " :You're not channel operator\r\n"
 
 
-
+        // 482     ERR_CHANOPRIVSNEEDED "<channel> :You're not channel operator"
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 
 
