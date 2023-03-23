@@ -77,10 +77,11 @@ int Server::readExistingConnection(int i)
             std::string input(buffer);
             if (checkIfNewClient(buffer, fds[i].fd))
             {
+                dprintf(2, "before set command()\n");
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            std::cout << buffer << "\n";
+            // std::cout << buffer << "\n";
             if (tmp.find("printpls") != std::string::npos)
                 printClientList();
             memset(buffer, 0, sizeof(buffer));
@@ -115,7 +116,7 @@ int Server::polling()
 {
     int status;
 
-    std::cout << "Waiting on poll()...\n";
+    // std::cout << "Waiting on poll()...\n";
     status = poll(fds.data(), fds.size(), 180000);
     if (status < 0)
     {

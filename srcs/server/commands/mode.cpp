@@ -50,19 +50,30 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
     }
 }
 
-// MODE channelName +o-l+v+p name 1500 name2
+//   :irc.example.com MODE #foobar +o bunny
 
 void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted)
 {
+    std::string message;
+
     if ( ! clientTargeted.empty() )
     {
         if (sign == '+')
+        {
+            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted;
             targetedChannel->addOperator(clientTargeted);
+            targetedChannel->sendToAllClients(message);
+        }
         else if (sign == '-')
+        {
+            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted;
             targetedChannel->removeOperator(clientTargeted);
+            targetedChannel->sendToAllClients(message);
+        }
         else
             std::cout << "bad format, except + or - before flag" << std::endl;
     }
+    targetedChannel->printOperators();
 }
 
 void    Server::modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted)
@@ -169,7 +180,6 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
         else if (flags[i] && flags[i] == 'i')
             modeIflag(flags[i - 1], targetedChannel, actualArg);
     }
-    std::cout << targetedChannel->getPrivateStatus() << std::endl;
 }
 
 
