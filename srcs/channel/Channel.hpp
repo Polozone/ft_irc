@@ -5,8 +5,9 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstddef>
 #include "../client/Client.hpp"
-#include "../server/numeric_replies.hpp"
+#include "../server/numericReplies.hpp"
 
 class Server;
 
@@ -38,7 +39,6 @@ class Channel {
 
         void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
-
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
@@ -55,9 +55,11 @@ class Channel {
 
         Client *                    findClientByFd(int fd);
 
+        //tools
         void                        printClientList();
         void                        printOperators();
         void                        printSpeakList();
+        Client                      *findClient(int client_fd);
 
     private:
         Channel();

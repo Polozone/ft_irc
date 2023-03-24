@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   setPoll.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/23 16:11:58 by theodeville      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "./Server.hpp"
 
@@ -92,24 +81,49 @@ int Server::readExistingConnection(int i)
     return (0);
 }
 
+// This function accepts incoming client connections on a listening socket
 int Server::acceptIncomingConnection()
 {
+    socklen_t sin_size;             // Size of the client address structure
+    struct sockaddr_in client_addr; // Client address structure
     int new_sd;
+
+    // Clear the client address structure to all zeros
+    memset(&client_addr, 0, sizeof(sockaddr_in));
+
+    // Clear the size of the client address structure to all zeros
+    memset(&sin_size, 0, sizeof(socklen_t));
+
+    // Loop until a new client connection is accepted
     do
     {
-        new_sd = accept(listen_sd, NULL, NULL);
+        // Accept a new client connection on the listening socket
+        // and get a new socket descriptor for the connection
+        new_sd = accept(listen_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
+        // If the accept() call failed
         if (new_sd < 0)
         {
+            // If the error is not EWOULDBLOCK (meaning there are no more connections to accept)
             if (errno != EWOULDBLOCK)
             {
                 perror("  accept() failed");
+                // Set the end_server flag to TRUE
                 end_server = TRUE;
             }
+            // Return -1 to indicate an error occurred
             return (-1);
         }
+        // Get the local address and port of the new socket descriptor
+        getsockname(new_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
 
+        // Create a new client object and add it to the _clientsTryingToConnect map
+        this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
+
+        // Add a new pollfd structure to the fds vector for the new socket descriptor
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
+
     } while (new_sd != -1);
+
     return (0);
 }
 
