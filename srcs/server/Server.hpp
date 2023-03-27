@@ -100,12 +100,13 @@ private:
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
     int         checkIfNickAvailable(const std::string &nick) const;
+    int         checkNickUser(int client_fd, const std::string &nick);
 
     // PRIVMSG
-    void            privmsgCommand(Client &client, std::vector<std::string> args);
+    void        privmsgCommand(Client &client, std::vector<std::string> args);
 
     // PART
-    int Server::partCommand(int client_fd, const std::string &buffer);
+    int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
     // ************************************
     // |           END COMMANDS           |
