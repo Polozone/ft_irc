@@ -2,12 +2,12 @@
 #pragma once
 
 //------------------*ERROR-PRIVMSG-----------------------
-# define ERR_NORECIPIENT(nickname) ":localhost 411 " + nickname + ":No recipient given"
-# define ERR_NOTEXTTOSEND(nickname) ":localhost 473 " + nickname + ":No text to send"
-# define ERR_NOSUCHNICK(nickname) ":localhost 401"  + nickname + "No such nick"
-# define ERR_NOSUCHCHANNEL(nickname) ":localhost 403"  + nickname + "No such channel"
-# define ERR_CANNOTSENDTOCHAN(nickname) ":localhost 404" + nickname + "Cannot send to channel"
-# define ERR_ERR_NOSUCHNICK(nickname) ":localhost 406" + nickname + "There was not such nickname"
+# define ERR_NORECIPIENT(nickname) ":localhost 411 " + nickname + " :No recipient given"
+# define ERR_NOTEXTTOSEND(nickname) ":localhost 473 " + nickname + " :No text to send"
+# define ERR_NOSUCHNICK(nickname) ":localhost 401 "  + nickname + " :No such nick"
+# define ERR_NOSUCHCHANNEL(nickname) ":localhost 403 "  + nickname + " :No such channel"
+# define ERR_CANNOTSENDTOCHAN(nickname) ":localhost 404 " + nickname + " :Cannot send to channel"
+# define ERR_ERR_NOSUCHNICK(nickname) ":localhost 406 " + nickname + " :There was not such nickname"
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              

@@ -10,7 +10,7 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         nickCommand(clientFd, inputClient[1]);
     else if (inputClient[0] == "PING")
         pingCommand(clientFd, rawClientInput);
-    else if (inputClient[0] == "PRIVMSG")
+    else if (inputClient[0] == "PRIVMSG" || inputClient[0] == "MSG")
         privmsgCommand(getClientByFd(clientFd), inputClient);
     else if (inputClient[0] == "PART")
         partCommand(clientFd, inputClient);

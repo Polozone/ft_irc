@@ -131,7 +131,6 @@ int Server::polling()
 {
     int status;
 
-    // std::cout << "Waiting on poll()...\n";
     status = poll(fds.data(), fds.size(), 180000);
     if (status < 0)
     {
@@ -151,9 +150,6 @@ int Server::setPoll()
 {
     int current_size;
 
-    //!----create poll instance assigning a fd to monitor\
-    //!----and what tipe of event we want to monitor
-    //!---- we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
@@ -163,16 +159,13 @@ int Server::setPoll()
         current_size = fds.size();
         for (int i = 0; i < current_size; i++)
         {
-            //! if no event 
             if (fds[i].revents == 0)
                 continue;
-            //! if the file descriptor has hang up
             if (fds[i].revents & POLLHUP)
             {
                 closeConnection(i);
                 continue;
             }
-            //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
                 printf("  Error! revents = %d\n", fds[i].revents);
@@ -181,13 +174,11 @@ int Server::setPoll()
             }
             if (fds[i].fd == listen_sd)
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (readExistingConnection(i) == -1)
                     break;
             }

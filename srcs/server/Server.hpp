@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstring>
+#include <string>
 #include <sys/types.h>
 #include <netdb.h>
 #include <iostream>
@@ -149,9 +150,10 @@ private:
 };
 
 // Server Utils
-int handleServerErrors(const char *str, int *sd);
-int detectEOF(const char *str);
-struct pollfd createPollFdNode(int sd, int event);
-const std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void    sendNumericReplies(int fd, const std::string &message);
+int         handleServerErrors(const char *str, int *sd);
+int         detectEOF(const char *str);
+struct      pollfd createPollFdNode(int sd, int event);
+const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void        sendNumericReplies(int fd, const std::string &message);
 const char *addCarriageReturn(const char *buffer);
+std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);

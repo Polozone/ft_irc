@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/27 08:26:58 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/03/27 11:22:08 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,14 @@ bool Client::removeChannelJoined(std::string channelName) {
 	return false;
 }
 
+
+//! OSTREAM 
+std::ostream & operator<<(std::ostream &o, Client const &rhs) {
+	if (rhs.getAuthenticated() == true)
+		o << rhs.getNickname() << "!" << rhs.getUsername();
+	return o;
+}
+
 void Client::sendMessage(const std::string &message)
 {
 	std::string full_message = message + "\r\n"; // Add CRLF to the message as per the IRC protocol
@@ -117,12 +125,6 @@ void Client::sendMessage(const std::string &message)
 		}
 		total_bytes_sent += bytes_sent;
 	}
+	std::cout << buffer << '\n';
 	// std::cout << buffer << "\n";
-}
-
-//! OSTREAM 
-std::ostream & operator<<(std::ostream &o, Client const &rhs) {
-	if (rhs.getAuthenticated() == true)
-		o << rhs.getNickname() << "!" << rhs.getUsername();
-	return o;
 }
