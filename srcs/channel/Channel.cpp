@@ -135,28 +135,3 @@ void Channel::sendToAllClients(std::string &message)
         (*_itm).second->sendMessage(message);
     }
 }
-
-bool    Channel::isOperator(std::string clientName)
-{
-    for (_it = _operators.begin(); _it != _operators.end(); ++_it)
-    {
-        if (*_it == clientName)
-            return (true);
-    }
-    return (false);
-}
-// This function sends a message to all clients connected to a channel except for the one specified.
-void Channel::sendToChannel(const std::string &message, const Client &user)
-{
-    // Iterate over all clients connected to the channel
-    for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
-    {
-        // If the current client being iterated is not the one specified
-        if (user.getFd() != (*_itm).second->getFd())
-        {
-            // Send the message to the current client
-            (*_itm).second->sendMessage(message);
-        }
-    }
-}
-
