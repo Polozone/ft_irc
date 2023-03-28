@@ -7,10 +7,12 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstring>
+#include <string>
 #include <sys/types.h>
 #include <netdb.h>
 #include <iostream>
@@ -19,10 +21,10 @@
 #include <algorithm>
 #include <map>
 #include <sstream>
+#include <cstddef>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
-#include "numeric_replies.hpp"
 
 #define SERVER_ADDR "0.0.0.0"
 
@@ -30,6 +32,7 @@
 #define FALSE 0
 
 class Channel;
+class Client;
 
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
@@ -62,7 +65,7 @@ private:
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
-    Channel*    findChannelByName(std::string channelName, int fdClient);
+    Channel*    findChannelByName(std::string channelName);
     
     // Commands
 
@@ -75,7 +78,7 @@ private:
 
     // Init commands
     void        setCommand(std::string &clientInput, int clientFd);
-    void        callCommand(std::vector<std::string> inputClient, int clientFd);
+    void        callCommand(std::vector<std::string> inputClient, const std::string rawClientInput, int clientFd);
     
     // JOIN
     void        joinCommand(std::vector<std::string> command, int clientFd);
@@ -92,12 +95,19 @@ private:
     void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
 
+    // PONG - PONG
+    int         pingCommand(int client_fd, const std::string &token) const;
+
     // NICK
     int         nickCommand(int client_fd, const std::string &nick);
     int         checkIfNickAvailable(const std::string &nick) const;
+    int         checkNickUser(int client_fd, const std::string &nick);
 
     // PRIVMSG
-    void PrivmsgCommand(Client& client, const std::vector<std::string>& args);
+    void        privmsgCommand(Client &client, std::vector<std::string> args);
+
+    // PART
+    int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
     // ************************************
     // |           END COMMANDS           |
@@ -121,7 +131,7 @@ private:
     void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    
+    Client *findClientByNick(const std::string &nickname);
 
     const char                  *port;
     const char                  *password;
@@ -133,15 +143,17 @@ private:
     int                         concatenate;
     std::string                 concatenatedCmd;
     std::map<int, Client*>::iterator _it;
-    std::map<int, Client *>     clients;
-    std::map<int, Client *>     clientsTryingToConnect;
+    std::map<int, Client *>     _clients;
+    std::map<int, Client *>     _clientsTryingToConnect;
     std::vector<Channel*>       _channelList;
 
 };
 
 // Server Utils
-int handleServerErrors(const char *str, int *sd);
-int detectEOF(const char *str);
-struct pollfd createPollFdNode(int sd, int event);
-const std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void        sendNumericReplies(int fd, std::string message);
+int         handleServerErrors(const char *str, int *sd);
+int         detectEOF(const char *str);
+struct      pollfd createPollFdNode(int sd, int event);
+const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void        sendNumericReplies(int fd, const std::string &message);
+const char *addCarriageReturn(const char *buffer);
+std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);

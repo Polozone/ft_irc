@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   setPoll.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/10 13:10:58 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/22 09:20:47 by theodeville      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "./Server.hpp"
 
@@ -75,13 +64,14 @@ int Server::readExistingConnection(int i)
         if (!handleCtrlD(buffer))
         {
             std::string input(buffer);
+            addCarriageReturn(buffer);
             if (checkIfNewClient(buffer, fds[i].fd))
             {
                 dprintf(2, "before set command()\n");
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            // std::cout << buffer << "\n";
+            std::cout << buffer << "\n";
             if (tmp.find("printpls") != std::string::npos)
                 printClientList();
             memset(buffer, 0, sizeof(buffer));
@@ -91,24 +81,49 @@ int Server::readExistingConnection(int i)
     return (0);
 }
 
+// This function accepts incoming client connections on a listening socket
 int Server::acceptIncomingConnection()
 {
+    socklen_t sin_size;             // Size of the client address structure
+    struct sockaddr_in client_addr; // Client address structure
     int new_sd;
+
+    // Clear the client address structure to all zeros
+    memset(&client_addr, 0, sizeof(sockaddr_in));
+
+    // Clear the size of the client address structure to all zeros
+    memset(&sin_size, 0, sizeof(socklen_t));
+
+    // Loop until a new client connection is accepted
     do
     {
-        new_sd = accept(listen_sd, NULL, NULL);
+        // Accept a new client connection on the listening socket
+        // and get a new socket descriptor for the connection
+        new_sd = accept(listen_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
+        // If the accept() call failed
         if (new_sd < 0)
         {
+            // If the error is not EWOULDBLOCK (meaning there are no more connections to accept)
             if (errno != EWOULDBLOCK)
             {
                 perror("  accept() failed");
+                // Set the end_server flag to TRUE
                 end_server = TRUE;
             }
+            // Return -1 to indicate an error occurred
             return (-1);
         }
+        // Get the local address and port of the new socket descriptor
+        getsockname(new_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
 
+        // Create a new client object and add it to the _clientsTryingToConnect map
+        this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
+
+        // Add a new pollfd structure to the fds vector for the new socket descriptor
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
+
     } while (new_sd != -1);
+
     return (0);
 }
 
@@ -116,7 +131,6 @@ int Server::polling()
 {
     int status;
 
-    // std::cout << "Waiting on poll()...\n";
     status = poll(fds.data(), fds.size(), 180000);
     if (status < 0)
     {
@@ -136,9 +150,6 @@ int Server::setPoll()
 {
     int current_size;
 
-    //!----create poll instance assigning a fd to monitor\
-    //!----and what tipe of event we want to monitor
-    //!---- we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
@@ -148,16 +159,13 @@ int Server::setPoll()
         current_size = fds.size();
         for (int i = 0; i < current_size; i++)
         {
-            //! if no event 
             if (fds[i].revents == 0)
                 continue;
-            //! if the file descriptor has hang up
             if (fds[i].revents & POLLHUP)
             {
                 closeConnection(i);
                 continue;
             }
-            //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
                 printf("  Error! revents = %d\n", fds[i].revents);
@@ -166,13 +174,11 @@ int Server::setPoll()
             }
             if (fds[i].fd == listen_sd)
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (readExistingConnection(i) == -1)
                     break;
             }

@@ -35,8 +35,8 @@ int Server::isValidFd(int client_fd) const
 {
     try
     {
-        std::map<int, Client *>::const_iterator it = clientsTryingToConnect.find(client_fd);
-        if (it != clients.end())
+        std::map<int, Client *>::const_iterator it = _clientsTryingToConnect.find(client_fd);
+        if (it != _clients.end())
             return (client_fd);
     }
     catch(const std::exception& e)
@@ -45,8 +45,8 @@ int Server::isValidFd(int client_fd) const
     
     try
     {
-        std::map<int, Client *>::const_iterator it = clients.find(client_fd);
-        if (it == clients.end())
+        std::map<int, Client *>::const_iterator it = _clients.find(client_fd);
+        if (it == _clients.end())
             throw std::invalid_argument("Invalid client fd");
     }
     catch (const std::exception &e)
@@ -61,8 +61,8 @@ Client &Server::getClientByFd(int client_fd) const
 {
     try
     {
-        std::map<int, Client *>::const_iterator it = clientsTryingToConnect.find(client_fd);
-        if (it != clientsTryingToConnect.end())
+        std::map<int, Client *>::const_iterator it = _clientsTryingToConnect.find(client_fd);
+        if (it != _clientsTryingToConnect.end())
         {
             return (*it->second);
         }
@@ -73,8 +73,8 @@ Client &Server::getClientByFd(int client_fd) const
     std::map<int, Client *>::const_iterator it;
     try
     {
-        it = clients.find(client_fd);
-        if (it == clients.end())
+        it = _clients.find(client_fd);
+        if (it == _clients.end())
             throw std::invalid_argument("Invalid client fd");
     }
     catch (const std::exception &e)
@@ -82,4 +82,26 @@ Client &Server::getClientByFd(int client_fd) const
         std::cerr << "Error finding client: " << e.what() << '\n';
     }
     return (*it->second);
+}
+
+void    sendNumericReplies(int fd, const std::string &message)
+{
+    const char * casted_message = message.c_str();
+    if (send(fd, casted_message, message.size(), 0) == -1){
+        perror("send() failed");
+        return ;
+    }
+}
+
+const char *addCarriageReturn(const char *buffer)
+{
+    std::string tmp(buffer);
+
+    if (tmp.find("\r\n") != std::string::npos)
+        return (buffer);
+    const std::string carriageReturn("\r\n");
+    tmp.append(carriageReturn);
+
+    const char *newBuffer = tmp.c_str();
+    return (newBuffer);
 }

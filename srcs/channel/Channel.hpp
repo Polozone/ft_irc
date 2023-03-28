@@ -5,8 +5,9 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstddef>
 #include "../client/Client.hpp"
-#include "../server/numeric_replies.hpp"
+#include "../server/numericReplies.hpp"
 
 class Server;
 
@@ -16,7 +17,7 @@ class Channel {
 
         Channel(std::string name, std::string passwd, Client * creator);
 
-
+        // GETTERS
         std::string                 getPasswd(){return _passwd;};
         std::string                 getChannelName(){return _channelName;};
         bool                        getPrivateStatus(){return _isPrivate;};
@@ -25,6 +26,7 @@ class Channel {
         bool                        getTopicStatus(){return _topic;};
         int                         getMaxClient(){return _maxClients;};
 
+        // SETTERS
         void                        setPasswd(std::string &passwd){_passwd = passwd;};
         void                        setChannelName(std::string &channelName){_channelName = channelName;};
         void                        setPrivateStatus(bool status){_isPrivate = status;};
@@ -37,7 +39,6 @@ class Channel {
 
         void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
-
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
@@ -51,13 +52,18 @@ class Channel {
         bool                        isClientIsInvited(std::string &clientName);
         bool                        isOperator(std::string clientName);
 
-        void                        sendToAllClients(std::string &message);
 
         Client *                    findClientByFd(int fd);
 
+        //tools
         void                        printClientList();
         void                        printOperators();
         void                        printSpeakList();
+        Client                      *findClient(int client_fd);
+
+        //methods
+        void                        sendToAllClients(std::string &message);
+        void                        sendToChannel(const std::string &message, const Client &user);
 
     private:
         Channel();
@@ -73,7 +79,7 @@ class Channel {
         std::vector<std::string>            _privateClientAllowed;
         std::vector<std::string>            _invitedClient;
         std::vector<std::string>            _canSpeakList;
-
+        
         int                                 _nbrClientsConnected;
         bool                                _isPrivate; // -p  -> dont list channel form outside with /list
         bool                                _isSecret;  // -s -> idem
