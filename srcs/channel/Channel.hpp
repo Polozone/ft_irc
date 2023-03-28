@@ -39,6 +39,7 @@ class Channel {
 
         void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
+        bool                        isOperator(std::string clientName);
         void                        addClientToChannel(int fdClient, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
@@ -50,7 +51,6 @@ class Channel {
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
-        bool                        isOperator(std::string clientName);
 
 
         Client *                    findClientByFd(int fd);

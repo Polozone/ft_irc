@@ -11,7 +11,10 @@
 # define ERR_CHANNELISFULL(channel) ":localhost " + channel + " :Cannot join channel (+l)\r\n"
 # define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic + "\r\n"
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":" + "awd awdd ddwa cawca" + "\r\n"
-# define ERR_CHANOPRIVSNEEDED(channel) ":localhost 482 " + channel + ":You're not channel operator\r\n"
+# define ERR_CHANOPRIVSNEEDED(channel) ":localhost/" + channel + " :You're not channel operator\r\n"
+
+
+        // 482     ERR_CHANOPRIVSNEEDED "<channel> :You're not channel operator"
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 
 
