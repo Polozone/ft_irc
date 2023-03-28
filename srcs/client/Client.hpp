@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/22 16:51:28 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/28 09:55:31 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ private:
     std::string             _hostname;
     short                   _mode;
     bool                    _authenticated;
+    bool                    _operatorStatus;
     std::deque<std::string> _channelsJoined;
     std::string             _password;
 
@@ -77,6 +78,7 @@ public:
     short                   getMode() const;
     std::string             getPassword() const;
     bool                    getAuthenticated() const;
+    bool                    isOperator() const;
     std::deque<std::string> getChannelsJoined() const;
 
     // Setters
@@ -87,6 +89,7 @@ public:
     void                    setHostname(const std::string &hostname);
     void                    setPassword(const std::string &password);
     void                    setAuthenticated(bool authenticated);
+    void                    setOperatorStatus(bool status);
 
     // General Methods
     void sendMessage(const std::string &message);

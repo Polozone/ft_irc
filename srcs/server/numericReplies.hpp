@@ -7,7 +7,10 @@
 # define ERR_NOSUCHNICK(nickname) ":localhost 401 "  + nickname + " :No such nick"
 # define ERR_NOSUCHCHANNEL(nickname) ":localhost 403 "  + nickname + " :No such channel"
 # define ERR_CANNOTSENDTOCHAN(nickname) ":localhost 404 " + nickname + " :Cannot send to channel"
-# define ERR_ERR_NOSUCHNICK(nickname) ":localhost 406 " + nickname + " :There was not such nickname"
+
+//------------------*ERROR-OPER--------------------------
+# define RPL_YOUREOPER(nickname) ":localhost 381 " + nickname + " :You are now an IRC operator"
+# define ERR_PASSWDMISMATCH(nickname) ":localhost 464 " + nickname + " : :Password incorrect"
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              

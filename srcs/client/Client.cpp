@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/27 11:22:08 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/28 10:01:34 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ Client& Client::operator=(Client const &rhs)
         this->_password = rhs._password;
         this->_authenticated = rhs._authenticated;
         this->_channelsJoined = rhs._channelsJoined;
+		this->_operatorStatus = rhs._operatorStatus;
     }
     return *this;
 }
@@ -58,6 +59,7 @@ std::string Client::getPassword(void)                   const { return this->_pa
 bool Client::getAuthenticated(void)                     const { return this->_authenticated;}
 std::deque<std::string> Client::getChannelsJoined(void) const { return this->_channelsJoined;}
 bool Client::hasMode(short mode)                              { return ((this->_mode & mode) > 0); }
+bool Client::isOperator() 								const { return _operatorStatus;}
 
 //! SETTERS
 void Client::setFd(int fd) { this->_fd = fd; }
@@ -66,9 +68,8 @@ void Client::setUsername(const std::string &username) { this->_username = userna
 void Client::setFullname(const std::string &fullname) { this->_fullname = fullname; }
 void Client::setHostname(const std::string &hostname) { this->_hostname = hostname; }
 void Client::setPassword(const std::string &password) { this->_password = password; }
-void Client::setAuthenticated(bool authenticated) { 
-	this->_authenticated = authenticated; 
-}
+void Client::setAuthenticated(bool authenticated) 	  { this->_authenticated = authenticated; }
+void Client::setOperatorStatus(bool status) 		  {this->_operatorStatus = status; }
 void Client::addMode(short mode) { this->_mode |= mode; }
 void Client::removeMode(short mode) { this->_mode &= ~mode; }
 
@@ -106,6 +107,7 @@ std::ostream & operator<<(std::ostream &o, Client const &rhs) {
 	return o;
 }
 
+// METHODS
 void Client::sendMessage(const std::string &message)
 {
 	std::string full_message = message + "\r\n"; // Add CRLF to the message as per the IRC protocol

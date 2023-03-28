@@ -109,6 +109,9 @@ private:
     // PART
     int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
+    // OPER
+    void        OperCommand(Client &client, const std::vector<std::string> &args);
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************
@@ -125,28 +128,32 @@ private:
     int     isValidFd(int client_fd) const;
     void    addClientToList(Client *toAdd);
 
-
-
     // Utils
     void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
     Client *findClientByNick(const std::string &nickname);
+    void    addOperCreds(std::string user, std::string password);
+    bool checkOperCreds(const std::string &username, const std::string &password) const;
 
-    const char                  *port;
-    const char                  *password;
-    int                         listen_sd;
-    int                         end_server;
-    int                         close_conn;
-    std::vector<struct pollfd>  fds;
-    struct addrinfo *           servinfo;
-    int                         concatenate;
-    std::string                 concatenatedCmd;
-    std::map<int, Client*>::iterator _it;
-    std::map<int, Client *>     _clients;
-    std::map<int, Client *>     _clientsTryingToConnect;
-    std::vector<Channel*>       _channelList;
+    // Variables
+    const char *port;
+    const char *password;
+    std::string _serverName;
+    int listen_sd;
+    int end_server;
+    int close_conn;
+    std::vector<struct pollfd> fds;
+    struct addrinfo *servinfo;
+    int concatenate;
 
+    // Containers
+    std::string concatenatedCmd;
+    std::map<int, Client *>::iterator _it;
+    std::map<int, Client *> _clients;
+    std::map<int, Client *> _clientsTryingToConnect;
+    std::map<std::string, std::string> _operatorCredentials;
+    std::vector<Channel *> _channelList;
 };
 
 // Server Utils
