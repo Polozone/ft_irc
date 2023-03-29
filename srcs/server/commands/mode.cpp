@@ -1,14 +1,14 @@
 
 #include "../Server.hpp"
 
-static bool   isFlagNeedArgs(char flag)
-{
-    if (flag == 't' || flag == 'l' || flag == 'o')
-        return (true);
-    else if (flag != 'p' || flag != 's' || flag != 'i' || flag != 'm' || flag != 'v')
-        return (false);
-    return false;
-}
+// static bool   isFlagNeedArgs(char flag)
+// {
+//     if (flag == 't' || flag == 'l' || flag == 'o')
+//         return (true);
+//     else if (flag != 'p' || flag != 's' || flag != 'i' || flag != 'm' || flag != 'v')
+//         return (false);
+//     return false;
+// }
 
 static int    parseFlags(std::string &flags)
 {
@@ -35,11 +35,9 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
 
     std::stringstream ss(limitString);
     ss >> limit;
-    if ( ! limitString.empty())
+    if ( ! limitString.empty() && isDigits(limitString))
     {
-            if (sign == '+')
-            targetedChannel->setMaxClient(limit);
-        else if (sign == '-')
+        if (sign == '+' || sign == '-')
             targetedChannel->setMaxClient(limit);
         else
             std::cout << "bad format, except + or - before flag" << std::endl;
@@ -48,9 +46,8 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
     {
         std::cout << "flag -l: invalid argument" << std::endl;
     }
+    std::cout << "limit of " << targetedChannel->getChannelName() << " is " << targetedChannel->getMaxClient() << std::endl;
 }
-
-//   :irc.example.com MODE #foobar +o bunny
 
 void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted)
 {
@@ -60,13 +57,14 @@ void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clien
     {
         if (sign == '+')
         {
-            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted;
+            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted + "\r\n";
             targetedChannel->addOperator(clientTargeted);
             targetedChannel->sendToAllClients(message);
         }
         else if (sign == '-')
         {
-            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted;
+            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted + "\r\n";
+            std::cout << "target == " << clientTargeted << std::endl;
             targetedChannel->removeOperator(clientTargeted);
             targetedChannel->sendToAllClients(message);
         }
@@ -185,6 +183,8 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
 
 void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 {
+    Client client = getClientByFd(clientFd);
+
     std::string targetChannelName;
     Channel *targetedChannel;
     int flagNeedArgs = 0;
@@ -196,6 +196,14 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
         std::cout << "Channel does not exist" << std::endl;
         return ;
     }
+
+    if (targetedChannel->isOperator(client.getNickname()) == false)
+    {
+        std::cout << ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()) << std::endl;
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()));
+        return ;
+    }
+
     if (command.size() > 2)
     {
         if ((flagNeedArgs = parseFlags(command[2])) == -1)

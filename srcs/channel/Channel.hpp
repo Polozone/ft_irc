@@ -47,10 +47,14 @@ class Channel {
 
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
+        void                        sendMsgToSpeakList(std::string &message);
+
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
+        bool                        isOperator(std::string clientName);
 
+        void                        sendToChannel(const std::string &message, const Client &user);
         void                        sendToAllClients(std::string &message);
 
         Client *                    findClientByFd(int fd);
