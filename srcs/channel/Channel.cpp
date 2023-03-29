@@ -44,6 +44,7 @@ void    Channel::printOperators()
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
 {
+
     if (_isInviteOnly)
         clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
     else

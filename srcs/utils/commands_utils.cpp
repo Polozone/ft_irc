@@ -1,6 +1,6 @@
 #include "../server/Server.hpp"
 
-void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
+void    Server::callCommand(std::vector<std::string> inputClient, const std::string rawClientInput, int clientFd)
 {
     if (inputClient[0] == "JOIN")
         joinCommand(inputClient, clientFd);
@@ -8,6 +8,12 @@ void    Server::callCommand(std::vector<std::string> inputClient, int clientFd)
         parseModeCommand(inputClient, clientFd);
     else if (inputClient[0] == "NICK")
         nickCommand(clientFd, inputClient[1]);
+    else if (inputClient[0] == "PING")
+        pingCommand(clientFd, rawClientInput);
+    else if (inputClient[0] == "PRIVMSG")
+        privmsgCommand(getClientByFd(clientFd), inputClient);
+    else if (inputClient[0] == "PART")
+        partCommand(clientFd, inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
@@ -17,6 +23,9 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
     if (clientInput.empty())
         return ;
 
+    if (isValidFd(clientFd) == -1)
+        return ;
+    
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
 
@@ -25,6 +34,5 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
         sendNumericReplies(clientFd, ERR_NEEDMOREPARAMS(inputParsed[0]));
         return ;
     }
-
-    callCommand(inputParsed, clientFd);
+    callCommand(inputParsed, clientInput, clientFd);
 }

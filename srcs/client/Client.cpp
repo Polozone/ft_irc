@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
+/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/22 15:01:54 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/27 08:26:58 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void Client::sendMessage(const std::string &message)
 		}
 		total_bytes_sent += bytes_sent;
 	}
+	// std::cout << buffer << "\n";
 }
 
 //! OSTREAM 
