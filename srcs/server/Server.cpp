@@ -5,7 +5,6 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
-    addOperCreds("Admin", "42lyon");
     Server::launchServer();
 }
 
@@ -29,7 +28,6 @@ Server  &Server::operator=(const Server &rhs)
 int Server::getAddrinfo() {
     int status;
     struct addrinfo hints;
-    char hostname[NI_MAXHOST];
 
     std::memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -39,20 +37,10 @@ int Server::getAddrinfo() {
         std::cerr << "getaddrinfo error: " << gai_strerror(status) << std::endl;
         return (-1);
     }
-
-     // Extract the hostname from the first addrinfo struct in the list
-    status = getnameinfo(servinfo->ai_addr, servinfo->ai_addrlen, hostname, sizeof(hostname), NULL, 0, 0);
-    if (status != 0)
-    {
-        // Print an error message if getnameinfo fails
-        std::cerr << "getnameinfo: " << gai_strerror(status) << std::endl;
-        return (-1);
-    }
-    this->_serverName = hostname;
     return (0);
 }
 
-// find client by FD
+//! find client by FD
 int Server::findClientByFd(int client_fd) const
 {
     try
@@ -68,7 +56,7 @@ int Server::findClientByFd(int client_fd) const
     return (client_fd);
 }
 
-// find client by nickname
+//! find client by nickname
 Client *Server::findClientByNick(const std::string &nickname)
 {
     for (_it = _clients.begin(); _it != _clients.end(); ++_it)
@@ -162,9 +150,9 @@ void    Server::addClientToList(Client *toAdd)
     _clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
 }
 
-void    Server::printClientList()
+void    Server::printClientList() const
 {
-    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::const_iterator it;
 
     for (it = _clients.begin(); it != _clients.end(); ++it)
     {
@@ -173,48 +161,3 @@ void    Server::printClientList()
     }
 }
 
-/**
-    @brief This function adds a new operator to the Server object with the given username \ 
-    and password.
-    @param user A string representing the username of the new operator.
-    @param password A string representing the password of the new operator.
-    @throws std::runtime_error If the given username already exists in the map of operator \ 
-    credentials.
-    @note This function does not return anything; instead, it throws an exception if the \ 
-    given username already exists.
-*/
-void Server::addOperCreds(std::string user, std::string password)
-{
-    try
-    {
-        std::map<std::string, std::string>::iterator it = this->\
-        _operatorCredentials.find(user);
-
-        if (it != this->_operatorCredentials.end())
-        {
-            throw std::runtime_error("Credentials for this user already established");
-        }
-        this->_operatorCredentials[user] = password;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-    }
-}
-
-/**
-    @brief This function checks if the given username and password match the operator \
-    stored in the Server object.
-    @param username A constant reference to a string representing the username of the operator.
-    @param password A constant reference to a string representing the password of the operator.
-    @return A boolean value indicating if the provided credentials match or not.
-*/
-bool Server::checkOperCreds(const std::string &username, const std::string &password) const
-{
-    std::map<std::string, std::string>::const_iterator it = _operatorCredentials.find(username);
-
-    if (it == _operatorCredentials.end())
-        return false; // Username not found
-
-    return  (password == it->second);
-}

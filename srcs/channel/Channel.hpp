@@ -51,6 +51,7 @@ class Channel {
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
 
+        void                        sendToAllClients(std::string &message);
 
         Client *                    findClientByFd(int fd);
 
@@ -59,10 +60,6 @@ class Channel {
         void                        printOperators();
         void                        printSpeakList();
         Client                      *findClient(int client_fd);
-
-        //methods
-        void                        sendToAllClients(std::string &message);
-        void                        sendToChannel(const std::string &message, const Client &user);
 
     private:
         Channel();

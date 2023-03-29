@@ -14,8 +14,6 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         privmsgCommand(getClientByFd(clientFd), inputClient);
     else if (inputClient[0] == "PART")
         partCommand(clientFd, inputClient);
-    else if (inputClient[0] == "OPER")
-        OperCommand(getClientByFd(clientFd), inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
@@ -25,6 +23,9 @@ void    Server::setCommand(std::string &clientInput, int clientFd)
     if (clientInput.empty())
         return ;
 
+    if (isValidFd(clientFd) == -1)
+        return ;
+    
     std::string withoutExtraSpace = removeExtraSpaces(clientInput);
     inputParsed = split(withoutExtraSpace, ' ');
 

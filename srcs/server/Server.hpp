@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstring>
-#include <string>
 #include <sys/types.h>
 #include <netdb.h>
 #include <iostream>
@@ -109,9 +108,6 @@ private:
     // PART
     int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
-    // OPER
-    void        OperCommand(Client &client, const std::vector<std::string> &args);
-
     // ************************************
     // |           END COMMANDS           |
     // ************************************
@@ -119,7 +115,6 @@ private:
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
-    void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
@@ -128,39 +123,37 @@ private:
     int     isValidFd(int client_fd) const;
     void    addClientToList(Client *toAdd);
 
+
+
     // Utils
-    void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    Client *findClientByNick(const std::string &nickname);
-    void    addOperCreds(std::string user, std::string password);
-    bool checkOperCreds(const std::string &username, const std::string &password) const;
+    Client  *findClientByNick(const std::string &nickname);
+    int     removeClientFromMap(int client_fd);
 
-    // Variables
-    const char *port;
-    const char *password;
-    std::string _serverName;
-    int listen_sd;
-    int end_server;
-    int close_conn;
-    std::vector<struct pollfd> fds;
-    struct addrinfo *servinfo;
-    int concatenate;
+    // DEBUG FUNCTIONS
+    void    printClientList() const;
+    void    printClientMaps() const;
 
-    // Containers
-    std::string concatenatedCmd;
-    std::map<int, Client *>::iterator _it;
-    std::map<int, Client *> _clients;
-    std::map<int, Client *> _clientsTryingToConnect;
-    std::map<std::string, std::string> _operatorCredentials;
-    std::vector<Channel *> _channelList;
+    const char                  *port;
+    const char                  *password;
+    int                         listen_sd;
+    int                         end_server;
+    int                         close_conn;
+    std::vector<struct pollfd>  fds;
+    struct addrinfo *           servinfo;
+    int                         concatenate;
+    std::string                 concatenatedCmd;
+    std::map<int, Client*>::iterator _it;
+    std::map<int, Client *>     _clients;
+    std::map<int, Client *>     _clientsTryingToConnect;
+    std::vector<Channel*>       _channelList;
+
 };
 
 // Server Utils
-int         handleServerErrors(const char *str, int *sd);
-int         detectEOF(const char *str);
-struct      pollfd createPollFdNode(int sd, int event);
-const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void        sendNumericReplies(int fd, const std::string &message);
-const char *addCarriageReturn(const char *buffer);
-std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
+int handleServerErrors(const char *str, int *sd);
+int detectEOF(const char *str);
+struct pollfd createPollFdNode(int sd, int event);
+const std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void    sendNumericReplies(int fd, const std::string &message);
