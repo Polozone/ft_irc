@@ -34,7 +34,7 @@ int Server::checkNickUser(int client_fd, const std::string &nick)
     int i = 0;
     int j = 0;
     
-    while (user[i] != ' ')
+    while (user[i] && user[i] != ' ')
         i++;
     
     const std::string userFirstParam(user.substr(j, i));
