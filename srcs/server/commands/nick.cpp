@@ -51,19 +51,14 @@ int Server::nickCommand(int client_fd, const std::string &nick)
 {
     Client  &target = getClientByFd(client_fd);
 
-    dprintf(2, "test7\n");
     if (isValidFd(client_fd) == -1)
         return (-1);
-    dprintf(2, "test8\n");
     if (!checkIfNickAvailable(nick))
     {
-        dprintf(2, "test8.5\n");
         const std::string oldnick(getClientByFd(client_fd).getNickname());
         getClientByFd(client_fd).setNickname(nick);
-        dprintf(2, "test9\n");
         const std::string newnick(getClientByFd(client_fd).getNickname());
         checkNickUser(client_fd, nick);
-        dprintf(2, "test10\n");
         sendNumericReplies(client_fd, RPL_NICK(oldnick, newnick));
     }
     else
