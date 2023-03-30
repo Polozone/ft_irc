@@ -38,6 +38,8 @@ int Server::checkNickUser(int client_fd, const std::string &nick)
         i++;
     
     const std::string userFirstParam(user.substr(j, i));
+    std::cout << userFirstParam << std::endl;
+    std::cout << nick << std::endl;
     if (userFirstParam != nick)
     {
         newUser = user.replace(j, i, nick);
