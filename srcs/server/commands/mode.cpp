@@ -184,6 +184,8 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 {
     std::string targetChannelName;
     Channel *targetedChannel;
+    Client client = getClientByFd(clientFd);
+    std::cout << "client name is " << client.getNickname() << std::endl;
     int flagNeedArgs = 0;
 
     if (command.size() > 1)
