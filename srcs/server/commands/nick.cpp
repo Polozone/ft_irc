@@ -34,7 +34,7 @@ int Server::checkNickUser(int client_fd, const std::string &nick)
     int i = 0;
     int j = 0;
     
-    while (user[i] != ' ')
+    while (user[i] && user[i] != ' ')
         i++;
     
     const std::string userFirstParam(user.substr(j, i));
@@ -55,16 +55,11 @@ int Server::nickCommand(int client_fd, const std::string &nick)
         return (-1);
     if (!checkIfNickAvailable(nick))
     {
+        const std::string oldnick(getClientByFd(client_fd).getNickname());
         getClientByFd(client_fd).setNickname(nick);
+        const std::string newnick(getClientByFd(client_fd).getNickname());
         checkNickUser(client_fd, nick);
-        const std::string sPort(port);
-        const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
-                                          getClientByFd(client_fd).getNickname() + " :Nick setup\r\n";
-        if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
-        {
-            std::cerr << "Send error\n";
-            return (-1);
-        }
+        sendNumericReplies(client_fd, RPL_NICK(oldnick, newnick));
     }
     else
     {

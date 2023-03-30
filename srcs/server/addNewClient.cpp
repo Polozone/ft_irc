@@ -18,17 +18,11 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
 
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
-    Client *newClient;
-    //! Make sure the client_fd exits
+
+    if (isValidFd(client_fd) == -1)
+        return (-1);
     if (_clients.count(client_fd))
         return (1);
-    if (_clientsTryingToConnect.count(client_fd) == 0)
-    {
-        printf("New client\n");
-        newClient = new Client;
-        newClient->setFd(client_fd);
-        _clientsTryingToConnect[client_fd] = newClient;
-    }
     std::string tmp(buffer);
     if (tmp.find("PASS ") != std::string::npos)
     {
@@ -53,20 +47,6 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
     return (0);
 }
 
-void Server::addNick(int client_fd, const std::string &nick)
-{
-    try {
-        //! Make sure the client_fd is valid
-        if (_clientsTryingToConnect.count(client_fd) == 0)
-            throw std::invalid_argument("Invalid client_fd");
-
-        //! Set the nickname of the client with the given client_fd
-        _clientsTryingToConnect[client_fd]->setNickname(nick);
-    } catch (const std::exception &e) {
-        std::cerr << "Error setting nickname: " << e.what() << std::endl;
-    }
-}
-
 void Server::addUser(int client_fd, const std::string &user)
 {
     try
@@ -81,6 +61,7 @@ void Server::addUser(int client_fd, const std::string &user)
     catch(const std::exception& e)
     {
         std::cerr << "Error setting username: " << e.what() << std::endl;
+        return ;
     }
     
     _clientsTryingToConnect[client_fd]->setUsername(user);
@@ -131,6 +112,5 @@ int Server::wrongPassword(int client_fd)
         std::cerr << "Send error\n";
         return (-1);
     }
-    _clientsTryingToConnect.erase(client_fd);
     return (1);
 }

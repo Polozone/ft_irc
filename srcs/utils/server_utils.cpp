@@ -86,22 +86,58 @@ Client &Server::getClientByFd(int client_fd) const
 
 void    sendNumericReplies(int fd, const std::string &message)
 {
-    const char * casted_message = message.c_str();
-    if (send(fd, casted_message, message.size(), 0) == -1){
+    if (send(fd, message.data(), message.size(), 0) == -1){
         perror("send() failed");
         return ;
     }
 }
 
-const char *addCarriageReturn(const char *buffer)
+int Server::removeClientFromMap(int client_fd)
 {
-    std::string tmp(buffer);
+    std::map<int, Client *>::iterator it;
 
-    if (tmp.find("\r\n") != std::string::npos)
-        return (buffer);
-    const std::string carriageReturn("\r\n");
-    tmp.append(carriageReturn);
+    it = _clientsTryingToConnect.find(client_fd);
+    if (it != _clientsTryingToConnect.end())
+    {
+        _clientsTryingToConnect.erase(it);
+        return (0);
+    }
+    
+    it = _clients.find(client_fd);
+    if (it != _clients.end())
+    {
+        _clients.erase(it);
+        return (0);
+    }
+    std::cerr << "error: Client to erase not found\n";
+    return (-1);
+}
 
-    const char *newBuffer = tmp.c_str();
-    return (newBuffer);
+
+// DEBUG FUNCTIONS
+void Server::printClientMaps() const
+{
+    std::map<int, Client *>::const_iterator it;
+    int i = 0;
+
+    std::cout << "_clients - Size: " << _clients.size() << "\n";
+    for(it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        std::cout << "[" << i << "]" << " fd: " << it->first << "\n";
+        std::cout << " NICK: " << it->second->getNickname() << "\n";
+        std::cout << " USER: " << it->second->getUsername() << "\n";
+        std::cout << " PASS: " << it->second->getPassword() << "\n";
+        std::cout << "\n";
+        i++;
+    }
+    std::cout << "_clientsTryingToConnect - Size: " << _clientsTryingToConnect.size() << "\n";
+    for(it = _clientsTryingToConnect.begin(); it != _clientsTryingToConnect.end(); ++it)
+    {
+        std::cout << "[" << i << "]" << " fd: " << it->first << "\n";
+        std::cout << " NICK: " << it->second->getNickname() << "\n";
+        std::cout << " USER: " << it->second->getUsername() << "\n";
+        std::cout << " PASS: " << it->second->getPassword() << "\n";
+        std::cout << "\n";
+        i++;
+    }
 }

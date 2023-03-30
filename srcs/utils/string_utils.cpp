@@ -30,3 +30,8 @@ std::vector<std::string> split(std::string str, char separator)
     }
     return result;
 }
+
+bool isDigits(const std::string &str)
+{
+    return str.find_first_not_of("0123456789") == std::string::npos;
+}

@@ -23,9 +23,9 @@ int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
     if (isValidFd(client_fd))
     {
         tmp->removeClientByFd(client_fd);
-        std::string message = ":" + getClientByFd(client_fd).getNickname() + \
-            + " " + getClientByFd(client_fd).getUsername() + "@localhost PART #" + clientInput[1] + " :Is leaving\r\n";
-        std::cout << message << std::endl;
+        std::string message = ":" + getClientByFd(client_fd).getNickname() + "!tdeville PART " + tmp->getChannelName() + " :WeeChat 3.5\r\n";
+        std::cout << "Message: " << message << std::endl;
+        send(client_fd, message.data(), message.size(), 0);
         tmp->sendToAllClients(message);
     }
     return (0);

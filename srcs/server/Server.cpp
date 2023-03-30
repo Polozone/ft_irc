@@ -150,9 +150,9 @@ void    Server::addClientToList(Client *toAdd)
     _clients.insert(std::pair<int, Client*>(toAdd->getFd(), toAdd));
 }
 
-void    Server::printClientList()
+void    Server::printClientList() const
 {
-    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::const_iterator it;
 
     for (it = _clients.begin(); it != _clients.end(); ++it)
     {

@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstring>
-#include <string>
 #include <sys/types.h>
 #include <netdb.h>
 #include <iostream>
@@ -116,7 +115,6 @@ private:
 
     // Add new Client
     int     checkIfNewClient(const char *buffer, int client_fd);
-    void    addNick(int client_fd, const std::string &nick);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
@@ -128,10 +126,14 @@ private:
 
 
     // Utils
-    void    printClientList();
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    Client *findClientByNick(const std::string &nickname);
+    Client  *findClientByNick(const std::string &nickname);
+    int     removeClientFromMap(int client_fd);
+
+    // DEBUG FUNCTIONS
+    void    printClientList() const;
+    void    printClientMaps() const;
 
     const char                  *port;
     const char                  *password;
@@ -150,10 +152,8 @@ private:
 };
 
 // Server Utils
-int         handleServerErrors(const char *str, int *sd);
-int         detectEOF(const char *str);
-struct      pollfd createPollFdNode(int sd, int event);
-const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void        sendNumericReplies(int fd, const std::string &message);
-const char *addCarriageReturn(const char *buffer);
-std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
+int handleServerErrors(const char *str, int *sd);
+int detectEOF(const char *str);
+struct pollfd createPollFdNode(int sd, int event);
+const std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void    sendNumericReplies(int fd, const std::string &message);
