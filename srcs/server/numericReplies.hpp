@@ -10,7 +10,21 @@
 
 //------------------*ERROR-OPER--------------------------
 # define RPL_YOUREOPER(nickname) ":localhost 381 " + nickname + " :You are now an IRC operator"
-# define ERR_PASSWDMISMATCH(nickname) ":localhost 464 " + nickname + " : :Password incorrect"
+# define ERR_PASSWDMISMATCH(nickname) ":localhost 464 " + nickname + " :Password incorrect"
+
+//------------------*ERROR-MODE_USER--------------------------
+# define ERR_USERSDONTMATCH(nickname) ":localhost 502 " + nickname + " :Cannot change mode for other users"
+# define ERR_UMODEUNKNOWNFLAG(nickname) ":localhost 501 " + nickname + " :Unknown MODE flag"
+#define  RPL_UMODEIS(nickname, user_modes) ("221 " + nickname + " " + user_modes)
+
+# define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid"
+# define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
+# define ERR_CHANNELISFULL(channel) ":localhost 471" + channel + " :Cannot join channel (+l)"
+# define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic
+# define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":" + "awd awdd ddwa cawca"
+# define ERR_CHANOPRIVSNEEDED(channel, user) ":localhost 482 " + user + " " + channel + " :You're not channel operator"
+# define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
+
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              
@@ -20,15 +34,6 @@
 // # define ERR_NOSUCHCHANNEL(nickname) ":localhost/" +   + nickname + "number of params invalid"               
 // # define ERR_TOOMANYCHANNELS(nickname) ":localhost/" +   + nickname + "number of params invalid"
 // # define RPL_TOPIC(nickname) ":localhost/" +   + nickname + "number of params invalid"
-# define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid"
-# define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
-# define ERR_CHANNELISFULL(channel) ":localhost 471" + channel + " :Cannot join channel (+l)"
-# define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic
-# define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":" + "awd awdd ddwa cawca"
-# define ERR_CHANOPRIVSNEEDED(channel) ":localhost 482" + channel + " :You're not channel operator"
-# define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
-
-
 
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 
