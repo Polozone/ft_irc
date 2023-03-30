@@ -26,6 +26,7 @@
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
+# define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
 
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 
