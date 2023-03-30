@@ -18,12 +18,14 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
 
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
-
+    dprintf(2, "test1\n");
     if (isValidFd(client_fd) == -1)
         return (-1);
+    dprintf(2, "test2\n");
     if (_clients.count(client_fd))
         return (1);
     std::string tmp(buffer);
+    dprintf(2, "test3\n");
     if (tmp.find("PASS ") != std::string::npos)
     {
         // NO NEED TO DO THIS ANY MORE AS IT IS ALREADY
@@ -35,15 +37,18 @@ int Server::checkIfNewClient(const char *buffer, int client_fd)
         // //---------------------------------------------------
         addPassword(client_fd, extractCommandContent(tmp, "PASS "));
     }
+    dprintf(2, "test4\n");
     if (tmp.find("NICK ") != std::string::npos)
     {
         nickCommand(client_fd, extractCommandContent(buffer, "NICK "));
     }
+    dprintf(2, "test5\n");
     if (tmp.find("USER ") != std::string::npos)
     {
         addUser(client_fd, extractCommandContent(tmp, "USER "));
         handleConnection(client_fd);
     }
+    dprintf(2, "test6\n");
     return (0);
 }
 
