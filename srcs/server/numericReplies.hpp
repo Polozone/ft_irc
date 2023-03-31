@@ -22,7 +22,7 @@
 # define ERR_CHANNELISFULL(channel) ":localhost 471" + channel + " :Cannot join channel (+l)"
 # define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":\r\n"
-# define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost/6666 482 " + nickname + " " + channel + " :You're not channel operator\r\n"
+# define ERR_CHANOPRIVSNEEDED(channel) ":" + channel + " :You're not channel operator"
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"

@@ -199,8 +199,8 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 
     if (targetedChannel->isOperator(client.getNickname()) == false)
     {
-        std::cout << ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()) << std::endl;
-        client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()));
+        std::cout << ERR_CHANOPRIVSNEEDED(targetedChannel->getChannelName()) << std::endl;
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(targetedChannel->getChannelName()));
         return ;
     }
 
