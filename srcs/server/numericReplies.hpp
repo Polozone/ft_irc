@@ -35,7 +35,6 @@
 // # define ERR_NOSUCHCHANNEL(nickname) ":localhost/" +   + nickname + "number of params invalid"               
 // # define ERR_TOOMANYCHANNELS(nickname) ":localhost/" +   + nickname + "number of params invalid"
 // # define RPL_TOPIC(nickname) ":localhost/" +   + nickname + "number of params invalid"
-<<<<<<< HEAD
 # define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid"
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
 # define ERR_CHANNELISFULL(channel) ":localhost 471" + channel + " :Cannot join channel (+l)"
@@ -45,8 +44,6 @@
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
-=======
->>>>>>> bf4689e7960ada0f8d9b443cca5410f0d342226a
 
 
 
