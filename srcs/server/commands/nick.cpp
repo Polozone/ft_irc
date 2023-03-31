@@ -55,6 +55,12 @@ int Server::nickCommand(int client_fd, const std::string &nick)
 
     if (isValidFd(client_fd) == -1)
         return (-1);
+    if (nick[0] == '#')
+    {
+        const std::string sPort(port);
+        sendNumericReplies(client_fd, ERR_ERRONEUSNICKNAME(sPort, getClientByFd(client_fd).getNickname()));
+        return (1);
+    }
     if (!checkIfNickAvailable(nick))
     {
         const std::string oldnick(getClientByFd(client_fd).getNickname());
