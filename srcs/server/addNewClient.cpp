@@ -101,6 +101,7 @@ int Server::welcomeClient(int client_fd)
     //! map intead of vector 
     _clients[client_fd] = _clientsTryingToConnect[client_fd];
     _clientsTryingToConnect.erase(client_fd);
+    checkNickUser(client_fd, getClientByFd(client_fd).getNickname());
     return (0);
 }
 
