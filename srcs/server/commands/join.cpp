@@ -34,7 +34,6 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
                 channel = new Channel(channelList[i], "", client);
             addToChannelList(channel);
         }
-        // std::cout << "channel name = " << channel->getChannelName() << "passwd =" << channel->getPasswd() << std::endl;
         if (i < passwdList.size())
             channel->addClientToChannel(clientFd, client, passwdList[i]);
         else
