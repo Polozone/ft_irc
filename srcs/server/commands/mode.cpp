@@ -1,15 +1,6 @@
 
 #include "../Server.hpp"
 
-// static bool   isFlagNeedArgs(char flag)
-// {
-//     if (flag == 't' || flag == 'l' || flag == 'o')
-//         return (true);
-//     else if (flag != 'p' || flag != 's' || flag != 'i' || flag != 'm' || flag != 'v')
-//         return (false);
-//     return false;
-// }
-
 static int    parseFlags(std::string &flags)
 {
     std::string::iterator it;

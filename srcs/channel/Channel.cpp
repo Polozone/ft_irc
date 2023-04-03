@@ -3,12 +3,19 @@
 Channel::Channel(){}
 
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
-    : _channelName(channelName), _passwd(passwd), _creator(creator),
+    : _channelName(checkChannelName(channelName)), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),
     _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false)
 {
     addClientToChannel(creator->getFd(), creator);
     addOperator(creator->getNickname());
+}
+
+std::string Channel::checkChannelName(std::string &channelName)
+{
+    if (channelName[0] != '#')
+        channelName.insert(0, "#");
+    return (channelName);
 }
 
 void Channel::removeOperator(std::string &opName)

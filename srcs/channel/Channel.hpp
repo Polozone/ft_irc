@@ -54,6 +54,9 @@ class Channel {
         bool                        isClientIsInvited(std::string &clientName);
         bool                        isOperator(std::string clientName);
 
+        std::string                        checkChannelName(std::string &channelName);
+
+
         void                        sendToChannel(const std::string &message, const Client &user);
         void                        sendToAllClients(std::string &message);
 

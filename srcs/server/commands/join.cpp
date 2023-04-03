@@ -10,6 +10,7 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
         channelList = split(command[1], ',');
     else
         channelList.push_back(command[1]);
+
     if (command.size() > 2)
     {
         if (command[2].find(',') != std::string::npos)
@@ -17,8 +18,10 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
         else
             passwdList.push_back(command[2]);
     }
+
     std::vector<std::string>::iterator it;
     size_t i = 0;
+
     for (it = channelList.begin(); it != channelList.end(); ++it)
     {
         Channel *channel;
@@ -30,6 +33,7 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
                 channel = new Channel(channelList[i], "", client);
             addToChannelList(channel);
         }
+        std::cout << "channel name = " << channel->getChannelName() << std::endl;
         channel->addClientToChannel(clientFd, client);
         i++;
     }
