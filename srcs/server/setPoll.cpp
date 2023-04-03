@@ -51,7 +51,7 @@ int Server::readExistingConnection(int i)
     {
         if (errno != EWOULDBLOCK)
         {
-            perror("  recv() failed");
+            perror("recv() failed");
             close_conn = TRUE;
         }
         return (-1);
