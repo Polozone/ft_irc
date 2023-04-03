@@ -25,7 +25,7 @@
 # define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n"
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
 
-# define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick
+# define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              
@@ -35,6 +35,9 @@
 // # define ERR_NOSUCHCHANNEL(nickname) ":localhost/" +   + nickname + "number of params invalid"               
 // # define ERR_TOOMANYCHANNELS(nickname) ":localhost/" +   + nickname + "number of params invalid"
 // # define RPL_TOPIC(nickname) ":localhost/" +   + nickname + "number of params invalid"
+# define ERR_ERRONEUSNICKNAME(port, nickname) ":localhost/" + port + " 432 " + nickname + " :Invalid Nickname\r\n"
+# define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
+# define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
 
 //   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 
