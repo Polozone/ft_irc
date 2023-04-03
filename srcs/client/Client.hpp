@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/30 11:13:45 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/03 13:59:02 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ public:
     void                    setHostname(const std::string &hostname);
     void                    setPassword(const std::string &password);
     void                    setAuthenticated(bool authenticated);
+    void                    setOperatorStatus(bool status);
 
     // General Methods
     void sendMessage(const std::string &message);
