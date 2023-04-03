@@ -48,14 +48,13 @@ void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clien
     {
         if (sign == '+')
         {
-            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted + "\r\n";
+            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted;
             targetedChannel->addOperator(clientTargeted);
             targetedChannel->sendToAllClients(message);
         }
         else if (sign == '-')
         {
-            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted + "\r\n";
-            std::cout << "target == " << clientTargeted << std::endl;
+            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted;
             targetedChannel->removeOperator(clientTargeted);
             targetedChannel->sendToAllClients(message);
         }
@@ -174,14 +173,14 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
 
 void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 {
-    Client client = getClientByFd(clientFd);
-
     std::string targetChannelName;
     Channel *targetedChannel;
+    Client client = getClientByFd(clientFd);
     int flagNeedArgs = 0;
 
     if (command.size() > 1)
         targetChannelName = command[1];
+
     if ((targetedChannel = findChannelByName(targetChannelName)) == NULL)
     {
         std::cout << "Channel does not exist" << std::endl;
