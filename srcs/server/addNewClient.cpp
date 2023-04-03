@@ -91,16 +91,11 @@ int Server::handleConnection(int client_fd)
 int Server::welcomeClient(int client_fd)
 {
     const std::string sPort(port);
-    const std::string welcomeClient = ":localhost/" + sPort + " 001 " +
-                                      _clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
-    if (send(client_fd, welcomeClient.data(), welcomeClient.size(), 0) < 0)
-    {
-        std::cerr << "Send error\n";
-        return (-1);
-    }
+    sendNumericReplies(client_fd, RPL_WELCOME(sPort, _clientsTryingToConnect[client_fd]->getNickname()));
     //! map intead of vector 
     _clients[client_fd] = _clientsTryingToConnect[client_fd];
     _clientsTryingToConnect.erase(client_fd);
+    checkNickUser(client_fd, getClientByFd(client_fd).getNickname());
     return (0);
 }
 

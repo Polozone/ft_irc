@@ -1,15 +1,6 @@
 
 #include "../Server.hpp"
 
-// static bool   isFlagNeedArgs(char flag)
-// {
-//     if (flag == 't' || flag == 'l' || flag == 'o')
-//         return (true);
-//     else if (flag != 'p' || flag != 's' || flag != 'i' || flag != 'm' || flag != 'v')
-//         return (false);
-//     return false;
-// }
-
 static int    parseFlags(std::string &flags)
 {
     std::string::iterator it;
@@ -185,11 +176,11 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
     std::string targetChannelName;
     Channel *targetedChannel;
     Client client = getClientByFd(clientFd);
-    std::cout << "client name is " << client.getNickname() << std::endl;
     int flagNeedArgs = 0;
 
     if (command.size() > 1)
         targetChannelName = command[1];
+
     if ((targetedChannel = findChannelByName(targetChannelName)) == NULL)
     {
         std::cout << "Channel does not exist" << std::endl;
@@ -198,7 +189,6 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 
     if (targetedChannel->isOperator(client.getNickname()) == false)
     {
-        std::cout << ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()) << std::endl;
         client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()));
         return ;
     }

@@ -39,8 +39,9 @@ class Channel {
 
         void                        addOperator(std::string opName);
         void                        removeOperator(std::string &opName);
-        bool                        isOperator(std::string clientName);
-        void                        addClientToChannel(int fdClient, Client *clientToAdd);
+        bool                        isOperator(const std::string &clientName);
+
+        void                        addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
         void                        removeClientAllowed(std::string &nameDisallowed);
@@ -53,6 +54,9 @@ class Channel {
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
+
+        std::string                 checkChannelName(std::string &channelName);
+        bool                        checkPasswd(const std::string& passwd, int fdClient);
 
         void                        sendToChannel(const std::string &message, const Client &user);
         void                        sendToAllClients(std::string &message);
@@ -80,6 +84,7 @@ class Channel {
         std::vector<std::string>            _invitedClient;
         std::vector<std::string>            _canSpeakList;
         
+        bool                                _isPasswd;
         int                                 _nbrClientsConnected;
         bool                                _isPrivate; // -p  -> dont list channel form outside with /list
         bool                                _isSecret;  // -s -> idem

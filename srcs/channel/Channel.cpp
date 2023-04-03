@@ -3,12 +3,21 @@
 Channel::Channel(){}
 
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
-    : _channelName(channelName), _passwd(passwd), _creator(creator),
+    : _channelName(checkChannelName(channelName)), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),
-    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false)
+    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false), _isPasswd(false)
 {
-    addClientToChannel(creator->getFd(), creator);
+    addClientToChannel(creator->getFd(), creator, passwd);
     addOperator(creator->getNickname());
+    if (_passwd != "")
+        _isPasswd = true;
+}
+
+std::string Channel::checkChannelName(std::string &channelName)
+{
+    if (channelName[0] != '#')
+        channelName.insert(0, "#");
+    return (channelName);
 }
 
 void Channel::removeOperator(std::string &opName)
@@ -29,7 +38,7 @@ void Channel::removeOperator(std::string &opName)
 
 void Channel::addOperator(std::string opName)
 {
-    if (isClientExist(opName))
+    if (isClientExist(opName) && ! isOperator(opName))
     {
         _operators.push_back(opName);
         std::cout << opName << " have been added to operators list" << std::endl;
@@ -42,9 +51,20 @@ void    Channel::printOperators()
         std::cout << *_it << std::endl;
 }
 
-void    Channel::addClientToChannel(int fdClient, Client *clientToAdd)
+bool    Channel::checkPasswd(const std::string& passwd, int fdClient)
 {
+    if (_isPasswd && _passwd != passwd)
+    {
+        std::cout << "check passwd wrong "<< std::endl;
+        return false;
+    }
+    return true;
+}
 
+void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd)
+{
+    if ( ! checkPasswd(passwd, fdClient))
+        return ;
     if (_isInviteOnly)
         clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
     else
@@ -155,7 +175,7 @@ void Channel::sendToAllClients(std::string &message)
     }
 }
 
-bool    Channel::isOperator(std::string clientName)
+bool    Channel::isOperator(const std::string &clientName)
 {
     for (_it = _operators.begin(); _it != _operators.end(); ++_it)
     {
