@@ -105,6 +105,12 @@ private:
     // PRIVMSG
     void        privmsgCommand(Client &client, std::vector<std::string> args);
 
+
+    // OPER
+    void        OperCommand(Client &client, const std::vector<std::string> &args);
+    void        addOperCreds(std::string user, std::string password);
+    bool        checkOperCreds(const std::string &username, const std::string &password) const;
+
     // PART
     int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
@@ -135,19 +141,20 @@ private:
     void    printClientList() const;
     void    printClientMaps() const;
 
-    const char                  *port;
-    const char                  *password;
-    int                         listen_sd;
-    int                         end_server;
-    int                         close_conn;
-    std::vector<struct pollfd>  fds;
-    struct addrinfo *           servinfo;
-    int                         concatenate;
-    std::string                 concatenatedCmd;
-    std::map<int, Client*>::iterator _it;
-    std::map<int, Client *>     _clients;
-    std::map<int, Client *>     _clientsTryingToConnect;
-    std::vector<Channel*>       _channelList;
+    const char                          *port;
+    const char                          *password;
+    int                                 listen_sd;
+    int                                 end_server;
+    int                                 close_conn;
+    std::vector<struct pollfd>          fds;
+    struct addrinfo *                   servinfo;
+    int                                 concatenate;
+    std::string                         concatenatedCmd;
+    std::map<int, Client*>::iterator    _it;
+    std::map<int, Client *>             _clients;
+    std::map<int, Client *>             _clientsTryingToConnect;
+    std::map<std::string, std::string> _operatorCredentials;
+    std::vector<Channel*>               _channelList;
 
 };
 
