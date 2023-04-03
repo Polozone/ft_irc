@@ -6,16 +6,24 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:47:54 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/27 15:29:21 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/03/30 14:50:49 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 
-/*
- Function that extracts and concatenates strings from a vector starting at a 
- given index, with one space added between each concatenated string
- */
+/**
+    @brief This function extracts and concatenates all the strings in the \ 
+    input vector starting from a given index.
+    @param strings A vector of strings representing the strings to be \ 
+    concatenated.
+    @param index An integer representing the starting index of the vector from\ 
+     where the strings will be concatenated.
+    @return A string representing the concatenated result of all the strings \ 
+    in the input vector starting from the given index.
+    @note This function removes any extra space at the end of the concatenated\ 
+     string.
+*/
 std::string extractAndConcatenateStrings(std::vector<std::string> strings, \
 int index)
 {
@@ -33,6 +41,17 @@ int index)
     return result;
 }
 
+/**
+    @brief This function implements the IRC PRIVMSG command, which sends a\ 
+    message to either a user or a channel.
+    @param client A reference to a Client object representing the client who\ 
+     issued the PRIVMSG command.
+    @param args A vector of strings representing the arguments passed to the\ 
+    PRIVMSG command.
+    @note This function sends error messages to the client if the PRIVMSG\ 
+    command is missing required parameters or if the target channel or user\ 
+    does not exist.
+*/
 void Server::privmsgCommand(Client &client, std::vector<std::string> args)
 {
     if (args.size() < 2)
@@ -78,7 +97,7 @@ void Server::privmsgCommand(Client &client, std::vector<std::string> args)
         + target + " :" + message;
 
         // Send the message to all clients in the channel
-        channel->sendToChannel(full_message, client);
+        //channel->sendToChannel(full_message, client);
     }
     else
     {
