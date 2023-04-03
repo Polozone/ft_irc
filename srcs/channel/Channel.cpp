@@ -147,7 +147,7 @@ bool    Channel::isClientIsInvited(std::string &clientName)
     return (false);
 }
 
-void Channel::sendToAllClients(std::string &message)
+void    Channel::sendToAllClients(const std::string &message)
 {
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
     {

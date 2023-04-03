@@ -108,6 +108,9 @@ private:
     // PART
     int         partCommand(int client_fd, std::vector<std::string> clientInput);
 
+    // KICK
+    int         kickCommand(int client_fd, std::vector<std::string> inputClient);
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************

@@ -55,7 +55,7 @@ class Channel {
         bool                        isOperator(std::string clientName);
 
         void                        sendToChannel(const std::string &message, const Client &user);
-        void                        sendToAllClients(std::string &message);
+        void                        sendToAllClients(const std::string &message);
 
         Client *                    findClientByFd(int fd);
 

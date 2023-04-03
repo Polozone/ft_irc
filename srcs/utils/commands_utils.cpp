@@ -14,6 +14,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         privmsgCommand(getClientByFd(clientFd), inputClient);
     else if (inputClient[0] == "PART")
         partCommand(clientFd, inputClient);
+    else if (inputClient[0] == "KICK")
+        kickCommand(clientFd, inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
