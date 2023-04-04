@@ -87,9 +87,15 @@ void    Server::modeSflag(char sign, Channel *targetedChannel, std::string clien
 void    Server::modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted)
 {
     if (sign == '+')
+    {
+        std::cout << " set m status to true" << std::endl;
         targetedChannel->setStatusModerate(true);
+    }
     else if (sign == '-')
+    {
+        std::cout << " set m status to false" << std::endl;
         targetedChannel->setStatusModerate(false);
+    }
     else
         std::cout << "bad format, except + or - before flag" << std::endl;
 }
@@ -160,7 +166,7 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
             counter++;
         }
         else if (flags[i] && flags[i] == 'm')
-            modeSflag(flags[i - 1], targetedChannel, actualArg);
+            modeMflag(flags[i - 1], targetedChannel, actualArg);
         else if (flags[i] && flags[i] == 'p')
             modePflag(flags[i - 1], targetedChannel, actualArg);
         else if (flags[i] && flags[i] == 's')

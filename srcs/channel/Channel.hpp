@@ -8,6 +8,7 @@
 #include <cstddef>
 #include "../client/Client.hpp"
 #include "../server/numericReplies.hpp"
+#include "../server/Server.hpp"
 
 class Server;
 
@@ -49,14 +50,14 @@ class Channel {
 
         void                        addClientToSpeakList(std::string &clientName);
         void                        rmvClientFromSpeakList(std::string &clientName);
-        void                        sendMsgToSpeakList(std::string &message);
+        void                        sendMsgToSpeakList(const std::string &message);
 
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
         bool                        isClientIsInvited(std::string &clientName);
 
         std::string                 checkChannelName(std::string &channelName);
-        bool                        checkPasswd(const std::string& passwd, int fdClient);
+        bool                        checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd);
 
         void                        sendToChannel(const std::string &message, const Client &user);
         void                        sendToAllClients(std::string &message);
