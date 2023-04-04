@@ -4,7 +4,7 @@
 //------------------*ERROR-PRIVMSG-----------------------
 # define ERR_NORECIPIENT(nickname) ":localhost 411 " + nickname + " :No recipient given"
 # define ERR_NOTEXTTOSEND(nickname) ":localhost 473 " + nickname + " :No text to send"
-# define ERR_NOSUCHNICK(nickname) ":localhost 401 "  + nickname + " :No such nick"
+# define ERR_NOSUCHNICK(nickname, nicktofind) ":localhost 401 " + nickname + " " + nicktofind + " :No such nick\r\n"
 # define ERR_NOSUCHCHANNEL(nickname) ":localhost 403 "  + nickname + " :No such channel"
 # define ERR_CANNOTSENDTOCHAN(nickname) ":localhost 404 " + nickname + " :Cannot send to channel"
 

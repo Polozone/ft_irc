@@ -106,7 +106,7 @@ void Server::privmsgCommand(Client &client, std::vector<std::string> args)
         if (!target_client)
         {
             // Send an error message to the client (e.g., ERR_NOSUCHNICK)
-            client.sendMessage(ERR_NOSUCHNICK(client.getNickname()));
+            client.sendMessage(ERR_NOSUCHNICK(client.getNickname(), client.getNickname()));
             return;
         }
         // Construct the message to be sent to the target user

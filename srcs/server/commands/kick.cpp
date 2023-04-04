@@ -23,12 +23,16 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
     }
 
     Client  *clientToKick = findClientByNick(inputClient[2]);
+    if (!clientToKick)
+    {
+        sendNumericReplies(client_fd, ERR_NOSUCHNICK(getClientByFd(client_fd).getNickname(), inputClient[2]));
+        return (1);
+    }
     Channel *chan = findChannelByName(inputClient[pos]);
 
     if (findChannelByName(inputClient[pos])->isOperator(
         getClientByFd(client_fd).getNickname()) == 1)
     {
-        std::cout << "KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n" << std::endl;
         chan->sendToAllClients(getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n");
         chan->removeClientByFd(clientToKick->getFd());
     }
