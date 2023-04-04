@@ -33,11 +33,3 @@
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":" + "awd awdd ddwa cawca"
 # define ERR_CHANOPRIVSNEEDED(channel) ":localhost 482" + channel + " :You're not channel operator"
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
-
-
-
-//   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-
-
-// ":localhost/" + sPort + " 001 " +
-//                                       _clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
