@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/28 10:01:34 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/03 14:36:58 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 //! CONSTRUCTORS
 Client::Client(void) : _nickname("*"), 
 			_username(""), _fullname(""), _hostname(""), 
-			_mode(MOD_NONE),  _password(""), _authenticated(false), _channelsJoined() { }
+			_mode(none),  _password(""), _authenticated(false), _channelsJoined() { }
 
 Client::Client(const int fd, std::string hostname) : _fd(fd), _nickname("*"), 
 			_username(""), _fullname(""), _hostname(hostname), 
-			_mode(MOD_NONE),  _password(""), _authenticated(false), _channelsJoined() { }
+			_mode(none),  _password(""), _authenticated(false), _channelsJoined() { }
 
 Client::Client(const Client &src) : _fd(src._fd)
 {

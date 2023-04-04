@@ -12,6 +12,7 @@
 # define RPL_YOUREOPER(nickname) ":localhost 381 " + nickname + " :You are now an IRC operator"
 # define ERR_PASSWDMISMATCH(nickname) ":localhost 464 " + nickname + " : :Password incorrect"
 
+
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              
 // # define ERR_BADCHANNELKEY(nickname) ":localhost/" +   + nickname + "number of params invalid"

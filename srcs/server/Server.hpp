@@ -111,6 +111,10 @@ private:
 
     // OPER
     void        OperCommand(Client &client, const std::vector<std::string> &args);
+    void        addOperCreds(std::string user, std::string password);
+
+    // USER MODE COMMAND
+    void userModeCommand(Client &client, const std::vector<std::string> &commandArgs);
 
     // ************************************
     // |           END COMMANDS           |
@@ -133,7 +137,6 @@ private:
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
     Client *findClientByNick(const std::string &nickname);
-    void    addOperCreds(std::string user, std::string password);
     bool checkOperCreds(const std::string &username, const std::string &password) const;
 
     // Variables

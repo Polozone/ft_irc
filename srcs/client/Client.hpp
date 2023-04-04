@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/03/28 09:55:31 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/03 14:33:22 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,25 @@
 //      s - marks a user for receipt of server notices.		=> 6	0010 0000
 //      r - restricted user connection;	 					=> 7	0100 0000
 
-#define MOD_NONE        (0 << 0)
-#define MOD_AWAY        (1 << 0)
-#define MOD_WALLOPS     (1 << 2)
-#define MOD_INVISIBLE   (1 << 3)
-#define MOD_OPER        (1 << 4)
-#define MOD_BOT    		(1 << 5)
-#define MOD_SRVNOTICES  (1 << 6)
-#define MOD_RESTRICTED  (1 << 7)
+// #define MOD_NONE        (0 << 0)
+// #define MOD_AWAY        (1 << 0)
+// #define MOD_WALLOPS     (1 << 2)
+// #define MOD_INVISIBLE   (1 << 3)
+// #define MOD_OPER        (1 << 4)
+// #define MOD_BOT    		(1 << 5)
+// #define MOD_SRVNOTICES  (1 << 6)
+// #define MOD_RESTRICTED  (1 << 7)
+
+enum modes
+{
+    none = (0),
+    a = (1 << 0),
+    w = (1 << 1),
+    i = (1 << 2),
+    o = (1 << 3),
+    s = (1 << 4),
+    r = (1 << 5)
+};
 
 // # include "../server/Server.hpp"
 
