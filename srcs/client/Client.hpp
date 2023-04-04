@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/04 07:56:09 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/04 08:53:27 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ private:
     std::string             _hostname;
     short                   _mode;
     bool                    _authenticated;
+    bool                    _operatorStatus;
     std::deque<std::string> _channelsJoined;
     std::string             _password;
 

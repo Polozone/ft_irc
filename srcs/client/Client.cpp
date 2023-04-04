@@ -6,12 +6,11 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/04 07:49:26 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/04 08:52:53 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./Client.hpp"
-
 
 //! CONSTRUCTORS
 Client::Client(void) : _nickname("*"), 
@@ -66,11 +65,10 @@ void Client::setUsername(const std::string &username) { this->_username = userna
 void Client::setFullname(const std::string &fullname) { this->_fullname = fullname; }
 void Client::setHostname(const std::string &hostname) { this->_hostname = hostname; }
 void Client::setPassword(const std::string &password) { this->_password = password; }
-void Client::setAuthenticated(bool authenticated) { 
-	this->_authenticated = authenticated; 
-}
+void Client::setAuthenticated(bool authenticated){this->_authenticated = authenticated;}
 void Client::addMode(short mode) { this->_mode |= mode; }
 void Client::removeMode(short mode) { this->_mode &= ~mode; }
+void Client::setOperatorStatus(bool status) 		  {this->_operatorStatus = status; }
 
 //! CHANNEL JOINED MANAGEMENT
 bool Client::addChannelJoined(std::string channelName) {
