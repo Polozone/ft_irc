@@ -12,6 +12,11 @@
 # define RPL_YOUREOPER(nickname) ":localhost 381 " + nickname + " :You are now an IRC operator"
 # define ERR_PASSWDMISMATCH(nickname) ":localhost 464 " + nickname + " : :Password incorrect"
 
+//------------------*ERROR-MODE_USER--------------------------
+# define ERR_USERSDONTMATCH(nickname) ":localhost 502 " + nickname + " :Cannot change mode for other users"
+# define ERR_UMODEUNKNOWNFLAG(nickname) ":localhost 501 " + nickname + " :Unknown MODE flag"
+# define RPL_UMODEIS(nickname, user_modes) ("221 " + nickname + " " + user_modes)
+
 
 // # define ERR_BANNEDFROMCHAN(nickname) ":localhost/" +   + nickname + "user ban from channel"
 // # define ERR_INVITEONLYCHAN(nickname) ":localhost/" +   + nickname + "number of params invalid"              
