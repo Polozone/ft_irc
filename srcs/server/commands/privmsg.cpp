@@ -97,7 +97,7 @@ void Server::privmsgCommand(Client &client, std::vector<std::string> args)
         + target + " :" + message;
 
         // Send the message to all clients in the channel
-        channel->sendToChannel(full_message, client);
+        //channel->sendToChannel(full_message, client);
     }
     else
     {

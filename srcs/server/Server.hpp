@@ -65,7 +65,9 @@ private:
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
-    
+    void        printClientMaps() const;
+    int         removeClientFromMap(int client_fd);
+
     // Commands
 
 
@@ -114,13 +116,15 @@ private:
     // USER MODE COMMAND
     void userModeCommand(Client &client, const std::vector<std::string> &commandArgs);
 
-    // ************************************
-    // |           END COMMANDS           |
-    // ************************************
+    // PART
+    int partCommand(int client_fd, std::vector<std::string> clientInput);
 
+        // ************************************
+        // |           END COMMANDS           |
+        // ************************************
 
-    // Add new Client
-    int     checkIfNewClient(const char *buffer, int client_fd);
+        // Add new Client
+        int checkIfNewClient(const char *buffer, int client_fd);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
@@ -128,8 +132,6 @@ private:
     int     wrongPassword(int client_fd);
     int     isValidFd(int client_fd) const;
     void    addClientToList(Client *toAdd);
-
-
 
     // Utils
     int     findClientByFd(int client_fd) const;
