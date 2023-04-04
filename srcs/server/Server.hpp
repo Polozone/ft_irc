@@ -111,8 +111,8 @@ private:
     void        addOperCreds(std::string user, std::string password);
     bool        checkOperCreds(const std::string &username, const std::string &password) const;
 
-    // PART
-    int         partCommand(int client_fd, std::vector<std::string> clientInput);
+    // USER MODE COMMAND
+    void userModeCommand(Client &client, const std::vector<std::string> &commandArgs);
 
     // ************************************
     // |           END COMMANDS           |
@@ -134,33 +134,35 @@ private:
     // Utils
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    Client  *findClientByNick(const std::string &nickname);
-    int     removeClientFromMap(int client_fd);
-
-    // DEBUG FUNCTIONS
+    Client *findClientByNick(const std::string &nickname);
     void    printClientList() const;
-    void    printClientMaps() const;
 
-    const char                          *port;
-    const char                          *password;
-    int                                 listen_sd;
-    int                                 end_server;
-    int                                 close_conn;
-    std::vector<struct pollfd>          fds;
-    struct addrinfo *                   servinfo;
-    int                                 concatenate;
-    std::string                         concatenatedCmd;
-    std::map<int, Client*>::iterator    _it;
-    std::map<int, Client *>             _clients;
-    std::map<int, Client *>             _clientsTryingToConnect;
+    // Variables
+    const char *port;
+    const char *password;
+    std::string _serverName;
+    int listen_sd;
+    int end_server;
+    int close_conn;
+    std::vector<struct pollfd> fds;
+    struct addrinfo *servinfo;
+    int concatenate;
+
+    // Containers
+    std::string concatenatedCmd;
+    std::map<int, Client *>::iterator _it;
+    std::map<int, Client *> _clients;
+    std::map<int, Client *> _clientsTryingToConnect;
     std::map<std::string, std::string> _operatorCredentials;
     std::vector<Channel*>               _channelList;
 
 };
 
 // Server Utils
-int handleServerErrors(const char *str, int *sd);
-int detectEOF(const char *str);
-struct pollfd createPollFdNode(int sd, int event);
-const std::string extractCommandContent(const std::string &buffer, const std::string &command);
-void    sendNumericReplies(int fd, const std::string &message);
+int         handleServerErrors(const char *str, int *sd);
+int         detectEOF(const char *str);
+struct      pollfd createPollFdNode(int sd, int event);
+const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
+void        sendNumericReplies(int fd, const std::string &message);
+const char *addCarriageReturn(const char *buffer);
+std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);

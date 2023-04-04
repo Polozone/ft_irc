@@ -172,4 +172,3 @@ void    Server::printClientList() const
         std::cout << it->second->getNickname() << std::endl;
     }
 }
-

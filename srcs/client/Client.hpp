@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/03 13:59:02 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/04 07:56:09 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@
 
 // #define MOD_NONE        (0 << 0)
 // #define MOD_AWAY        (1 << 0)
-// #define MOD_WALLOPS     (1 << 1)
-// #define MOD_INVISIBLE   (1 << 2)
-// #define MOD_OPER        (1 << 3)
-// #define MOD_SRVNOTICES  (1 << 4)
-// #define MOD_RESTRICTED  (1 << 5)
+// #define MOD_WALLOPS     (1 << 2)
+// #define MOD_INVISIBLE   (1 << 3)
+// #define MOD_OPER        (1 << 4)
+// #define MOD_BOT    		(1 << 5)
+// #define MOD_SRVNOTICES  (1 << 6)
+// #define MOD_RESTRICTED  (1 << 7)
 
-// # include "../server/Server.hpp"
 enum modes
 {
     none = (0),
