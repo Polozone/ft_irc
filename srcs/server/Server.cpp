@@ -5,6 +5,7 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
+    Server::addOperCreds("Admin", "42lyon");
     Server::launchServer();
 }
 
