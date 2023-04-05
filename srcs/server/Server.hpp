@@ -119,12 +119,15 @@ private:
     // PART
     int partCommand(int client_fd, std::vector<std::string> clientInput);
 
-        // ************************************
-        // |           END COMMANDS           |
-        // ************************************
+    //NOTICE
+    void noticeCommand(Client &client, const std::vector<std::string> &inputClient);
 
-        // Add new Client
-        int checkIfNewClient(const char *buffer, int client_fd);
+    // ************************************
+    // |           END COMMANDS           |
+    // ************************************
+
+    // Add new Client
+    int checkIfNewClient(const char *buffer, int client_fd);
     void    addUser(int client_fd, const std::string &user);
     void    addPassword(int client_fd, const std::string &pass);
     int     handleConnection(int client_fd);
