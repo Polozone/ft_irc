@@ -27,10 +27,9 @@
 
 # define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + "number of params invalid"
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)"
-# define ERR_CHANNELISFULL(channel) ":localhost 471 " + channel + " :Cannot join channel (+l)\r\n"
+# define ERR_CHANNELISFULL(channel) ":localhost 471 " + channel + " :Cannot join channel (+l)"
 # define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
-// # define ERR_WRONGPASSWD(nickname) ":localhost 400 " + nickname + " :Wrong password\r\n"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
 
@@ -41,8 +40,3 @@
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
 # define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
 
-//   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-
-
-// ":localhost/" + sPort + " 001 " +
-//                                       _clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";

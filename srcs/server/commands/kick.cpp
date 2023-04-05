@@ -30,7 +30,7 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
         getClientByFd(client_fd).getNickname()) == 1)
     {
         std::cout << "KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n" << std::endl;
-        chan->sendToAllClients(getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n");
+        chan->sendToAllClients(getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n", getClientByFd(client_fd));
         chan->removeClientByFd(clientToKick->getFd());
     }
     

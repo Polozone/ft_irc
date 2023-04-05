@@ -38,8 +38,8 @@ class Channel {
         void                        setStatusModerate(bool status){_isModerate = status;};                        
         void                        setTopicContent(std::string content){_topicContent = content;};
 
-        void                        addOperator(std::string opName);
-        void                        removeOperator(std::string &opName);
+        void                        addOperator(Client *clientToAdd);
+        void                        removeOperator(int fdClient);
         bool                        isOperator(const std::string &clientName);
 
         void                        addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd);
@@ -48,9 +48,10 @@ class Channel {
         void                        removeClientAllowed(std::string &nameDisallowed);
         void                        addInvitedClient(std::string toAdd);
 
-        void                        addClientToSpeakList(std::string &clientName);
-        void                        rmvClientFromSpeakList(std::string &clientName);
-        void                        sendMsgToSpeakList(const std::string &message);
+        void                        addClientToSpeakList(Client *clientToAdd);
+        void                        rmvClientFromSpeakList(int clientFd);
+        void                        sendMsgToSpeakList(const std::string &message, const Client &sender);
+        bool                        isSpeakList(const Client &client);
 
         bool                        isClientExist(std::string &clientName);
         bool                        isClientBan(std::string& clientName);
@@ -60,7 +61,7 @@ class Channel {
         bool                        checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd);
 
         void                        sendToChannel(const std::string &message, const Client &user);
-        void                        sendToAllClients(std::string &message);
+        void                        sendToAllClients(std::string &message, Client *sender);
 
         Client *                    findClientByFd(int fd);
 
@@ -75,15 +76,17 @@ class Channel {
 
         std::vector<std::string>::iterator  _it;
         std::map<int, Client*>::iterator    _itm;
-        std::map<int, Client*>              _clients;
         std::string                         _channelName;
         std::string                         _passwd;
         Client *                            _creator;
 
-        std::vector<std::string>            _operators;
+        std::map<int, Client*>              _clients;
+        std::map<int, Client*>              _operators;
+        std::map<int, Client*>              _canSpeakList;
+    
         std::vector<std::string>            _privateClientAllowed;
         std::vector<std::string>            _invitedClient;
-        std::vector<std::string>            _canSpeakList;
+        // std::vector<std::string>            _canSpeakList;
         
         bool                                _isPasswd;
         int                                 _nbrClientsConnected;

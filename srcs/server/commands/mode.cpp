@@ -40,29 +40,33 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
     std::cout << "limit of " << targetedChannel->getChannelName() << " is " << targetedChannel->getMaxClient() << std::endl;
 }
 
-void    Server::modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted)
+void    Server::modeOflag(char sign, Channel *targetedChannel, std::string nameClientTargeted, Client *caller)
 {
     std::string message;
+    Client *clientTargeted;
 
-    if ( ! clientTargeted.empty() )
+    if ( ! nameClientTargeted.empty() )
+        clientTargeted = findClientByNick(nameClientTargeted);
+    else
+        return ;
+
+    if (sign == '+')
     {
-        if (sign == '+')
-        {
-            message = ": MODE " + targetedChannel->getChannelName() + " +o " + clientTargeted;
-            targetedChannel->addOperator(clientTargeted);
-            targetedChannel->sendToAllClients(message);
-        }
-        else if (sign == '-')
-        {
-            message = ": MODE " + targetedChannel->getChannelName() + " -o " + clientTargeted;
-            targetedChannel->removeOperator(clientTargeted);
-            targetedChannel->sendToAllClients(message);
-        }
-        else
-            std::cout << "bad format, except + or - before flag" << std::endl;
+        message = ": MODE " + targetedChannel->getChannelName() + " +o " + nameClientTargeted;
+        targetedChannel->addOperator(clientTargeted);
+        targetedChannel->sendToAllClients(message, caller);
     }
+    else if (sign == '-')
+    {
+        message = ": MODE " + targetedChannel->getChannelName() + " -o " + nameClientTargeted;
+        targetedChannel->removeOperator(clientTargeted->getFd());
+        targetedChannel->sendToAllClients(message, caller);
+    }
+    else
+        std::cout << "bad format, except + or - before flag" << std::endl;
     targetedChannel->printOperators();
 }
+
 
 void    Server::modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted)
 {
@@ -100,12 +104,16 @@ void    Server::modeMflag(char sign, Channel *targetedChannel, std::string clien
         std::cout << "bad format, except + or - before flag" << std::endl;
 }
 
-void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted)
+void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clientName)
 {
+    Client *targetedClient = findClientByNick(clientName);
     if (sign == '+')
-        targetedChannel->addClientToSpeakList(clientTargeted);
+    {
+        std::cout << clientName << " will be add to clientSpeakList" << std::endl;
+        targetedChannel->addClientToSpeakList(targetedClient);
+    }
     else if (sign == '-')
-        targetedChannel->rmvClientFromSpeakList(clientTargeted);
+        targetedChannel->rmvClientFromSpeakList(targetedClient->getFd());
     else
         std::cout << "bad format, except + or - before flag" << std::endl;
 }
@@ -135,6 +143,7 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
     std::string flags = command[2];
     int counter = 3;
     std::string actualArg;
+    Client caller = getClientByFd(clientFd);
 
     for (int i = 0; i < flags.size(); i++)
     {
@@ -147,7 +156,7 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
             i++;
         if (flags[i] && flags[i] == 'o')
         {
-            modeOflag(flags[i - 1], targetedChannel, actualArg);
+            modeOflag(flags[i - 1], targetedChannel, actualArg, &caller);
             counter++;
         }
         else if (flags[i] && flags[i] == 'l')
@@ -176,13 +185,16 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
     }
 }
 
-
 void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 {
     std::string targetChannelName;
     Channel *targetedChannel;
-    Client client = getClientByFd(clientFd);
     int flagNeedArgs = 0;
+
+    if (isValidFd(clientFd) == -1)
+        return ;
+
+    Client client = getClientByFd(clientFd);
 
     if (command.size() > 1)
         targetChannelName = command[1];
