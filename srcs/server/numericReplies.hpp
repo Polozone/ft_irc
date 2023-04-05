@@ -28,9 +28,3 @@
 # define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n"
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
 # define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
-
-//   "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-
-
-// ":localhost/" + sPort + " 001 " +
-//                                       _clientsTryingToConnect[client_fd]->getNickname() + " :Welcome to the server\r\n";
