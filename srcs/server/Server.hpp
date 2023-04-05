@@ -85,7 +85,7 @@ private:
     void        joinCommand(std::vector<std::string> command, int clientFd);
     
     // MODE
-    void        parseModeCommand(std::vector<std::string> command, int clientFd);
+    void        parseChannelModeCommand(std::vector<std::string> command, int clientFd);
     void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
     void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
@@ -114,7 +114,7 @@ private:
     bool        checkOperCreds(const std::string &username, const std::string &password) const;
 
     // USER MODE COMMAND
-    void userModeCommand(Client &client, const std::vector<std::string> &commandArgs);
+    void parseUserModeCommand(Client &client, const std::vector<std::string> &commandArgs);
 
     // PART
     int partCommand(int client_fd, std::vector<std::string> clientInput);
@@ -138,6 +138,7 @@ private:
     Client  &getClientByFd(int client_fd) const;
     Client *findClientByNick(const std::string &nickname);
     void    printClientList() const;
+    void handleModeCommand(const std::vector<std::string> &inputClient, int clientFd);
 
     // Variables
     const char *port;

@@ -71,7 +71,7 @@ int Server::readExistingConnection(int i)
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            std::cout << buffer << "\n";
+            std::cout << buffer << "passing by here\n";
             if (tmp.find("printpls") != std::string::npos)
                 printClientList();
             if (tmp.find("printmap") != std::string::npos)

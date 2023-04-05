@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 07:38:50 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/04 07:49:05 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/05 09:08:01 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,54 +25,44 @@
     @note The input flag string must be one of the valid values defined in the
     lookup table.
 */
-enum modes getModeFlag(const char *flagString)
+modes getModeFlag(const std::string &flagString)
 {
-    static const char *const flags[] = {"a", "w", "i", "o", "B", "s", "r"};
-    for (int i = 0; i < std::string(flags).size(); i++)
+    static const char *const flags[] = {"a", "w", "i", "s", "r"};
+    static const modes values[] = {a, w, i, s, r};
+
+    for (int i = 0; i < 5; i++)
     {
-        if (strcmp(flagString, flags[i]) == 0)
+        if (flagString.compare(flags[i]) == 0)
         {
-            return (enum modes)i;
+            return values[i];
         }
     }
     return none; // Return a default value in case of invalid input
 }
 
 /**
-    @brief Gets the corresponding mode string for a given user mode integer.
-    This function takes a user mode integer as input and searches for the corresponding
-    mode string in a map. If a match is found, the corresponding mode string
-    is returned. If the input integer is not found in the map, an exception is thrown.
-    @param userMode The user mode integer to get the corresponding mode string for.
-    @return The corresponding mode string for the input integer.
-    @throw std::out_of_range if the input integer is not found in the map.
+    @brief Converts an enum mode value to its corresponding string representation.
+    This function takes an enum mode value and returns its corresponding string representation.
+    The function searches for the matching mode value in an internal lookup table, and if a match is found,
+    @param userMode The enum mode value to convert to its corresponding string representation.
+    @return The string representation of the input enum mode value.
+    @note The lookup table is defined internally in the function and cannot be modified from outside.
+    @note The input enum mode value must be one of the valid values defined in the lookup table.
 */
-std::string getModeString(int userMode)
+std::string getModeString(modes userMode)
 {
-    std::map<int, std::string> modes = {
-        {(0 << 0), "none"},
-        {(1 << 0), "a"},
-        {(1 << 1), "w"},
-        {(1 << 2), "i"},
-        {(1 << 3), "o"},
-        {(1 << 4), "s"},
-        {(1 << 5), "r"}};
-    try
-    {
-        // Attempt to find the user mode integer in the map
-        std::map<int, std::string>::iterator it = modes.find(userMode);
+    static const modes mode_values[] = {a, w, i, s, r};
+    static const char *const mode_strings[] = {"a", "w", "i", "s", "r"};
+    const int num_modes = sizeof(mode_values) / sizeof(*mode_values);
 
-        if (it == modes.end())
+    for (int i = 0; i < num_modes; i++)
+    {
+        if (mode_values[i] == userMode)
         {
-            // If the integer is not found, throw an exception
-            throw std::out_of_range("userMode not found in modes");
+            return mode_strings[i];
         }
     }
-    catch (const std::exception &e)
-    {
-        // Catch the exception and print an error message to the standard error stream
-        std::cerr << "Error: " << e.what() << '\n';
-    }
+    return " ";
 }
 
 /**
@@ -84,22 +74,23 @@ std::string getModeString(int userMode)
     @param client The Client object representing the sender of the command.
     @param commandArgs The vector of command arguments, with the user mode flag as the second argument.
 */
-void Server::userModeCommand(Client &client, const std::vector<std::string> &commandArgs)
+void Server::parseUserModeCommand(Client &client, const std::vector<std::string> &commandArgs)
 {
+    char modeFlag[2];
     std::string const &nickname = client.getNickname();
     // Check if the number of arguments is valid
-    if (commandArgs.size() < 2)
+    if (commandArgs.size() < 3)
     {
         client.sendMessage(ERR_NEEDMOREPARAMS(nickname));
         return;
     }
     // Check if the sender nickname is valid
-    if (nickname != commandArgs[0])
+    if (nickname != commandArgs[1])
     {
         client.sendMessage(ERR_USERSDONTMATCH(nickname));
         return;
     }
-    const std::string &mode = commandArgs[1];
+    const std::string &mode = commandArgs[2];
     // Check if the mode string is valid
     if (mode.length() < 2 || mode[0] != '+' && mode[0] != '-')
     {
@@ -107,20 +98,24 @@ void Server::userModeCommand(Client &client, const std::vector<std::string> &com
         return;
     }
     // Assuming that there is only one mode flag in the input for simplicity
-    char modeFlag = mode[1];
-    // Check if the mode flag is valid
-    if (std::string("ai").find(modeFlag) == std::string::npos)
+    modeFlag[0] = mode[1];
+    modeFlag[1] = '\0';
+    // Get the corresponding enum mode value for the mode flag
+    if (std::string("aiwrs").find(modeFlag) == std::string::npos)
     {
         client.sendMessage(ERR_UMODEUNKNOWNFLAG(nickname));
         return;
-    // Get the corresponding enum mode value for the mode flag
-    enum modes modeValue = getModeFlag(&modeFlag);
+    }
+    enum modes modeValue = getModeFlag(modeFlag);
+    // Check if the mode flag is valid
     // Add the mode flag to the client's mode flags
     client.addMode(modeValue);
     // Construct the message to send to the client and other relevant parties
-    std::string message = ":" + this->_serverName + " MODE " + nickname + " " + getModeString(modeValue);
+    std::string message = ":" + this->_serverName + " MODE " + nickname + " " + mode[0] \
+    + getModeString(modeValue);
     // Send a numeric reply to the client indicating success
-    RPL_UMODEIS(nickname, modeFlag);
-    
+    client.sendMessage(message);
+    std::cout << message << '\n';
+    // client.sendMessage(RPL_UMODEIS(nickname, modeFlag));
     return;
 }

@@ -5,7 +5,7 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
     if (inputClient[0] == "JOIN")
         joinCommand(inputClient, clientFd);
     else if (inputClient[0] == "MODE")
-        parseModeCommand(inputClient, clientFd);
+        handleModeCommand(inputClient, clientFd);
     else if (inputClient[0] == "NICK")
         nickCommand(clientFd, inputClient[1]);
     else if (inputClient[0] == "PING")
@@ -83,4 +83,48 @@ bool Server::checkOperCreds(const std::string &username, const std::string &pass
         return false; // Username not found
 
     return  (password == it->second);
+}
+
+/**
+ * @brief Handles MODE command for both user and channel modes.
+ *
+ * This function checks whether the MODE command is related to a user mode or
+ * channel mode based on the inputClient parameter. If it's a channel mode,
+ * the function attempts to find the channel and execute the
+ * parseChannelModeCommand. If it's a user mode, the function executes the
+ * handleUserModeCommand.
+ *
+ * @param inputClient A vector containing the tokenized client input.
+ * @param clientFd The file descriptor associated with the client.
+ */
+void Server::handleModeCommand(const std::vector<std::string> &inputClient, int clientFd)
+{
+    // Ensure there are enough elements in inputClient
+    if (inputClient.size() < 2)
+    {
+        return;
+    }
+
+    Client &client = getClientByFd(clientFd);
+
+    if (inputClient[1][0] == '#')
+    {
+        Channel *channel = findChannelByName(inputClient[1]);
+
+        if (!channel)
+        {
+            // Send an error message to the client (e.g., ERR_NOSUCHCHANNEL
+            client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname()));
+        }
+        else
+        {
+            // Execute channel Mode comamand
+            parseChannelModeCommand(inputClient, clientFd);
+        }
+    }
+    else
+    {
+        // Execute user Mode Command
+        parseUserModeCommand(client, inputClient);
+    }
 }
