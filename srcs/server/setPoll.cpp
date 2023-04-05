@@ -4,9 +4,10 @@
 int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;
+
+    removeClientFromMap(fds[i].fd);
     close(fds[i].fd);
     fds.erase(fds.begin() + i);
-    removeClientFromMap(fds[i].fd);
     close_conn = 0;
     return (0);
 }
@@ -71,7 +72,7 @@ int Server::readExistingConnection(int i)
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            std::cout << buffer << "\n";
+            // std::cout << buffer << "\n";
             if (tmp.find("printpls") != std::string::npos)
                 printClientList();
             if (tmp.find("printmap") != std::string::npos)
@@ -134,9 +135,12 @@ int Server::acceptIncomingConnection()
 int Server::polling()
 {
     int status;
+    nfds_t nfd;
 
     std::cout << "Waiting on poll()...\n";
-    status = poll(fds.data(), fds.size(), 180000);
+
+    nfd = fds.size();
+    status = poll(fds.data(), nfd, 180000);
     if (status < 0)
     {
         perror("poll()");
@@ -157,7 +161,7 @@ int Server::setPoll()
 
     //!----create poll instance assigning a fd to monitor\
     //!----and what tipe of event we want to monitor
-    //!---- we add it to a list of fds, representing the users
+    //!----we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
 
     do
@@ -174,12 +178,13 @@ int Server::setPoll()
             if (fds[i].revents & POLLHUP)
             {
                 closeConnection(i);
+                current_size--;
                 continue;
             }
             //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
-                printf("  Error! revents = %d\n", fds[i].revents);
+                printf("Error! revents = %d\n", fds[i].revents);
                 end_server = TRUE;
                 break;
             }
@@ -197,8 +202,13 @@ int Server::setPoll()
             }
 
             if (close_conn)
+            {
+                std::cout << "alors ici\n";
                 closeConnection(i);
+                break ;
+            }
         }
+        std::cout << "\n";
 
     } while (end_server == FALSE);
 

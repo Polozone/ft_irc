@@ -90,7 +90,6 @@ int Server::handleConnection(int client_fd)
 
 int Server::welcomeClient(int client_fd)
 {
-    std::cout << "ici\n";
     const std::string sPort(port);
     sendNumericReplies(client_fd, RPL_WELCOME(sPort, _clientsTryingToConnect[client_fd]->getNickname()));
     //! map intead of vector 
