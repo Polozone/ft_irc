@@ -171,7 +171,7 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
 }
 
 
-void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
+void    Server::parseChannelModeCommand(std::vector<std::string> command, int clientFd)
 {
     std::string targetChannelName;
     Channel *targetedChannel;
