@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:47:54 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/04 11:25:39 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/06 11:41:45 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void Server::privmsgCommand(Client &client, std::vector<std::string> args)
     {
         // Target is a user
         Client *target_client = findClientByNick(target);
-        if (!target_client)
+        if (!target_client || !target_client->getNickname().compare(client.getNickname()))
         {
             // Send an error message to the client (e.g., ERR_NOSUCHNICK)
             client.sendMessage(ERR_NOSUCHNICK(client.getNickname()));
