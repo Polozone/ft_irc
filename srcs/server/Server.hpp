@@ -60,6 +60,8 @@ private:
     int         acceptIncomingConnection();
     int         readExistingConnection(int i);
     int         closeConnection(int i);
+    int         closeConnectionByFd(int fd);
+    int         findFdsIndex(int fdToFind);
     int         handleCtrlD(const char *buffer);
 
     void        addToChannelList(Channel *toAdd);
@@ -107,6 +109,8 @@ private:
     // PRIVMSG
     void        privmsgCommand(Client &client, std::vector<std::string> args);
 
+    // KILL
+    void        killCommand(int clientFd, const std::string &clientName);
 
     // OPER
     void        OperCommand(Client &client, const std::vector<std::string> &args);

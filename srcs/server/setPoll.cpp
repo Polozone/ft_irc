@@ -1,6 +1,21 @@
 
 #include "./Server.hpp"
 
+int Server::findFdsIndex(int fdToFind)
+{
+    std::vector<struct pollfd>::iterator it;
+    std::vector<struct pollfd>::iterator ite = fds.end();
+    int i = 0;
+
+    for (it = fds.begin(); it != ite; ++it)
+    {
+        if (it[i].fd == fdToFind)
+            return (i);
+        i++;
+    }
+    return (-1);
+}
+
 int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;
@@ -8,6 +23,22 @@ int Server::closeConnection(int i)
     removeClientFromMap(fds[i].fd);
     close(fds[i].fd);
     fds.erase(fds.begin() + i);
+    close_conn = 0;
+    return (0);
+}
+
+int Server::closeConnectionByFd(int fd)
+{
+    std::cout << "connection closed - " << fd << std::endl;
+
+    removeClientFromMap(fd);
+    close(fd);
+
+    int index = findFdsIndex(fd);
+    if (index == -1)
+        return (-1);
+
+    fds.erase(fds.begin() + index);
     close_conn = 0;
     return (0);
 }
@@ -68,7 +99,6 @@ int Server::readExistingConnection(int i)
             std::string input(buffer);
             if (checkIfNewClient(buffer, fds[i].fd) > 0)
             {
-                dprintf(2, "before set command()\n");
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);

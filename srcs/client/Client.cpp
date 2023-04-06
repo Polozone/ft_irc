@@ -57,6 +57,7 @@ std::string Client::getPassword(void)                   const { return this->_pa
 bool Client::getAuthenticated(void)                     const { return this->_authenticated;}
 std::deque<std::string> Client::getChannelsJoined(void) const { return this->_channelsJoined;}
 bool Client::hasMode(short mode)                              { return ((this->_mode & mode) > 0); }
+bool Client::getOperatorStatus() 						const { return (this->_operatorStatus);}
 
 //! SETTERS
 void Client::setFd(int fd) { this->_fd = fd; }

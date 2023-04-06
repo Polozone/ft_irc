@@ -41,7 +41,7 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
   if (checkOperCreds(username, password))
   {
     // Grant operator privileges to the client
-    std::string message = ":" + this->_serverName + " MODE " + nickname + " +o";  
+    std::string message = ":" + this->_serverName + " MODE " + nickname + " +o";
     client.setOperatorStatus(true);
     client.sendMessage(RPL_YOUREOPER(nickname));
     client.sendMessage(message);

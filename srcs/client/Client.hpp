@@ -85,6 +85,7 @@ public:
     std::string             getHostname() const;
     short                   getMode() const;
     std::string             getPassword() const;
+    bool                    getOperatorStatus() const;
     bool                    getAuthenticated() const;
     std::deque<std::string> getChannelsJoined() const;
 
