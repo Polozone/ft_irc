@@ -15,6 +15,7 @@
 int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
 {
     Channel *tmp = findChannelByName(clientInput[1]);
+    Client client = getClientByFd(client_fd);
     if (!tmp)
     {
         std::cerr << "error: Channel not found\n";
@@ -26,7 +27,7 @@ int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
         std::string message = ":" + getClientByFd(client_fd).getNickname() + "!tdeville PART " + tmp->getChannelName() + " :WeeChat 3.5\r\n";
         std::cout << "Message: " << message << std::endl;
         send(client_fd, message.data(), message.size(), 0);
-        tmp->sendToAllClients(message);
+        tmp->sendToAllClients(message, &client);
     }
     return (0);
 }

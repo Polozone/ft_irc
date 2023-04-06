@@ -15,6 +15,8 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
     if (isValidFd(client_fd) == -1)
         return (-1);
 
+    Client client = getClientByFd(client_fd);
+
     int pos = findChannelInArgs(inputClient);
     if (pos != 1)
     {
@@ -33,7 +35,8 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
     if (findChannelByName(inputClient[pos])->isOperator(
         getClientByFd(client_fd).getNickname()) == 1)
     {
-        chan->sendToAllClients(getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n");
+        std::string message = getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n";
+        chan->sendToAllClients(message , &client);
         chan->removeClientByFd(clientToKick->getFd());
     }
     else

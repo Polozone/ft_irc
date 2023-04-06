@@ -20,6 +20,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         partCommand(clientFd, inputClient);
     else if (inputClient[0] == "KICK")
         kickCommand(clientFd, inputClient);
+    // else if (inputClient[0] == "KILL")
+    //     killCommand(clientFd, inputClient);    
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)
