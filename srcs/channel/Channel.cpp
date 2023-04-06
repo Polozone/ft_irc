@@ -51,7 +51,11 @@ void    Channel::printOperators()
 bool    Channel::checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd)
 {
     if (_isPasswd && _passwd != passwd)
+    {
+        clientToAdd->sendMessage(ERR_WRONGPSSWD(_channelName));
+        std::cout << "wrong passwd!" << std::endl;
         return false;
+    }
     return true;
 }
 
@@ -78,7 +82,6 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std
             clientToAdd->sendMessage(ERR_CHANNELISFULL(_channelName));
         }
     }
-    // printClientList();
 }
 
 void    Channel::removeClientByFd(int fdClient)
@@ -157,16 +160,10 @@ void Channel::sendToAllClients(std::string &message, Client *sender)
 {
     if (_isModerate)
     {
-        if (isSpeakList(*sender))
-        {
-            std::cout << sender->getNickname() << " is operator " << std::endl;
+        if ( isSpeakList(*sender) )
             sendMsgToSpeakList(message, *sender);
-        }
         else
-        {
-            std::cout << sender->getNickname() << " cant speak in this channel (+m)" << std::endl;
             return ;
-        }
     }
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
     {
@@ -223,7 +220,6 @@ bool    Channel::isSpeakList(const Client &client)
     {
         if ((*_itm).second->getNickname() == client.getNickname())
         {
-            std::cout << (*_itm).second->getNickname() << " == " << client.getNickname() << std::endl;
             return (true);
         }
     }

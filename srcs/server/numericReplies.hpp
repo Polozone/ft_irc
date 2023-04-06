@@ -22,6 +22,7 @@
 # define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use"
+# define ERR_WRONGPSSWD(channel) ":localhost 600 " + channel + ": password don't match"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"
 
