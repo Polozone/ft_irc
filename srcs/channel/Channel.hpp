@@ -59,7 +59,7 @@ class Channel {
         bool                        checkPasswd(const std::string& passwd, int fdClient);
 
         void                        sendToChannel(const std::string &message, const Client &user);
-        void                        sendToAllClients(std::string &message);
+        void                        sendToAllClients(const std::string &message);
 
         Client *                    findClientByFd(int fd);
 

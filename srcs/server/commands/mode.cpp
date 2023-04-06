@@ -171,7 +171,7 @@ void    Server::executeFlags(int flagNeedArgs, std::vector<std::string> command,
 }
 
 
-void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
+void    Server::parseChannelModeCommand(std::vector<std::string> command, int clientFd)
 {
     std::string targetChannelName;
     Channel *targetedChannel;
@@ -189,6 +189,7 @@ void    Server::parseModeCommand(std::vector<std::string> command, int clientFd)
 
     if (targetedChannel->isOperator(client.getNickname()) == false)
     {
+        std::cout << ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()) << std::endl;
         client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()));
         return ;
     }

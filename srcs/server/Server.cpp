@@ -5,6 +5,7 @@
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
+    Server::addOperCreds("Admin", "42lyon");
     Server::launchServer();
 }
 
@@ -24,10 +25,12 @@ Server  &Server::operator=(const Server &rhs)
     return (*this);
 }
 
+
 // MEMBER FUNCTIONS
 int Server::getAddrinfo() {
     int status;
     struct addrinfo hints;
+    char hostname[NI_MAXHOST];
 
     std::memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -37,6 +40,16 @@ int Server::getAddrinfo() {
         std::cerr << "getaddrinfo error: " << gai_strerror(status) << std::endl;
         return (-1);
     }
+
+     // Extract the hostname from the first addrinfo struct in the list
+    status = getnameinfo(servinfo->ai_addr, servinfo->ai_addrlen, hostname, sizeof(hostname), NULL, 0, 0);
+    if (status != 0)
+    {
+        // Print an error message if getnameinfo fails
+        std::cerr << "getnameinfo: " << gai_strerror(status) << std::endl;
+        return (-1);
+    }
+    this->_serverName = hostname;
     return (0);
 }
 
@@ -160,4 +173,3 @@ void    Server::printClientList() const
         std::cout << it->second->getNickname() << std::endl;
     }
 }
-
