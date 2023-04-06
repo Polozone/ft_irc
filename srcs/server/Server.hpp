@@ -66,7 +66,6 @@ private:
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
-    int         removeClientFromMap(int client_fd);
 
     // Commands
 
@@ -85,12 +84,13 @@ private:
     void        joinCommand(std::vector<std::string> command, int clientFd);
     
     // MODE
+
     void        parseChannelModeCommand(std::vector<std::string> command, int clientFd);
     void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
-    void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted, Client *caller);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
     void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeVflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeVflag(char sign, Channel *targetedChannel, std::string clientName);
     void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modePflag(char sign, Channel *targetedChannel, std::string clientTargeted);
     void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
@@ -122,6 +122,9 @@ private:
     //NOTICE
     void noticeCommand(Client &client, const std::vector<std::string> &inputClient);
 
+    // KICK
+    int         kickCommand(int client_fd, std::vector<std::string> inputClient);
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************
@@ -139,7 +142,11 @@ private:
     // Utils
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    Client *findClientByNick(const std::string &nickname);
+    // Client  *getClientByNickname(std::string const & nickname);
+    Client  *findClientByNick(const std::string &nickname);
+    int     removeClientFromMap(int client_fd);
+
+    // DEBUG FUNCTIONS
     void    printClientList() const;
     void handleModeCommand(const std::vector<std::string> &inputClient, int clientFd);
 

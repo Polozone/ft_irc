@@ -5,10 +5,11 @@ Channel::Channel(){}
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
     : _channelName(checkChannelName(channelName)), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),
-    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false), _isPasswd(false)
+    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false), 
+    _isPasswd(false), _nbrClientsConnected(0) 
 {
     addClientToChannel(creator->getFd(), creator, passwd);
-    addOperator(creator->getNickname());
+    addOperator(creator);
     if (_passwd != "")
         _isPasswd = true;
 }
@@ -20,42 +21,39 @@ std::string Channel::checkChannelName(std::string &channelName)
     return (channelName);
 }
 
-void Channel::removeOperator(std::string &opName)
+void Channel::removeOperator(int fdClient)
 {
-    size_t  index = 0;
-
-    for (_it = _operators.begin(); _it != _operators.end(); ++_it)
-    {
-        if (*_it == opName)
-        {
-            _operators.erase(_operators.begin() + index);
-            std::cout << *_it << " have been removed from operators list" << std::endl;
-            return ;
-        }
-        index++;
-    }
+    _operators.erase(fdClient);
+    rmvClientFromSpeakList(fdClient);
 }
 
-void Channel::addOperator(std::string opName)
+void Channel::addOperator(Client *clientToAdd)
 {
-    if (isClientExist(opName) && ! isOperator(opName))
+    std::string clientName = clientToAdd->getNickname();
+
+    if (isClientExist(clientName) && ! isOperator(clientToAdd->getNickname()))
     {
-        _operators.push_back(opName);
-        std::cout << opName << " have been added to operators list" << std::endl;
+        std::pair<std::map<int, Client*>::iterator, bool> result = _operators.insert(std::make_pair(clientToAdd->getFd(), clientToAdd));
+        if(result.second) {
+            std::cout << clientName << " have been added to operators list" << std::endl;
+            addClientToSpeakList(clientToAdd);
+        }
     }
+    printOperators();
 }
 
 void    Channel::printOperators()
 {
-    for (_it = _operators.begin(); _it != _operators.end(); ++_it)
-        std::cout << *_it << std::endl;
+    for (_itm = _operators.begin(); _itm != _operators.end(); ++_itm)
+        std::cout << (*_itm).second->getNickname() << std::endl;
 }
 
-bool    Channel::checkPasswd(const std::string& passwd, int fdClient)
+bool    Channel::checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd)
 {
     if (_isPasswd && _passwd != passwd)
     {
-        std::cout << "check passwd wrong "<< std::endl;
+        clientToAdd->sendMessage(ERR_WRONGPSSWD(_channelName));
+        std::cout << "wrong passwd!" << std::endl;
         return false;
     }
     return true;
@@ -63,7 +61,7 @@ bool    Channel::checkPasswd(const std::string& passwd, int fdClient)
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd)
 {
-    if ( ! checkPasswd(passwd, fdClient))
+    if ( ! checkPasswd(passwd, fdClient, clientToAdd))
         return ;
     if (_isInviteOnly)
         clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
@@ -73,11 +71,10 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std
         {
             std::pair<std::map<int, Client*>::iterator, bool> result = _clients.insert(std::make_pair(fdClient, clientToAdd));
             if(result.second) {
-                _nbrClientsConnected++;
-                clientToAdd->sendMessage(RPL_TOPIC(_channelName, _topicContent));
                 clientToAdd->sendMessage(RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
                 std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
-                sendToAllClients(message);
+                sendToAllClients(message, clientToAdd);
+                _nbrClientsConnected++;
             }
         }
         else
@@ -85,7 +82,6 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std
             clientToAdd->sendMessage(ERR_CHANNELISFULL(_channelName));
         }
     }
-    printClientList();
 }
 
 void    Channel::removeClientByFd(int fdClient)
@@ -94,29 +90,22 @@ void    Channel::removeClientByFd(int fdClient)
     _nbrClientsConnected--;
 }
 
-void    Channel::addClientToSpeakList(std::string &clientName)
+void    Channel::addClientToSpeakList(Client *clientToAdd)
 {
+    std::string clientName = clientToAdd->getNickname();
+    
     if (isClientExist(clientName))
     {
-        _canSpeakList.push_back(clientName);
-        std::cout << clientName << " has been added to speak list of " << _channelName << std::endl;
+        std::pair<std::map<int, Client*>::iterator, bool> result = _canSpeakList.insert(std::make_pair(clientToAdd->getFd(), clientToAdd));
+        if(result.second) {
+            std::cout << clientName << " have been added to speak list" << std::endl;
+        }
     }
 }
 
-void    Channel::rmvClientFromSpeakList(std::string &clientName)
+void    Channel::rmvClientFromSpeakList(int clientFd)
 {
-    size_t  index = 0;
-
-    for (_it = _canSpeakList.begin(); _it != _canSpeakList.end(); ++_it)
-    {
-        if (*_it == clientName)
-        {
-            _canSpeakList.erase(_canSpeakList.begin() + index);
-            std::cout << *_it << " has been removed to speak list of " << _channelName << std::endl;
-            break ;
-        }
-        index++;
-    }
+    _canSpeakList.erase(clientFd);
 }
 
 bool    Channel::isClientExist(std::string &clientName)
@@ -139,8 +128,8 @@ void    Channel::printClientList()
 
 void    Channel::printSpeakList()
 {
-    for (_it = _canSpeakList.begin(); _it != _canSpeakList.end(); ++_it)
-        std::cout << *_it << " ";
+    for (_itm = _canSpeakList.begin(); _itm != _canSpeakList.end(); ++_itm)
+        std::cout << (*_itm).second->getNickname() << " ";
     std::cout << std::endl;
 }
 
@@ -167,8 +156,15 @@ bool    Channel::isClientIsInvited(std::string &clientName)
     return (false);
 }
 
-void Channel::sendToAllClients(std::string &message)
+void Channel::sendToAllClients(std::string &message, Client *sender)
 {
+    if (_isModerate)
+    {
+        if ( isSpeakList(*sender) )
+            sendMsgToSpeakList(message, *sender);
+        else
+            return ;
+    }
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
     {
         (*_itm).second->sendMessage(message);
@@ -177,9 +173,9 @@ void Channel::sendToAllClients(std::string &message)
 
 bool    Channel::isOperator(const std::string &clientName)
 {
-    for (_it = _operators.begin(); _it != _operators.end(); ++_it)
+    for (_itm = _operators.begin(); _itm != _operators.end(); ++_itm)
     {
-        if (*_it == clientName)
+        if ((*_itm).second->getNickname() == clientName)
             return (true);
     }
     return (false);
@@ -187,6 +183,16 @@ bool    Channel::isOperator(const std::string &clientName)
 // This function sends a message to all clients connected to a channel except for the one specified.
 void Channel::sendToChannel(const std::string &message, const Client &user)
 {
+    if (_isModerate)
+    {
+        if ( isSpeakList(user) )
+        {
+            sendMsgToSpeakList(message, user);
+            return ;
+        }
+        else
+            return ;
+    }
     // Iterate over all clients connected to the channel
     for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
     {
@@ -199,14 +205,24 @@ void Channel::sendToChannel(const std::string &message, const Client &user)
     }
 }
 
-void    Channel::sendMsgToSpeakList(std::string &message)
+void    Channel::sendMsgToSpeakList(const std::string &message, const Client &sender)
 {
-    for (_itm = _clients.begin(); _itm != _clients.end(); ++_itm)
+    for (_itm = _canSpeakList.begin(); _itm != _canSpeakList.end(); ++_itm)
     {
-        for (_it = _canSpeakList.begin(); _it != _canSpeakList.end(); ++_it)
-        {
-            if ((*_itm).second->getNickname() == *_it)
-                (*_itm).second->sendMessage(message);
-        }
+        if ((*_itm).second->getNickname() != sender.getNickname())
+            (*_itm).second->sendMessage(message);
     }
 }
+
+bool    Channel::isSpeakList(const Client &client)
+{
+    for (_itm = _canSpeakList.begin(); _itm != _canSpeakList.end(); ++_itm)
+    {
+        if ((*_itm).second->getNickname() == client.getNickname())
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
