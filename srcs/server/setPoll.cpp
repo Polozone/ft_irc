@@ -9,7 +9,8 @@ int Server::findFdsIndex(int fdToFind)
 
     for (it = fds.begin(); it != ite; ++it)
     {
-        if (it[i].fd == fdToFind)
+        std::cout << "fd: " << it->fd << std::endl;
+        if (it->fd == fdToFind)
             return (i);
         i++;
     }
@@ -38,6 +39,7 @@ int Server::closeConnectionByFd(int fd)
     if (index == -1)
         return (-1);
 
+    std::cout << "index to erase :" << index << std::endl;
     fds.erase(fds.begin() + index);
     close_conn = 0;
     return (0);

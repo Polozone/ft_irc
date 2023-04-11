@@ -27,6 +27,8 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
 {
   const std::string &nickname = client.getNickname();
 
+  std::cout << "oper is set for  -->" << client.getNickname() << std::endl;
+
   if (args.size() < 2)
   {
     client.sendMessage(ERR_NEEDMOREPARAMS(nickname));
@@ -45,6 +47,7 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
     client.setOperatorStatus(true);
     client.sendMessage(RPL_YOUREOPER(nickname));
     client.sendMessage(message);
+    std::cout << "inside oper, status of oper is :" << client.getOperatorStatus() << std::endl;
   }
   else
   {
