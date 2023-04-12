@@ -179,6 +179,7 @@ void    Server::deleteAllChannel()
         delete *it;
     }
 }
+<<<<<<< HEAD
 
 // Define a function to handle signals
 void sigHandler(int sig)
@@ -194,3 +195,5 @@ void sigHandler(int sig)
     // Terminate the program
     exit(0);
 }
+=======
+>>>>>>> d22507796ef87b179f0343e9373b0216e8325b98
