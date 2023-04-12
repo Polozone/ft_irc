@@ -73,6 +73,7 @@ private:
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
+    void        deleteAllChannel();
 
     // Commands
 
@@ -89,7 +90,6 @@ private:
     
     // JOIN
     void        joinCommand(std::vector<std::string> command, int clientFd);
-    void        deleteAllChannel();
     
     // MODE
 
@@ -159,7 +159,6 @@ private:
     // DEBUG FUNCTIONS
     void    printClientList() const;
     void handleModeCommand(const std::vector<std::string> &inputClient, int clientFd);
-
 
     // Variables
     const char *port;
