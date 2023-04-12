@@ -41,11 +41,13 @@ class Server
 {
 
 public:
+
     Server(const char *port, const char *password);
     ~Server();
 
     // SIG HANDLER
     friend void    sigHandler(int sig);
+
 
 private:
     Server();
@@ -72,6 +74,8 @@ private:
     void        printChannelList();
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
+    void        deleteAllChannel();
+
 
     // Commands
 
