@@ -2,6 +2,11 @@
 
 Channel::Channel(){}
 
+Channel::~Channel()
+{
+    delete this;
+}
+
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
     : _channelName(checkChannelName(channelName)), _passwd(passwd), _creator(creator),
     _isPrivate(false), _isSecret(false), _isInviteOnly(false),

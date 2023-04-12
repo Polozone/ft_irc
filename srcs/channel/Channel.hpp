@@ -17,6 +17,7 @@ class Channel {
     public:
 
         Channel(std::string name, std::string passwd, Client * creator);
+        ~Channel();
 
         // GETTERS
         std::string                 getPasswd(){return _passwd;};

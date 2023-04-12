@@ -11,11 +11,12 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <cstring>
 #include <sys/types.h>
-#include <netdb.h>
-#include <iostream>
 #include <poll.h>
+#include <netdb.h>
+#include <signal.h>
+#include <iostream>
+#include <cstring>
 #include <vector>
 #include <algorithm>
 #include <map>
@@ -25,7 +26,7 @@
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "10.14.1.7"
 
 #define TRUE 1
 #define FALSE 0

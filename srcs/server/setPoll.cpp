@@ -195,9 +195,9 @@ int Server::setPoll()
     //!----and what tipe of event we want to monitor
     //!----we add it to a list of fds, representing the users
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
-
     do
     {
+
         if (polling() == -1)
             break;
         current_size = fds.size();
