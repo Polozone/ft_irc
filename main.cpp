@@ -17,16 +17,14 @@ void sigHandler(int sig)
 
 int main(int ac, char **av)
 {
-	// if (ac != 3)
-	// {
-	// 	std::cerr << "./ircserv [port number] [password]\n";
-	// 	return (-1);
-	// }
-	// handleUserInput();
-	//Server test(av[1], "awd");
+	if (ac != 3)
+	{
+		std::cerr << "./ircserv [port number] [password]\n";
+		return (-1);
+	}
 	g_ircserver = new Server(av[1], av[2]);
     signal(SIGINT, sigHandler);
 	delete g_ircserver;
-	// Server ircserv(av[1], av[2]);
+
 	return (0);
 }
