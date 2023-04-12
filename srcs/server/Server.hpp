@@ -26,7 +26,7 @@
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
 
-#define SERVER_ADDR "10.14.1.7"
+#define SERVER_ADDR "127.0.0.1"
 
 #define TRUE 1
 #define FALSE 0
@@ -45,11 +45,7 @@ public:
     ~Server();
 
     // SIG HANDLER
-
-    void        sigHandler(int sig);
-
-    void        deleteAllChannel();
-
+    friend void    sigHandler(int sig);
 
 private:
     Server();
@@ -191,3 +187,4 @@ const       std::string extractCommandContent(const std::string &buffer, const s
 void        sendNumericReplies(int fd, const std::string &message);
 const char *addCarriageReturn(const char *buffer);
 std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
+void sigHandler(int sig);

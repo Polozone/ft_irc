@@ -181,10 +181,18 @@ void    Server::deleteAllChannel()
     }
 }
 
-void  Server::sigHandler(int sig)
+
+// Define a function to handle signals
+void sigHandler(int sig)
 {
-	signal(sig, SIG_IGN);
-	std::cout << "leave by SIGINT" << std::endl;
-    deleteAllChannel();
-	exit(0);
+    // Ignore the signal
+    signal(sig, SIG_IGN);
+
+    
+    // Output a message to the console
+    std::cout << "leave by SIGINT" << std::endl;
+    std::cout << "passing by sigHandler\n";
+    
+    // Terminate the program
+    exit(0);
 }
