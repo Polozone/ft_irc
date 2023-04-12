@@ -6,6 +6,7 @@ Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
     Server::addOperCreds("Admin", "42lyon");
+    signal(SIGINT, sigHandler);
     Server::launchServer();
 }
 
@@ -167,4 +168,23 @@ void    Server::printClientList() const
         std::cout << it->first << std::endl;
         std::cout << it->second->getNickname() << std::endl;
     }
+}
+
+void    Server::deleteAllChannel()
+{
+    std::vector<Channel *>::iterator it;
+    std::vector<Channel *>::iterator ite = _channelList.end();
+
+    for (it = _channelList.begin(); it != ite; ++it)
+    {
+        delete *it;
+    }
+}
+
+void  Server::sigHandler(int sig)
+{
+	signal(sig, SIG_IGN);
+	std::cout << "leave by SIGINT" << std::endl;
+    // deleteAllChannel();
+	exit(0);
 }

@@ -26,7 +26,7 @@
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "10.14.1.7"
 
 #define TRUE 1
 #define FALSE 0
@@ -85,6 +85,7 @@ private:
     
     // JOIN
     void        joinCommand(std::vector<std::string> command, int clientFd);
+    void        deleteAllChannel();
     
     // MODE
 
@@ -154,6 +155,10 @@ private:
     // DEBUG FUNCTIONS
     void    printClientList() const;
     void handleModeCommand(const std::vector<std::string> &inputClient, int clientFd);
+
+    // SIG HANDLER
+
+    static void    sigHandler(int sig);
 
     // Variables
     const char *port;

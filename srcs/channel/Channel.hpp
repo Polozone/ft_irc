@@ -87,7 +87,6 @@ class Channel {
     
         std::vector<std::string>            _privateClientAllowed;
         std::vector<std::string>            _invitedClient;
-        // std::vector<std::string>            _canSpeakList;
         
         bool                                _isPasswd;
         int                                 _nbrClientsConnected;
