@@ -44,6 +44,9 @@ public:
     Server(const char *port, const char *password);
     ~Server();
 
+    // SIG HANDLER
+    friend void    sigHandler(int sig);
+
 private:
     Server();
     Server(const Server &rhs);
@@ -156,9 +159,6 @@ private:
     void    printClientList() const;
     void handleModeCommand(const std::vector<std::string> &inputClient, int clientFd);
 
-    // SIG HANDLER
-
-    static void    sigHandler(int sig);
 
     // Variables
     const char *port;
@@ -189,3 +189,4 @@ const       std::string extractCommandContent(const std::string &buffer, const s
 void        sendNumericReplies(int fd, const std::string &message);
 const char *addCarriageReturn(const char *buffer);
 std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
+void sigHandler(int sig);
