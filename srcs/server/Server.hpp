@@ -22,6 +22,7 @@
 #include <map>
 #include <sstream>
 #include <cstddef>
+#include<cstdlib>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
@@ -46,7 +47,9 @@ public:
     ~Server();
 
     // SIG HANDLER
-    friend void    sigHandler(int sig);
+    friend void sigHandler(int sig);
+    // Server setup
+    int launchServer();
 
 
 private:
@@ -56,7 +59,6 @@ private:
     Server &operator=(const Server &rhs);
 
 // Server setup
-    int         launchServer();
     int         getAddrinfo();
     int         getListenerSock();
 
