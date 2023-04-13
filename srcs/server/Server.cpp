@@ -8,7 +8,7 @@ Server::Server(const char *port, const char *password)
     Server::addOperCreds("Admin", "42lyon");
 }
 
-Server::~Server() {}
+Server::~Server() { }
 Server::Server() {}
 Server::Server(const Server &rhs)
 {
@@ -186,6 +186,23 @@ void Server::deleteAllChannel()
             std::cout << "Deleting channel at address: " << *it << std::endl;
             delete (*it);
             *it = NULL;
+        }
+        _channelList.clear();
+    }
+}
+
+void Server::deleteAllClients()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clients.end();
+
+    for (it = _clients.begin(); it != ite; ++it)
+    {
+        if (it->second != NULL)
+        {
+            std::cout << "Deleting channel at address: " << *it->second << std::endl;
+            delete (it->second);
+            it->second = NULL;
         }
         _channelList.clear();
     }

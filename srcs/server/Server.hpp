@@ -77,6 +77,7 @@ private:
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
     void        deleteAllChannel();
+    void        deleteAllClients();
 
 
     // Commands
