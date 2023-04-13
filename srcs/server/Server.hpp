@@ -38,11 +38,11 @@ class Client;
 int setPoll(int listener_fd);
 int welcomeClient(int fd);
 
-
 class Server
 {
 
 public:
+
     Server(const char *port, const char *password);
     ~Server();
 
@@ -50,6 +50,7 @@ public:
     friend void sigHandler(int sig);
     // Server setup
     int launchServer();
+
 
 private:
     Server();
@@ -76,6 +77,7 @@ private:
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
     void        deleteAllChannel();
+
 
     // Commands
 

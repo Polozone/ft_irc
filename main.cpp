@@ -12,11 +12,6 @@
 */
 Server *g_ircserver = NULL;
 
-/**
-	@brief Handles user input and sends it to the server
-	This function is called by the main() function and is responsible for handling
-	user input and sending it to the IRC server. 
-*/
 void handleUserInput();
 
 /**
@@ -44,6 +39,11 @@ void sigHandler(int sig)
 
 int main(int ac, char **av)
 {
+	if (ac != 3)
+	{
+		std::cerr << "./ircserv [port number] [password]\n";
+		return (0);
+	}
 	g_ircserver = new Server(av[1], av[2]);
 	signal(SIGINT, sigHandler);
 	g_ircserver->launchServer();
