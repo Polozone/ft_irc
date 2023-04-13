@@ -29,11 +29,9 @@ void sigHandler(int sig)
 	signal(sig, sigHandler);
 	if (g_ircserver != NULL)
 	{
-		std::cout << "Server not empty\n";
 		g_ircserver->deleteAllChannel();
 		g_ircserver->~Server();
 	}
-	std::cout << "leave by SIGINT" << std::endl;
 	exit(0);
 }
 
