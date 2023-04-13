@@ -32,8 +32,8 @@ void sigHandler(int sig)
 		std::cout << "Server not empty\n";
 		g_ircserver->deleteAllChannel();
 		g_ircserver->deleteAllClients();
-		g_ircserver->~Server();
 		freeaddrinfo(g_ircserver->servinfo);
+		delete g_ircserver;
 	}
 	std::cout << "leave by SIGINT" << std::endl;
 	exit(0);
