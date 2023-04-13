@@ -6,7 +6,6 @@ Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
     Server::addOperCreds("Admin", "42lyon");
-    Server::launchServer();
 }
 
 Server::~Server() {}
@@ -112,20 +111,20 @@ int Server::getListenerSock() {
     return (listen_sd);
 }
 
+/**
+    @brief Launches the server and sets up necessary connections and polling.
+    This function first calls getAddrinfo() to obtain address information about the server.
+    It then initializes the socket, modifies it to not block, assigns an IP and port to the socket,
+    and marks it as passive in order to accept incoming connections. After setting up the socket,
+    it creates a new poll instance to watch events and either establish new connections or handle
+    commands. Finally, it frees the address info and returns 0.
+    @return 0 if the server is successfully launched.
+*/
 int Server::launchServer() {
 
     getAddrinfo();
-
-    //?----(socket)initialize socket
-    //?----(fcntl)modify the socket to not block, even if there no data to read
-    //?----bind(assign) a ip and port to the socker
-    //?----listen, marck socket as passive in order to accept incoming connections 
     listen_sd = getListenerSock();
-    
-    //?---create new poll instance to watch event
-    //? ---watch events to either stablish new connections or handle commands
     setPoll();
-
     freeaddrinfo(servinfo);
     return (0);
 }
@@ -169,13 +168,25 @@ void    Server::printClientList() const
     }
 }
 
-void    Server::deleteAllChannel()
+/**
+    @brief Deletes all channels stored in the server's channel list.
+    This function iterates through the server's channel list, deletes each channel object,
+    and sets the corresponding vector element to NULL. After deletion, the function also
+    clears the entire channel list.
+*/
+void Server::deleteAllChannel()
 {
     std::vector<Channel *>::iterator it;
     std::vector<Channel *>::iterator ite = _channelList.end();
 
     for (it = _channelList.begin(); it != ite; ++it)
     {
-        delete *it;
+        if (*it != NULL)
+        {
+            std::cout << "Deleting channel at address: " << *it << std::endl;
+            delete (*it);
+            *it = NULL;
+        }
+        _channelList.clear();
     }
 }

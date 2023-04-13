@@ -4,7 +4,7 @@ Channel::Channel(){}
 
 Channel::~Channel()
 {
-    delete this;
+    // delete this;
 }
 
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
