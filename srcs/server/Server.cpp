@@ -208,21 +208,3 @@ void Server::deleteAllClients()
     }
     _clients.clear();
 }
-
-void Server::deleteAllClientsTryingToConnect()
-{
-    std::map<int, Client *>::iterator it;
-    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
-
-    std::cout << "passing by deleteAllClientsTryingToConnect before for loop\n";
-    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
-    {
-        if (it->second != NULL)
-        {
-            std::cout << "passing by delete : ClientsTryingToConnect\n";
-            delete (it->second);
-            it->second = NULL;
-        }
-    }
-    _clientsTryingToConnect.clear();
-}

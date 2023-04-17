@@ -94,8 +94,6 @@ int Server::welcomeClient(int client_fd)
     sendNumericReplies(client_fd, RPL_WELCOME(sPort, _clientsTryingToConnect[client_fd]->getNickname()));
     //! map intead of vector 
     _clients[client_fd] = _clientsTryingToConnect[client_fd];
-    delete _clientsTryingToConnect[client_fd];
-    _clientsTryingToConnect.erase(client_fd);
     checkNickUser(client_fd, getClientByFd(client_fd).getNickname());
     return (0);
 }
