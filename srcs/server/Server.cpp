@@ -11,7 +11,7 @@ Server::Server(const char *port, const char *password)
     Server::addOperCreds("Admin", "42lyon");
 }
 
-Server::~Server() {}
+Server::~Server() { }
 Server::Server() {}
 Server::Server(const Server &rhs)
 {
@@ -187,4 +187,40 @@ void Server::deleteAllChannel()
         delete (*it);
     }
     _channelList.clear();
+}
+
+void Server::deleteAllClients()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clients.end();
+
+    std::cout << "passing by deleteAllClients before for loop\n";
+    for (it = _clients.begin(); it != ite; ++it)
+    {
+        if (it->second != NULL)
+        {
+            std::cout << "passing by delete : clients\n";
+            delete (it->second);
+            it->second = NULL;
+        }
+    }
+    _clients.clear();
+}
+
+void Server::deleteAllClientsTryingToConnect()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
+
+    std::cout << "passing by deleteAllClientsTryingToConnect before for loop\n";
+    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
+    {
+        if (it->second != NULL)
+        {
+            std::cout << "passing by delete : ClientsTryingToConnect\n";
+            delete (it->second);
+            it->second = NULL;
+        }
+    }
+    _clientsTryingToConnect.clear();
 }

@@ -77,11 +77,10 @@ private:
     Channel*    findChannelByName(std::string channelName);
     void        printClientMaps() const;
     void        deleteAllChannel();
-
+    void        deleteAllClients();
+    void        deleteAllClientsTryingToConnect();
 
     // Commands
-
-
     // ************************************
     // |                                  |
     // |             COMMANDS             |
