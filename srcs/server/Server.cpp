@@ -181,12 +181,8 @@ void Server::deleteAllChannel()
 
     for (it = _channelList.begin(); it != ite; ++it)
     {
-        if (*it != NULL)
-        {
-            std::cout << "Deleting channel at address: " << *it << std::endl;
-            delete (*it);
-            *it = NULL;
-        }
+        std::cout << "Deleting channel at address: " << *it << std::endl;
+        delete (*it);
     }
     _channelList.clear();
 }
@@ -199,12 +195,22 @@ void Server::deleteAllClients()
     std::cout << "passing by deleteAllClients before for loop\n";
     for (it = _clients.begin(); it != ite; ++it)
     {
-        if (it->second != NULL)
-        {
-            std::cout << "passing by delete : clients\n";
-            delete (it->second);
-            it->second = NULL;
-        }
+        std::cout << "passing by delete : clients\n";
+        delete (it->second);
     }
     _clients.clear();
+}
+
+void Server::deleteAllClientsTryingToConnect()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
+
+    std::cout << "passing by deleteAllClients before for loop\n";
+    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
+    {
+        std::cout << "passing by delete : clientsTryingToConnect\n";
+        delete (it->second);
+    }
+    _clientsTryingToConnect.clear();
 }
