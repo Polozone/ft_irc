@@ -78,11 +78,9 @@ private:
     void        printClientMaps() const;
     void        deleteAllChannel();
     void        deleteAllClients();
-
+    void        deleteAllClientsTryingToConnect();
 
     // Commands
-
-
     // ************************************
     // |                                  |
     // |             COMMANDS             |

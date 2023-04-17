@@ -152,6 +152,7 @@ int Server::acceptIncomingConnection()
         getsockname(new_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
 
         // Create a new client object and add it to the _clientsTryingToConnect map
+        std::cout << "allocating memory for _clientsTryingToConnect\n";
         this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
 
         // Add a new pollfd structure to the fds vector for the new socket descriptor
