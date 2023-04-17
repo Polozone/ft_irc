@@ -99,7 +99,6 @@ int Server::removeClientFromMap(int client_fd)
     it = _clientsTryingToConnect.find(client_fd);
     if (it != _clientsTryingToConnect.end())
     {
-        delete (it->second);
         _clientsTryingToConnect.erase(it);
         return (0);
     }
