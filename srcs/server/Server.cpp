@@ -184,13 +184,7 @@ void Server::deleteAllChannel()
 
     for (it = _channelList.begin(); it != _channelList.end(); ++it)
     {
-        if (*it != NULL)
-        {
-            std::cout << "Deleting channel at address: " << *it << std::endl;
-            delete (*it);
-            *it = NULL;
-        }
-        _channelList.clear();
+        delete (*it);
     }
     _channelList.clear();
 }

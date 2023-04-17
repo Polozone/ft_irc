@@ -43,13 +43,15 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
 void    Server::modeOflag(char sign, Channel *targetedChannel, std::string nameClientTargeted, Client *caller)
 {
     std::string message;
-    Client *clientTargeted;
+    Client *clientTargeted = NULL;
 
     if ( ! nameClientTargeted.empty() )
         clientTargeted = findClientByNick(nameClientTargeted);
     else
         return ;
 
+    if (clientTargeted == NULL)
+        return ;
     if (sign == '+')
     {
         message = ": MODE " + targetedChannel->getChannelName() + " +o " + nameClientTargeted;
@@ -107,6 +109,10 @@ void    Server::modeMflag(char sign, Channel *targetedChannel, std::string clien
 void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clientName)
 {
     Client *targetedClient = findClientByNick(clientName);
+
+    if (targetedClient == NULL)
+        return ;
+
     if (sign == '+')
     {
         std::cout << clientName << " will be add to clientSpeakList" << std::endl;
