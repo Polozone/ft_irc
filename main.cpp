@@ -28,14 +28,7 @@ void sigHandler(int sig)
 {
 	signal(sig, sigHandler);
 	if (g_ircserver != NULL)
-	{
-		std::cout << "Server not empty\n";
-		g_ircserver->deleteAllChannel();
-		g_ircserver->deleteAllClientsTryingToConnect();
-		g_ircserver->deleteAllClients();
-		freeaddrinfo(g_ircserver->servinfo);
-		delete g_ircserver;
-	}
+		freeResources(g_ircserver);
 	std::cout << "leave by SIGINT" << std::endl;
 	exit(0);
 }
@@ -50,5 +43,6 @@ int main(int ac, char **av)
 	g_ircserver = new Server(av[1], av[2]);
 	signal(SIGINT, sigHandler);
 	g_ircserver->launchServer();
+	freeResources(g_ircserver);
 	return (0);
 }

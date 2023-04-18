@@ -125,7 +125,7 @@ int Server::launchServer() {
     getAddrinfo();
     listen_sd = getListenerSock();
     setPoll();
-    freeaddrinfo(servinfo);
+    // freeaddrinfo(servinfo);
     return (0);
 }
 
@@ -206,7 +206,7 @@ void Server::deleteAllClientsTryingToConnect()
     std::map<int, Client *>::iterator it;
     std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
 
-    std::cout << "passing by deleteAllClients before for loop\n";
+    std::cout << "passing by deleteAllClientsTryingToConnect before for loop\n";
     for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
     {
         std::cout << "passing by delete : clientsTryingToConnect\n";

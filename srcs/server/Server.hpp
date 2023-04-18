@@ -48,6 +48,8 @@ public:
 
     // SIG HANDLER
     friend void sigHandler(int sig);
+    friend void freeResources(Server *server);
+
     // Server setup
     int launchServer();
 
@@ -192,4 +194,5 @@ const       std::string extractCommandContent(const std::string &buffer, const s
 void        sendNumericReplies(int fd, const std::string &message);
 const char *addCarriageReturn(const char *buffer);
 std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
-void sigHandler(int sig);
+void        sigHandler(int sig);
+void        freeResources(Server *server);

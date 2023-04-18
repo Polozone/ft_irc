@@ -143,3 +143,21 @@ void Server::printClientMaps() const
         i++;
     }
 }
+
+/**
+    @brief Frees the resources allocated for the server and deletes the server object.
+    This function proceeds to call three member functions of the Server class to delete all 
+    channels, all clients trying to connect, and all clients that are currently connected to 
+    the server. Next, it frees the memory allocated for the servinfo structure, which was 
+    obtained from the getaddrinfo() function. Finally, it deletes the server object itself.
+    @param server A pointer to the Server object whose resources are to be freed.
+    @return This function does not return anything.
+*/
+void freeResources(Server *server)
+{
+    server->deleteAllChannel();
+    server->deleteAllClientsTryingToConnect();
+    server->deleteAllClients();
+    freeaddrinfo(server->servinfo);
+    delete server;
+}

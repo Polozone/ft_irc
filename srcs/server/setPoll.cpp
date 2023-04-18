@@ -173,7 +173,7 @@ int Server::polling()
     std::cout << "Waiting on poll()...\n";
 
     nfd = fds.size();
-    status = poll(fds.data(), nfd, 180000);
+    status = poll(fds.data(), nfd, 9000);
     if (status < 0)
     {
         perror("poll()");
