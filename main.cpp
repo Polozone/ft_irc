@@ -33,16 +33,25 @@ void sigHandler(int sig)
 	exit(0);
 }
 
-int main(int ac, char **av)
+int main(int argc, const char **argv)
 {
-	if (ac != 3)
+	if (argc != 3)
 	{
 		std::cerr << "./ircserv [port number] [password]\n";
-		return (0);
+		return 1; // Return non-zero to indicate failure
 	}
-	g_ircserver = new Server(av[1], av[2]);
+
+	// Create server object
+	Server *server = new Server(argv[1], argv[2]);
+
+	// Register signal handler for SIGINT
 	signal(SIGINT, sigHandler);
-	g_ircserver->launchServer();
-	freeResources(g_ircserver);
-	return (0);
+
+	// Launch server
+	server->launchServer();
+
+	// Free resources and delete server object
+	freeResources(server);
+
+	return 0; // Return zero to indicate success
 }
