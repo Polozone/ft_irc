@@ -1,17 +1,17 @@
 
 #include "../Server.hpp"
 
-static int    parseFlags(std::string &flags)
+static int    parseFlags(std::string &flags, Client &client)
 {
-    std::string::iterator it;
     int counter = 0;
+
     for (int i = 0; i < flags.length(); i++)
     {
         if (flags[i] != '-' && flags[i] != '+' && flags[i] != 'p' 
             && flags[i] != 's' && flags[i] != 'i' && flags[i] != 'm' 
             && flags[i] != 'v' && flags[i] != 't' && flags[i] != 'l' && flags[i] != 'o')
         {
-            std::cout << "MODE/ #Channel -+psitlmvo [args...]" << std::endl;
+            client.sendMessage(ERR_UNKNOWNMODE(flags[i]));
             return (-1);
         }
         if (flags[i] == 't' || flags[i] == 'l' || flags[i] == 'o' || flags[i] == 'v')
@@ -114,10 +114,7 @@ void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clien
         return ;
 
     if (sign == '+')
-    {
-        std::cout << clientName << " will be add to clientSpeakList" << std::endl;
         targetedChannel->addClientToSpeakList(targetedClient);
-    }
     else if (sign == '-')
         targetedChannel->rmvClientFromSpeakList(targetedClient->getFd());
     else
@@ -207,20 +204,19 @@ void    Server::parseChannelModeCommand(std::vector<std::string> command, int cl
 
     if ((targetedChannel = findChannelByName(targetChannelName)) == NULL)
     {
-        std::cout << "Channel does not exist" << std::endl;
+        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname()));
         return ;
     }
 
     if (targetedChannel->isOperator(client.getNickname()) == false)
     {
-        std::cout << ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()) << std::endl;
         client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), targetedChannel->getChannelName()));
         return ;
     }
 
     if (command.size() > 2)
     {
-        if ((flagNeedArgs = parseFlags(command[2])) == -1)
+        if ((flagNeedArgs = parseFlags(command[2], client)) == -1)
             return ;
         executeFlags(flagNeedArgs, command, clientFd, targetedChannel);
     }

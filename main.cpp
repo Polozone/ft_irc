@@ -38,7 +38,16 @@ void sigHandler(int sig)
 	}
 	std::cout << "leave by SIGINT" << std::endl;
 	exit(0);
- }
+}
+
+void sigTest(int sig)
+{
+	signal(sig, sigTest);
+	if (sig == SIGHUP)
+		std::cout << "SIGHUP!" << std::endl;
+	std::cout << "SIGHUP!" << std::endl;
+}
+
 
 int main(int ac, char **av)
 {
@@ -49,6 +58,7 @@ int main(int ac, char **av)
 	}
 	g_ircserver = new Server(av[1], av[2]);
 	signal(SIGINT, sigHandler);
+	signal(SIGHUP, sigTest);
 	g_ircserver->launchServer();
 	return (0);
 }

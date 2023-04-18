@@ -37,7 +37,6 @@ void Channel::addOperator(Client *clientToAdd)
     {
         std::pair<std::map<int, Client*>::iterator, bool> result = _operators.insert(std::make_pair(clientToAdd->getFd(), clientToAdd));
         if(result.second) {
-            std::cout << clientName << " have been added to operators list" << std::endl;
             addClientToSpeakList(clientToAdd);
         }
     }
@@ -55,7 +54,6 @@ bool    Channel::checkPasswd(const std::string& passwd, int fdClient, Client * c
     if (_isPasswd && _passwd != passwd)
     {
         clientToAdd->sendMessage(ERR_WRONGPSSWD(_channelName));
-        std::cout << "wrong passwd!" << std::endl;
         return false;
     }
     return true;

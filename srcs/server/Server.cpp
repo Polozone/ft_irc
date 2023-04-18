@@ -135,10 +135,8 @@ void    Server::printChannelList()
 {
     std::vector<Channel*>::iterator it;
 
-    std::cout << "before printCHannelList" << std::endl;
     for (it = _channelList.begin(); it != _channelList.end(); ++it)
     {
-        // Channel* channel = *it;
         std::cout << "channelName:" << (*it)->getChannelName() <<std::endl;
     }
 }
@@ -194,12 +192,10 @@ void Server::deleteAllClients()
     std::map<int, Client *>::iterator it;
     std::map<int, Client *>::iterator ite = _clients.end();
 
-    std::cout << "passing by deleteAllClients before for loop\n";
     for (it = _clients.begin(); it != ite; ++it)
     {
         if (it->second != NULL)
         {
-            std::cout << "passing by delete : clients\n";
             delete (it->second);
             it->second = NULL;
         }
