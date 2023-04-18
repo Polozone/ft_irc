@@ -8,7 +8,7 @@ Server::Server(const char *port, const char *password)
     Server::addOperCreds("Admin", "42lyon");
 }
 
-Server::~Server() {}
+Server::~Server() { }
 Server::Server() {}
 Server::Server(const Server &rhs)
 {
@@ -125,7 +125,7 @@ int Server::launchServer() {
     getAddrinfo();
     listen_sd = getListenerSock();
     setPoll();
-    freeaddrinfo(servinfo);
+    // freeaddrinfo(servinfo);
     return (0);
 }
 
@@ -181,12 +181,36 @@ void Server::deleteAllChannel()
 
     for (it = _channelList.begin(); it != ite; ++it)
     {
-        if (*it != NULL)
-        {
-            std::cout << "Deleting channel at address: " << *it << std::endl;
-            delete (*it);
-            *it = NULL;
-        }
-        _channelList.clear();
+        std::cout << "Deleting channel at address: " << *it << std::endl;
+        delete (*it);
     }
+    _channelList.clear();
+}
+
+void Server::deleteAllClients()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clients.end();
+
+    std::cout << "passing by deleteAllClients before for loop\n";
+    for (it = _clients.begin(); it != ite; ++it)
+    {
+        std::cout << "passing by delete : clients\n";
+        delete (it->second);
+    }
+    _clients.clear();
+}
+
+void Server::deleteAllClientsTryingToConnect()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
+
+    std::cout << "passing by deleteAllClientsTryingToConnect before for loop\n";
+    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
+    {
+        std::cout << "passing by delete : clientsTryingToConnect\n";
+        delete (it->second);
+    }
+    _clientsTryingToConnect.clear();
 }
