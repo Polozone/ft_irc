@@ -26,7 +26,7 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
 
     for (it = channelList.begin(); it != channelList.end(); ++it)
     {
-        Channel *channel;
+        Channel *channel = NULL;
         channelList[i] = channel->checkChannelName(channelList[i]);
         if ((channel = findChannelByName(channelList[i])) == NULL)
         {
