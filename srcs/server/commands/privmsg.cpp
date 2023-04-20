@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:47:54 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/06 11:41:45 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/20 12:41:12 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void Server::privmsgCommand(Client &client, std::vector<std::string> args)
         {
             // Send an error message to the client (e.g., ERR_NOSUCHCHANNEL
             client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname()));
+            return;
         }
         if (!channel->findClientByFd(client.getFd()))
         {
