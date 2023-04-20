@@ -33,5 +33,6 @@
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":\r\n"
 # define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n"
 # define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
-# define ERR_CHANNELISFULL(channel) ":localhost 471" + channel + " :Cannot join channel (+l)\r\n"
-# define ERR_NOPRIVILEGES ":localhost 481 :Permission Denied- You're not an IRC operator\r\n"
+# define ERR_CHANNELISFULL(channel) ":localhost 471 " + channel + " :Cannot join channel (+l)"
+# define ERR_NOPRIVILEGES ":localhost 481 :Permission Denied- You're not an IRC operator"
+# define ERR_UNKNOWNMODE(mode) mode + " :is unknown mode char to me"

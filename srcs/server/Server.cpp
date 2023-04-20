@@ -1,10 +1,13 @@
 
 #include "./Server.hpp"
 
+extern Server *g_ircserver;
+
 // CLASS INIT
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
+    g_ircserver = this;
     Server::addOperCreds("Admin", "42lyon");
 }
 
@@ -23,7 +26,6 @@ Server  &Server::operator=(const Server &rhs)
     fds = rhs.fds;
     return (*this);
 }
-
 
 // MEMBER FUNCTIONS
 int Server::getAddrinfo() {
@@ -135,8 +137,7 @@ void    Server::printChannelList()
 
     for (it = _channelList.begin(); it != _channelList.end(); ++it)
     {
-        Channel* channel = *it;
-        std::cout << "channelName:" << channel->getChannelName() <<std::endl;
+        std::cout << "channelName:" << (*it)->getChannelName() <<std::endl;
     }
 }
 
@@ -191,7 +192,6 @@ void Server::deleteAllClients()
     std::map<int, Client *>::iterator it;
     std::map<int, Client *>::iterator ite = _clients.end();
 
-    std::cout << "passing by deleteAllClients before for loop\n";
     for (it = _clients.begin(); it != ite; ++it)
     {
         delete (it->second);

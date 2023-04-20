@@ -1,9 +1,8 @@
 
 #include "../Server.hpp"
 
-static int    parseFlags(std::string &flags)
+static int    parseFlags(std::string &flags, Client &client)
 {
-    std::string::iterator it;
     int counter = 0;
     for (size_t i = 0; i < flags.length(); i++)
     {
@@ -11,6 +10,7 @@ static int    parseFlags(std::string &flags)
             && flags[i] != 's' && flags[i] != 'i' && flags[i] != 'm' 
             && flags[i] != 'v' && flags[i] != 't' && flags[i] != 'l' && flags[i] != 'o')
         {
+            client.sendMessage(ERR_UNKNOWNMODE(flags[i]));
             return (-1);
         }
         if (flags[i] == 't' || flags[i] == 'l' || flags[i] == 'o' || flags[i] == 'v')
@@ -35,13 +35,15 @@ void    Server::modeLflag(char sign, Channel *targetedChannel, std::string limit
 void    Server::modeOflag(char sign, Channel *targetedChannel, std::string nameClientTargeted, Client *caller)
 {
     std::string message;
-    Client *clientTargeted;
+    Client *clientTargeted = NULL;
 
     if ( ! nameClientTargeted.empty() )
         clientTargeted = findClientByNick(nameClientTargeted);
     else
         return ;
 
+    if (clientTargeted == NULL)
+        return ;
     if (sign == '+')
     {
         message = ": MODE " + targetedChannel->getChannelName() + " +o " + nameClientTargeted;
@@ -88,10 +90,12 @@ void    Server::modeMflag(char sign, Channel *targetedChannel)
 void    Server::modeVflag(char sign, Channel *targetedChannel, std::string clientName)
 {
     Client *targetedClient = findClientByNick(clientName);
+
+    if (targetedClient == NULL)
+        return ;
+
     if (sign == '+')
-    {
         targetedChannel->addClientToSpeakList(targetedClient);
-    }
     else if (sign == '-')
         targetedChannel->rmvClientFromSpeakList(targetedClient->getFd());
 }
@@ -175,6 +179,7 @@ void    Server::parseChannelModeCommand(std::vector<std::string> command, int cl
 
     if ((targetedChannel = findChannelByName(targetChannelName)) == NULL)
     {
+        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname()));
         return ;
     }
 
@@ -186,7 +191,7 @@ void    Server::parseChannelModeCommand(std::vector<std::string> command, int cl
 
     if (command.size() > 2)
     {
-        if ((flagNeedArgs = parseFlags(command[2])) == -1)
+        if ((flagNeedArgs = parseFlags(command[2], client)) == -1)
             return ;
         executeFlags(command, clientFd, targetedChannel);
     }

@@ -159,7 +159,7 @@ private:
     // Utils
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    // Client  *getClientByNickname(std::string const & nickname);
+    // Client  *name(std::string const & nickname);getClientByNick
     Client  *findClientByNick(const std::string &nickname);
     int     removeClientFromMap(int client_fd);
 
