@@ -28,8 +28,8 @@ void sigHandler(int sig)
 {
 	signal(sig, sigHandler);
 	if (g_ircserver != NULL)
-		freeResources(g_ircserver);
-	std::cout << "leave by SIGINT" << std::endl;
+		g_ircserver->freeResources();
+	delete g_ircserver;
 	exit(0);
 }
 
@@ -43,6 +43,7 @@ int main(int argc, const char **argv)
 
 	// Create server object
 	Server *server = new Server(argv[1], argv[2]);
+	g_ircserver = server;
 
 	// Register signal handler for SIGINT
 	signal(SIGINT, sigHandler);
@@ -51,7 +52,8 @@ int main(int argc, const char **argv)
 	server->launchServer();
 
 	// Free resources and delete server object
-	freeResources(server);
+	server->freeResources();
+	delete server;
 
 	return 0; // Return zero to indicate success
 }

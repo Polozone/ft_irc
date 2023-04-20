@@ -115,7 +115,6 @@ void Server::parseUserModeCommand(Client &client, const std::vector<std::string>
     + getModeString(modeValue);
     // Send a numeric reply to the client indicating success
     client.sendMessage(message);
-    std::cout << message << '\n';
     // client.sendMessage(RPL_UMODEIS(nickname, modeFlag));
     return;
 }
