@@ -180,7 +180,7 @@ void Server::deleteAllChannel()
     std::vector<Channel *>::iterator it;
     std::vector<Channel *>::iterator ite = _channelList.end();
 
-    for (it = _channelList.begin(); it != _channelList.end(); ++it)
+    for (it = _channelList.begin(); it != ite; ++it)
     {
         delete (*it);
     }
