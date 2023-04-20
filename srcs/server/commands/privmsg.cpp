@@ -29,7 +29,7 @@ int index)
 {
     std::string result = "";
 
-    for (int i = index; i < strings.size(); i++)
+    for (size_t i = index; i < strings.size(); i++)
     {
         result.append(strings[i]);
         result.append(" ");

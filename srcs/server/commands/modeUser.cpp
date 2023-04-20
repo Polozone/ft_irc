@@ -92,7 +92,7 @@ void Server::parseUserModeCommand(Client &client, const std::vector<std::string>
     }
     const std::string &mode = commandArgs[2];
     // Check if the mode string is valid
-    if (mode.length() < 2 || mode[0] != '+' && mode[0] != '-')
+    if (mode.length() < 2 || (mode[0] != '+' && mode[0] != '-'))
     {
         client.sendMessage(ERR_UMODEUNKNOWNFLAG(nickname));
         return;

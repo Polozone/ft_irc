@@ -22,7 +22,8 @@ struct pollfd createPollFdNode(int sd, int event)
 {
     struct pollfd pollFdNode = {
         .fd = sd,
-        .events = event};
+        .events = static_cast<short>(event),
+        .revents = 0};
 
     return (pollFdNode);
 }

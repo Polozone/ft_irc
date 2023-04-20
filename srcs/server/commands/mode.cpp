@@ -119,7 +119,7 @@ void    Server::executeFlags(std::vector<std::string> command, int clientFd, Cha
     std::string actualArg;
     Client caller = getClientByFd(clientFd);
 
-    for (size_t i = 0; i < flags.size(); i++)
+    for (int i = 0; i < static_cast<int>(flags.size()); i++)
     {
         if (counter < command.size())
             actualArg = command[counter];
