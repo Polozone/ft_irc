@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
+/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:47:54 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/20 12:41:12 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/04/20 13:50:33 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

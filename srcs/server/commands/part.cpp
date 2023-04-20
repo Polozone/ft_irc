@@ -6,7 +6,7 @@
 /*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 16:27:02 by theodeville       #+#    #+#             */
-/*   Updated: 2023/03/27 08:25:59 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/04/20 13:47:06 by theodeville      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 int Server::getRealNameFromUserName(int client_fd, std::string &realname)
 {
-    const std::string str = getClientByFd(client_fd).getUsername().substr(getClientByFd(client_fd).getNickname().size() + 6, getClientByFd(client_fd).getUsername().size());
-    
+    if (getClientByFd(client_fd).getUsername().find("0 * :") == std::string::npos)
+    {
+        realname = "";
+        return (0);
+    }
+    const std::string str = getClientByFd(client_fd).getUsername().substr(getClientByFd(client_fd).getNickname().size() + 6, getClientByFd(client_fd).getUsername().size() - getClientByFd(client_fd).getNickname().size() + 5);
     realname = str;
     return (0);
 }
