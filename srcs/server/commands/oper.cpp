@@ -27,8 +27,6 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
 {
   const std::string &nickname = client.getNickname();
 
-  std::cout << "oper is set for  -->" << client.getNickname() << std::endl;
-
   if (args.size() < 2)
   {
     client.sendMessage(ERR_NEEDMOREPARAMS(nickname));
@@ -38,8 +36,8 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
   const std::string &username = args[1];
   const std::string &password = args[2];
 
-  // Check if the provided username and password match the predefined operator\
-   credentials.
+  /* Check if the provided username and password match the predefined operator
+   credentials.*/
   if (checkOperCreds(username, password))
   {
     // Grant operator privileges to the client
@@ -47,7 +45,7 @@ void Server::OperCommand(Client &client, const std::vector<std::string> &args)
     client.setOperatorStatus(true);
     client.sendMessage(RPL_YOUREOPER(nickname));
     client.sendMessage(message);
-    std::cout << "inside oper, status of oper is :" << client.getOperatorStatus() << std::endl;
+
   }
   else
   {

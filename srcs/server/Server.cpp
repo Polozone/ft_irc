@@ -127,7 +127,7 @@ int Server::launchServer() {
     getAddrinfo();
     listen_sd = getListenerSock();
     setPoll();
-    freeaddrinfo(servinfo);
+    // freeaddrinfo(servinfo);
     return (0);
 }
 
@@ -194,11 +194,19 @@ void Server::deleteAllClients()
 
     for (it = _clients.begin(); it != ite; ++it)
     {
-        if (it->second != NULL)
-        {
-            delete (it->second);
-            it->second = NULL;
-        }
+        delete (it->second);
     }
     _clients.clear();
+}
+
+void Server::deleteAllClientsTryingToConnect()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
+
+    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
+    {
+        delete (it->second);
+    }
+    _clientsTryingToConnect.clear();
 }

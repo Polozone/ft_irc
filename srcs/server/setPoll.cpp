@@ -9,7 +9,6 @@ int Server::findFdsIndex(int fdToFind)
 
     for (it = fds.begin(); it != ite; ++it)
     {
-        std::cout << "fd: " << it->fd << std::endl;
         if (it->fd == fdToFind)
             return (i);
         i++;
@@ -39,13 +38,14 @@ int Server::closeConnectionByFd(int fd)
     if (index == -1)
         return (-1);
 
-    std::cout << "index to erase :" << index << std::endl;
     fds.erase(fds.begin() + index);
     close_conn = 0;
     return (0);
 }
 
-int Server::handleCtrlD(const char *buffer)
+
+
+int Server::handleCtrlD(char *buffer)
 {
     std::string tmp(buffer);
     if (detectEOF(buffer))
@@ -54,13 +54,10 @@ int Server::handleCtrlD(const char *buffer)
         concatenatedCmd += tmp;
         return (1);
     }
-    else if (!detectEOF(buffer) && concatenate)
+    else if (!detectEOF( buffer) && concatenate)
     {
         concatenate = 0;
         concatenatedCmd += tmp;
-        std::cout << concatenatedCmd << std::endl;
-        concatenatedCmd.empty();
-        return (1);
     }
     return (0);
 }
@@ -70,9 +67,10 @@ void printStringInInt(const char *buffer)
     int i = 0;
     while (buffer[i])
     {
-        printf("%d\n", buffer[i]);
+        std::cout << buffer[i] << " ";
         i++;
     }
+    std::cout << std::endl << std::endl;
 }
 
 int Server::readExistingConnection(int i)
@@ -99,16 +97,17 @@ int Server::readExistingConnection(int i)
         if (!handleCtrlD(buffer))
         {
             std::string input(buffer);
-            if (checkIfNewClient(buffer, fds[i].fd) > 0)
+            if (!concatenatedCmd.empty())
+            {
+                input = concatenatedCmd;
+                concatenatedCmd = "";
+                printStringInInt(input.c_str());
+            }
+            if (checkIfNewClient(input.c_str(), fds[i].fd) > 0)
             {
                 setCommand(input, fds[i].fd);
             }
             std::string tmp(buffer);
-            // std::cout << buffer << "\n";
-            if (tmp.find("printpls") != std::string::npos)
-                printClientList();
-            if (tmp.find("printmap") != std::string::npos)
-                printClientMaps();
             memset(buffer, 0, sizeof(buffer));
         }
     }
@@ -173,7 +172,7 @@ int Server::polling()
     std::cout << "Waiting on poll()...\n";
 
     nfd = fds.size();
-    status = poll(fds.data(), nfd, 180000);
+    status = poll(fds.data(), nfd, (3 * 60 * 1000));
     if (status < 0)
     {
         perror("poll()");
@@ -192,9 +191,9 @@ int Server::setPoll()
 {
     int current_size;
 
-    //!----create poll instance assigning a fd to monitor\
-    //!----and what tipe of event we want to monitor
-    //!----we add it to a list of fds, representing the users
+    /*----create poll instance assigning a fd to monitor
+      ----and what tipe of event we want to monitor
+      ----we add it to a list of fds, representing the users*/
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
     do
     {
@@ -217,31 +216,27 @@ int Server::setPoll()
             //! at this point if fd event different than POLLIN, we sent error 
             if (fds[i].revents != POLLIN)
             {
-                printf("Error! revents = %d\n", fds[i].revents);
                 end_server = TRUE;
                 break;
             }
             if (fds[i].fd == listen_sd)
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (acceptIncomingConnection() == -1)
                     break;
             }
             else
             {
-                // std::cout << fds[i].fd << " | listen_sd: " << listen_sd << "\n";
                 if (readExistingConnection(i) == -1)
                     break;
             }
 
             if (close_conn)
             {
-                std::cout << "alors ici\n";
                 closeConnection(i);
                 break ;
             }
         }
-        std::cout << "\n";
+        std::cout << std::endl;
 
     } while (end_server == FALSE);
 

@@ -6,9 +6,8 @@ Channel::~Channel(){}
 
 Channel::Channel(std::string channelName, std::string passwd, Client *creator)
     : _channelName(checkChannelName(channelName)), _passwd(passwd), _creator(creator),
-    _isPrivate(false), _isSecret(false), _isInviteOnly(false),
-    _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false), 
-    _isPasswd(false), _nbrClientsConnected(0) 
+    _isPasswd(false), _nbrClientsConnected(0), _isPrivate(false), _isSecret(false), 
+    _isInviteOnly(false), _topic("default topic"), _maxClients(1000), _isModerate(false), _isVoice(false)
 {
     addClientToChannel(creator->getFd(), creator, passwd);
     addOperator(creator);
@@ -49,7 +48,7 @@ void    Channel::printOperators()
         std::cout << (*_itm).second->getNickname() << std::endl;
 }
 
-bool    Channel::checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd)
+bool    Channel::checkPasswd(const std::string& passwd, Client * clientToAdd)
 {
     if (_isPasswd && _passwd != passwd)
     {
@@ -61,7 +60,7 @@ bool    Channel::checkPasswd(const std::string& passwd, int fdClient, Client * c
 
 void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd)
 {
-    if ( ! checkPasswd(passwd, fdClient, clientToAdd))
+    if ( ! checkPasswd(passwd, clientToAdd))
         return ;
     if (_isInviteOnly)
         clientToAdd->sendMessage(ERR_INVITEONLYCHAN(clientToAdd->getNickname()));
@@ -96,10 +95,7 @@ void    Channel::addClientToSpeakList(Client *clientToAdd)
     
     if (isClientExist(clientName))
     {
-        std::pair<std::map<int, Client*>::iterator, bool> result = _canSpeakList.insert(std::make_pair(clientToAdd->getFd(), clientToAdd));
-        if(result.second) {
-            std::cout << clientName << " have been added to speak list" << std::endl;
-        }
+        _canSpeakList.insert(std::make_pair(clientToAdd->getFd(), clientToAdd));
     }
 }
 
