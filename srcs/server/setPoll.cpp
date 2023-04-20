@@ -191,9 +191,9 @@ int Server::setPoll()
 {
     int current_size;
 
-    //!----create poll instance assigning a fd to monitor\
-    //!----and what tipe of event we want to monitor
-    //!----we add it to a list of fds, representing the users
+    /*----create poll instance assigning a fd to monitor
+      ----and what tipe of event we want to monitor
+      ----we add it to a list of fds, representing the users*/
     fds.push_back(createPollFdNode(listen_sd, POLLIN));
     do
     {
