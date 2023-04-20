@@ -101,6 +101,7 @@ int Server::readExistingConnection(int i)
             {
                 setCommand(input, fds[i].fd);
             }
+            std::cout << buffer << std::endl;
             std::string tmp(buffer);
             memset(buffer, 0, sizeof(buffer));
         }
