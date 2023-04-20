@@ -43,6 +43,7 @@ int main(int argc, const char **argv)
 
 	// Create server object
 	Server *server = new Server(argv[1], argv[2]);
+	g_ircserver = server;
 
 	// Register signal handler for SIGINT
 	signal(SIGINT, sigHandler);
