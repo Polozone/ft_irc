@@ -12,6 +12,14 @@
 
 #include "../Server.hpp"
 
+int Server::getRealNameFromUserName(int client_fd, std::string &realname)
+{
+    const std::string str = getClientByFd(client_fd).getUsername().substr(getClientByFd(client_fd).getNickname().size() + 6, getClientByFd(client_fd).getUsername().size());
+    
+    realname = str;
+    return (0);
+}
+
 int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
 {
     Channel *tmp = findChannelByName(clientInput[1]);
@@ -23,9 +31,10 @@ int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
     }
     if (isValidFd(client_fd))
     {
+        std::string realname;
+        getRealNameFromUserName(client_fd, realname);
         tmp->removeClientByFd(client_fd);
-        std::string message = ":" + getClientByFd(client_fd).getNickname() + "!tdeville PART " + tmp->getChannelName() + " :WeeChat 3.5\r\n";
-        std::cout << "Message: " << message << std::endl;
+        std::string message = ":" + getClientByFd(client_fd).getNickname() + "!" + realname + " PART " + tmp->getChannelName() + " :WeeChat 3.5\r\n";
         send(client_fd, message.data(), message.size(), 0);
         tmp->sendToAllClients(message, &client);
     }
