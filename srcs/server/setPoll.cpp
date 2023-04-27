@@ -158,8 +158,8 @@ int Server::acceptIncomingConnection()
         fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));
 
         std::cout << "Accepted connection - " << new_sd << std::endl;
-
     } while (new_sd != -1);
+
 
     return (0);
 }
@@ -235,7 +235,6 @@ int Server::setPoll()
 
             if (close_conn)
             {
-                std::cout << "alors ici\n";
                 closeConnection(i);
                 break ;
             }
