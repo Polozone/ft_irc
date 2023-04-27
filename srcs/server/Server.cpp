@@ -1,14 +1,17 @@
 
 #include "./Server.hpp"
 
+extern Server *g_ircserver;
+
 // CLASS INIT
 Server::Server(const char *port, const char *password)
     : port(port), password(password), end_server(0), close_conn(0), concatenate(0), concatenatedCmd("")
 {
+    g_ircserver = this;
     Server::addOperCreds("Admin", "42lyon");
 }
 
-Server::~Server() {}
+Server::~Server() { }
 Server::Server() {}
 Server::Server(const Server &rhs)
 {
@@ -23,7 +26,6 @@ Server  &Server::operator=(const Server &rhs)
     fds = rhs.fds;
     return (*this);
 }
-
 
 // MEMBER FUNCTIONS
 int Server::getAddrinfo() {
@@ -125,7 +127,7 @@ int Server::launchServer() {
     getAddrinfo();
     listen_sd = getListenerSock();
     setPoll();
-    freeaddrinfo(servinfo);
+    // freeaddrinfo(servinfo);
     return (0);
 }
 
@@ -135,8 +137,7 @@ void    Server::printChannelList()
 
     for (it = _channelList.begin(); it != _channelList.end(); ++it)
     {
-        Channel* channel = *it;
-        std::cout << "channelName:" << channel->getChannelName() <<std::endl;
+        std::cout << "channelName:" << (*it)->getChannelName() <<std::endl;
     }
 }
 
@@ -181,12 +182,31 @@ void Server::deleteAllChannel()
 
     for (it = _channelList.begin(); it != ite; ++it)
     {
-        if (*it != NULL)
-        {
-            std::cout << "Deleting channel at address: " << *it << std::endl;
-            delete (*it);
-            *it = NULL;
-        }
-        _channelList.clear();
+        delete (*it);
     }
+    _channelList.clear();
+}
+
+void Server::deleteAllClients()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clients.end();
+
+    for (it = _clients.begin(); it != ite; ++it)
+    {
+        delete (it->second);
+    }
+    _clients.clear();
+}
+
+void Server::deleteAllClientsTryingToConnect()
+{
+    std::map<int, Client *>::iterator it;
+    std::map<int, Client *>::iterator ite = _clientsTryingToConnect.end();
+
+    for (it = _clientsTryingToConnect.begin(); it != ite; ++it)
+    {
+        delete (it->second);
+    }
+    _clientsTryingToConnect.clear();
 }

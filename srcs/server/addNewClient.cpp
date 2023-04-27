@@ -3,7 +3,7 @@
 const std::string extractCommandContent(const std::string &buffer, const std::string &command)
 {
     size_t pos = buffer.find(command);
-    size_t end;
+    size_t end = 0;
     size_t i = 0;
 
     if (pos != std::string::npos)
@@ -18,7 +18,6 @@ const std::string extractCommandContent(const std::string &buffer, const std::st
 
 int Server::checkIfNewClient(const char *buffer, int client_fd)
 {
-
     if (isValidFd(client_fd) == -1)
         return (-1);
     if (_clients.count(client_fd))
@@ -51,7 +50,7 @@ void Server::addUser(int client_fd, const std::string &user)
 {
     try
     {
-        //! Make sure the client_fd is valied
+        //! Make sure the client_fd is valid
         if (_clientsTryingToConnect.count(client_fd) == 0)
             throw std::invalid_argument("Invalid client_fd");
         

@@ -15,11 +15,11 @@
 //! CONSTRUCTORS
 Client::Client(void) : _nickname("*"), 
 			_username(""), _fullname(""), _hostname(""), 
-			_mode(none),  _password(""), _authenticated(false), _channelsJoined() { }
+			_mode(none), _authenticated(false), _channelsJoined(), _password("") { }
 
 Client::Client(const int fd, std::string hostname) : _fd(fd), _nickname("*"), 
 			_username(""), _fullname(""), _hostname(hostname), 
-			_mode(none),  _password(""), _authenticated(false), _channelsJoined() { }
+			_mode(none), _authenticated(false), _channelsJoined(), _password("") { }
 
 Client::Client(const Client &src) : _fd(src._fd)
 {
@@ -103,7 +103,7 @@ void Client::sendMessage(const std::string &message)
 	ssize_t bytes_sent = 0;
 	ssize_t total_bytes_sent = 0;
 	const char *buffer = full_message.c_str();
-	size_t buffer_length = full_message.length();
+	ssize_t buffer_length = full_message.length();
 
 	// Send the message to the client through the client's socket (client_fd_)
 	while (total_bytes_sent < buffer_length)
@@ -116,7 +116,6 @@ void Client::sendMessage(const std::string &message)
 		}
 		total_bytes_sent += bytes_sent;
 	}
-	// std::cout << buffer << "\n";
 }
 
 //! OSTREAM 

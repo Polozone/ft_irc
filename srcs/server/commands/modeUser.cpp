@@ -92,7 +92,7 @@ void Server::parseUserModeCommand(Client &client, const std::vector<std::string>
     }
     const std::string &mode = commandArgs[2];
     // Check if the mode string is valid
-    if (mode.length() < 2 || mode[0] != '+' && mode[0] != '-')
+    if (mode.length() < 2 || (mode[0] != '+' && mode[0] != '-'))
     {
         client.sendMessage(ERR_UMODEUNKNOWNFLAG(nickname));
         return;
@@ -115,7 +115,6 @@ void Server::parseUserModeCommand(Client &client, const std::vector<std::string>
     + getModeString(modeValue);
     // Send a numeric reply to the client indicating success
     client.sendMessage(message);
-    std::cout << message << '\n';
     // client.sendMessage(RPL_UMODEIS(nickname, modeFlag));
     return;
 }
