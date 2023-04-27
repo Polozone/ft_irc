@@ -10,7 +10,8 @@ static int    parseFlags(std::string &flags, Client &client)
             && flags[i] != 's' && flags[i] != 'i' && flags[i] != 'm' 
             && flags[i] != 'v' && flags[i] != 't' && flags[i] != 'l' && flags[i] != 'o')
         {
-            client.sendMessage(ERR_UNKNOWNMODE(flags[i]));
+	    std::string flag(1, flags[i]);
+            client.sendMessage(ERR_UNKNOWNMODE(flag));
             return (-1);
         }
         if (flags[i] == 't' || flags[i] == 'l' || flags[i] == 'o' || flags[i] == 'v')
