@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+         #
+#    By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/10 10:22:05 by theodeville       #+#    #+#              #
-#    Updated: 2023/03/22 08:45:22 by theodeville      ###   ########.fr        #
+#    Updated: 2023/04/27 10:07:39 by alexanderva      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,14 @@ NAME	= ircserv
 HEADER	+= 
 
 SRCS	+=	main.cpp
+MK_FILES = $(shell find srcs/config/ -maxdepth 1 -iname *.mk)
 
 CC		=	c++
 CFLAGS	=	-std=c++98 -g -Wall -Wextra -Werror
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-%.o:		%.cpp $(HEADER) Makefile
+%.o:		%.cpp $(HEADER) Makefile $(MK_FILES)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
