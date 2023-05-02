@@ -59,7 +59,7 @@ class Channel {
         bool                        isClientIsInvited(std::string &clientName);
 
         std::string                 checkChannelName(std::string &channelName);
-        bool                        checkPasswd(const std::string& passwd, int fdClient, Client * clientToAdd);
+        bool                        checkPasswd(const std::string& passwd, Client * clientToAdd);
 
         void                        sendToChannel(const std::string &message, const Client &user);
         void                        sendToAllClients(std::string &message, Client *sender);

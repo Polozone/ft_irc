@@ -26,14 +26,18 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
 
     for (it = channelList.begin(); it != channelList.end(); ++it)
     {
-        Channel *channel;
+        Channel *channel = NULL;
         channelList[i] = channel->checkChannelName(channelList[i]);
         if ((channel = findChannelByName(channelList[i])) == NULL)
         {
             if (i < passwdList.size())
+            {
                 channel = new Channel(channelList[i], passwdList[i], client);
+            }
             else
+            {
                 channel = new Channel(channelList[i], "", client);
+            }
             addToChannelList(channel);
         }
         if (i < passwdList.size())
@@ -46,13 +50,5 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
 
 void    Server::addToChannelList(Channel *toAdd)
 {
-    std::vector<Channel*>::iterator it;
-    for (it = _channelList.begin(); it != _channelList.end(); ++it)
-    {
-        Channel* tmp = *it;
-        if (tmp->getChannelName() == toAdd->getChannelName())
-            break ;
-    }
-    if (it == _channelList.end())
-        _channelList.push_back(toAdd);
+    _channelList.push_back(toAdd);
 }

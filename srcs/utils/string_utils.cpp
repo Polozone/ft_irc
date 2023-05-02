@@ -5,7 +5,7 @@ std::string removeExtraSpaces(std::string &str) {
     std::string result;
     bool spaceFound = false;
 
-    for (int i = 0; i < str.size(); i++) {
+    for (size_t i = 0; i < str.size(); i++) {
         if (isspace(str[i])) {
             if (!spaceFound) {
                 result += ' ';

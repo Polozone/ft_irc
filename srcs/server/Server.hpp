@@ -52,6 +52,7 @@ public:
 
     // Server setup
     int launchServer();
+    void        freeResources();
 
 
 private:
@@ -72,7 +73,7 @@ private:
     int         closeConnection(int i);
     int         closeConnectionByFd(int fd);
     int         findFdsIndex(int fdToFind);
-    int         handleCtrlD(const char *buffer);
+    int         handleCtrlD(char *buffer);
 
     void        addToChannelList(Channel *toAdd);
     void        printChannelList();
@@ -99,15 +100,15 @@ private:
     // MODE
 
     void        parseChannelModeCommand(std::vector<std::string> command, int clientFd);
-    void        executeFlags(int flagNeedArgs, std::vector<std::string> command, int clientFd, Channel *targetedChannel);
-    void        modeOflag(char sign, Channel *targetedChannel, std::string clientTargeted, Client *caller);
+    void        executeFlags(std::vector<std::string> command, int clientFd, Channel *targetedChannel);
+    void        modeOflag(char sign, Channel *targetedChannel, std::string modeClientTargeted, Client *caller);
     void        modeLflag(char sign, Channel *targetedChannel, std::string limitString);
-    void        modeTflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeTflag(char sign, Channel *targetedChannel);
     void        modeVflag(char sign, Channel *targetedChannel, std::string clientName);
-    void        modeMflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modePflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeSflag(char sign, Channel *targetedChannel, std::string clientTargeted);
-    void        modeIflag(char sign, Channel *targetedChannel, std::string clientTargeted);
+    void        modeMflag(char sign, Channel *targetedChannel);
+    void        modePflag(char sign, Channel *targetedChannel);
+    void        modeSflag(char sign, Channel *targetedChanneld);
+    void        modeIflag(char sign, Channel *targetedChannel);
 
     // PONG - PONG
     int         pingCommand(int client_fd, const std::string &token) const;
@@ -133,6 +134,7 @@ private:
 
     // PART
     int partCommand(int client_fd, std::vector<std::string> clientInput);
+    int getRealNameFromUserName(int client_fd, std::string &realname);
 
     //NOTICE
     void noticeCommand(Client &client, const std::vector<std::string> &inputClient);
@@ -157,7 +159,7 @@ private:
     // Utils
     int     findClientByFd(int client_fd) const;
     Client  &getClientByFd(int client_fd) const;
-    // Client  *getClientByNickname(std::string const & nickname);
+    // Client  *name(std::string const & nickname);getClientByNick
     Client  *findClientByNick(const std::string &nickname);
     int     removeClientFromMap(int client_fd);
 
@@ -192,7 +194,6 @@ int         detectEOF(const char *str);
 struct      pollfd createPollFdNode(int sd, int event);
 const       std::string extractCommandContent(const std::string &buffer, const std::string &command);
 void        sendNumericReplies(int fd, const std::string &message);
-const char *addCarriageReturn(const char *buffer);
 std::string extractAndConcatenateStrings(std::vector<std::string> strings, int index);
 void        sigHandler(int sig);
 void        freeResources(Server *server);
