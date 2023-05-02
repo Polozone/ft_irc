@@ -162,6 +162,7 @@ private:
     // Client  *name(std::string const & nickname);getClientByNick
     Client  *findClientByNick(const std::string &nickname);
     int     removeClientFromMap(int client_fd);
+    int     removeClientFromChannel(Client *toRemove, int fd);
 
     // DEBUG FUNCTIONS
     void    printClientList() const;

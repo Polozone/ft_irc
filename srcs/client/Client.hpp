@@ -64,7 +64,7 @@ private:
     short                   _mode;
     bool                    _authenticated;
     bool                    _operatorStatus;
-    std::deque<std::string> _channelsJoined;
+    std::vector<std::string> _channelsJoined;
     std::string             _password;
 
 public:
@@ -87,7 +87,7 @@ public:
     std::string             getPassword() const;
     bool                    getOperatorStatus() const;
     bool                    getAuthenticated() const;
-    std::deque<std::string> getChannelsJoined() const;
+    std::vector<std::string> & getChannelsJoined();
 
     // Setters
     void                    setFd(int fd);
