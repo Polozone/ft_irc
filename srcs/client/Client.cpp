@@ -55,11 +55,12 @@ std::string Client::getHostname(void)                   const { return this->_ho
 short Client::getMode(void)                             const { return this->_mode; }
 std::string Client::getPassword(void)                   const { return this->_password; }
 bool Client::getAuthenticated(void)                     const { return this->_authenticated;}
-std::deque<std::string> Client::getChannelsJoined(void) const { return this->_channelsJoined;}
+std::vector<std::string> & Client::getChannelsJoined(void) { return this->_channelsJoined;}
 bool Client::hasMode(short mode)                              { return ((this->_mode & mode) > 0); }
 bool Client::getOperatorStatus() 						const { return (this->_operatorStatus); }
 
-//! SETTERS
+//! SETTER
+
 void Client::setFd(int fd) { this->_fd = fd; }
 void Client::setNickname(const std::string &nickname) { this->_nickname = nickname; }
 void Client::setUsername(const std::string &username) { this->_username = username; }
@@ -73,10 +74,10 @@ void Client::setOperatorStatus(bool status) 		  {this->_operatorStatus = status;
 
 //! CHANNEL JOINED MANAGEMENT
 bool Client::addChannelJoined(std::string channelName) {
-	std::deque<std::string>::iterator it;
-	std::deque<std::string>::iterator ite = this->_channelsJoined.end();
+	std::vector<std::string>::iterator it;
+	std::vector<std::string>::iterator ite = this->_channelsJoined.end();
 
-	for (it = this->_channelsJoined.begin(); it < ite; ++it) {
+	for (it = this->_channelsJoined.begin(); it != ite; ++it) {
 		if (*it == channelName)
 			return false;
 	}
@@ -85,8 +86,8 @@ bool Client::addChannelJoined(std::string channelName) {
 }
 
 bool Client::removeChannelJoined(std::string channelName) {
-	std::deque<std::string>::iterator it;
-	std::deque<std::string>::iterator ite = this->_channelsJoined.end();
+	std::vector<std::string>::iterator it;
+	std::vector<std::string>::iterator ite = this->_channelsJoined.end();
 
 	for (it = this->_channelsJoined.begin(); it < ite; ++it) {
 		if (*it == channelName) {

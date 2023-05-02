@@ -20,6 +20,15 @@ int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;
 
+
+    if (isValidFd(fds[i].fd) == -1)
+        return (-1);
+
+    Client client;
+
+    client = getClientByFd(fds[i].fd);
+    removeClientFromChannel(&client, fds[i].fd);
+
     removeClientFromMap(fds[i].fd);
     close(fds[i].fd);
     fds.erase(fds.begin() + i);
@@ -27,9 +36,34 @@ int Server::closeConnection(int i)
     return (0);
 }
 
+int Server::removeClientFromChannel(Client *toRemove, int fd)
+{
+    Channel *tmp;
+
+    std::vector<std::string>::iterator it;
+    std::vector<std::string>::iterator ite = toRemove->getChannelsJoined().end();
+
+    for (it = toRemove->getChannelsJoined().begin(); it != ite; ++it)
+    {
+        tmp = findChannelByName(*it);
+        if (tmp != NULL)
+        {
+            tmp->removeClientByFd(fd);
+        }
+    }
+    return (0);
+}
+
 int Server::closeConnectionByFd(int fd)
 {
     std::cout << "connection closed - " << fd << std::endl;
+
+    Client client;
+    if (isValidFd(fd) == -1)
+        return (-1);
+
+    client = getClientByFd(fd);
+    removeClientFromChannel(&client, fd);
 
     removeClientFromMap(fd);
     close(fd);
