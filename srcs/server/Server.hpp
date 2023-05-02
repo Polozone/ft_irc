@@ -142,6 +142,9 @@ private:
     // KICK
     int         kickCommand(int client_fd, std::vector<std::string> inputClient);
 
+    // INVITE
+    void inviteCommand(Client &inviter, std::vector<std::string> args);
+
     // ************************************
     // |           END COMMANDS           |
     // ************************************

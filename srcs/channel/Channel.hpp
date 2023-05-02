@@ -27,6 +27,7 @@ class Channel {
         bool                        getInviteStatus(){return _isInviteOnly;};
         bool                        getTopicStatus(){return _topic;};
         int                         getMaxClient(){return _maxClients;};
+        std::map<int, Client*>      getClients(){return _clients;};
 
         // SETTERS
         void                        setPasswd(std::string &passwd){_passwd = passwd;};

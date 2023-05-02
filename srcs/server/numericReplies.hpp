@@ -36,3 +36,10 @@
 # define ERR_CHANNELISFULL(channel) ":localhost 471 " + channel + " :Cannot join channel (+l)"
 # define ERR_NOPRIVILEGES ":localhost 481 :Permission Denied- You're not an IRC operator"
 # define ERR_UNKNOWNMODE(mode) mode + " :is unknown mode char to me"
+
+//------------------*ERROR-INVITE--------------------------
+# define ERR_NOTONCHANNEL(channel, inviter) ": " + channel + " 442 "  +  inviter + " " + channel + " :You are not on that channel" 
+# define ERR_CHANOPRIVSNEEDED(channel, inviter) ": " + channel + " 448 " + inviter + " " + channel + " :You are not on that channel"
+# define ERR_USERONCHANNEL(channel, inviter) ": " + channel + " 443 " + inviter + " " + channel + " :is already on channel"
+# define RPL_INVITING(channel, inviter, invitee) ": " + inviter + " 341 " + invitee + " " + channel + " :Inviting " + invitee + " to join " + channel
+# define RPL_AWAY(channel, invitee) ":" + channel.name + " 301 " + " " + invitee.nickname + " :is away"

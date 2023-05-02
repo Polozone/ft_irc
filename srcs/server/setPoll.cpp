@@ -1,4 +1,3 @@
-
 #include "./Server.hpp"
 
 int Server::findFdsIndex(int fdToFind)
