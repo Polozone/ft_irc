@@ -22,6 +22,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         kickCommand(clientFd, inputClient);
     else if (inputClient[0] == "KILL")
         killCommand(clientFd, inputClient[1]);
+    else if (inputClient[0] == "TOPIC")
+        topicCommand(clientFd, inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)

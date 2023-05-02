@@ -22,7 +22,7 @@
 #include <map>
 #include <sstream>
 #include <cstddef>
-#include<cstdlib>
+#include <cstdlib>
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../utils/string_utils.hpp"
@@ -136,11 +136,14 @@ private:
     int partCommand(int client_fd, std::vector<std::string> clientInput);
     int getRealNameFromUserName(int client_fd, std::string &realname);
 
-    //NOTICE
+    // NOTICE
     void noticeCommand(Client &client, const std::vector<std::string> &inputClient);
 
     // KICK
     int         kickCommand(int client_fd, std::vector<std::string> inputClient);
+
+    // TOPIC
+    void        topicCommand(int client_fd, std::vector<std::string> inputClient);
 
     // ************************************
     // |           END COMMANDS           |

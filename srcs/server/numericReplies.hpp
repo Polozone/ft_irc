@@ -24,7 +24,7 @@
 
 # define ERR_NEEDMOREPARAMS(nickname) ":localhost 461 " + nickname + " number of params invalid\r\n"
 # define ERR_INVITEONLYCHAN(nickname) ":localhost 473 " + nickname + ":Cannot join channel (+i)\r\n"
-# define RPL_TOPIC(channel, topic) ":localhost 332  " + channel + " :" + topic + "\r\n"
+# define RPL_TOPIC(client, channel, topic) ":localhost 332  " + client + " " + channel + " :" + topic + "\r\n"
 # define ERR_WRONGPSSWD(channel) ":localhost 600 " + channel + ": password don't match\r\n"
 
 # define RPL_NICK(oldnick, newnick) ":" + oldnick + " NICK " + newnick + "\r\n"

@@ -10,18 +10,6 @@ int findChannelInArgs(std::vector<std::string> args)
     return (-1);
 }
 
-static std::string createStringWithParams(std::vector<std::string> inputClient)
-{
-    std::string str(": ");
-    for (size_t i = 3; i < inputClient.size(); i++)
-    {
-        str += inputClient.at(i);
-        if (i + 1 != inputClient.size())
-            str += " ";
-    }
-    return (str);
-}
-
 int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
 {
     if (isValidFd(client_fd) == -1)
@@ -43,6 +31,11 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
         return (1);
     }
     Channel *chan = findChannelByName(inputClient[pos]);
+    if (!chan)
+    {
+        sendNumericReplies(client_fd, ERR_NOSUCHCHANNEL(client.getNickname()));
+        return (1);
+    }
 
     if (findChannelByName(inputClient[pos])->isOperator(
         client.getNickname()) == 1)
@@ -51,7 +44,7 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
         try
         {
             if (!inputClient.at(3).empty())
-                reason = createStringWithParams(inputClient);
+                reason = ": " + createStringWithParams(3, inputClient);
         }
         catch(const std::exception& e)
         {

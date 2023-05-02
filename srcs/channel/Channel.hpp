@@ -26,6 +26,7 @@ class Channel {
         bool                        getSecretStatus(){return _isSecret;};
         bool                        getInviteStatus(){return _isInviteOnly;};
         bool                        getTopicStatus(){return _topic;};
+        std::string                 getTopicContent(){return _topicContent;};
         int                         getMaxClient(){return _maxClients;};
 
         // SETTERS
