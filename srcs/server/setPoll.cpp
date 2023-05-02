@@ -141,7 +141,16 @@ int Server::acceptIncomingConnection()
     getsockname(new_sd, reinterpret_cast<struct sockaddr *>(&client_addr), &sin_size);
 
     // Create a new client object and add it to the _clientsTryingToConnect map
-    this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
+    try
+    {
+        this->_clientsTryingToConnect[new_sd] = new Client(new_sd, inet_ntoa(client_addr.sin_addr));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        exit(1);
+    }
+    
 
     // Add a new pollfd structure to the fds vector for the new socket descriptor
     fds.push_back(createPollFdNode(new_sd, POLLIN | POLLHUP));

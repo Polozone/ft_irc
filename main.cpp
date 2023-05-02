@@ -43,9 +43,18 @@ int main(int argc, const char **argv)
 	}
 
 	// Create server object
-	Server *server = new Server(argv[1], argv[2]);
+	Server *server;
+	try
+	{
+		server = new Server(argv[1], argv[2]);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		exit(1);
+	}
 	g_ircserver = server;
-
+	
 	// Register signal handler for SIGINT
 	signal(SIGINT, sigHandler);
 
