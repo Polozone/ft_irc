@@ -38,17 +38,29 @@ int Server::getAddrinfo() {
     hints.ai_socktype = SOCK_STREAM;
 
     if ((status = getaddrinfo(SERVER_ADDR, port, &hints, &servinfo)) != 0) {
-        std::cerr << "getaddrinfo error: " << gai_strerror(status) << std::endl;
-        return (-1);
+        std::cerr << gai_strerror(status) << std::endl;
+        exit(1);
     }
 
-     // Extract the hostname from the first addrinfo struct in the list
+    if (std::atoi(port) > 65535)
+    {
+        std::cerr << "Port too large" << std::endl;
+        exit(1);
+    }
+
+    if (std::atoi(port) <= 1023)
+    {
+        std::cerr << "Port too small" << std::endl;
+        exit(1);
+    }
+
+    // Extract the hostname from the first addrinfo struct in the list
     status = getnameinfo(servinfo->ai_addr, servinfo->ai_addrlen, hostname, sizeof(hostname), NULL, 0, 0);
     if (status != 0)
     {
         // Print an error message if getnameinfo fails
         std::cerr << "getnameinfo: " << gai_strerror(status) << std::endl;
-        return (-1);
+        exit(1);
     }
     this->_serverName = hostname;
     return (0);
