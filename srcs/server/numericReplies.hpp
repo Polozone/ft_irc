@@ -40,5 +40,5 @@
 //------------------*ERROR-INVITE--------------------------
 # define ERR_NOTONCHANNEL(channel, inviter) ":localhost 442 " + inviter + " " + channel + " :You are not on that channel" 
 # define ERR_USERONCHANNEL(invitee) ":localhost 443 " + invitee + " :is already on channel"
-# define RPL_INVITING(channel, inviter, invitee) ":localhost 341 " + inviter + " " + channel + " :Inviting " + invitee + " to join " + channel
+# define RPL_INVITING(channel, inviter, invitee) ":localhost 341 " + inviter + " " + invitee + " " + channel
 # define RPL_AWAY(channel, invitee) ":localhost 301 " + " " + invitee + " :is away"

@@ -195,5 +195,7 @@ void    Server::parseChannelModeCommand(std::vector<std::string> command, int cl
         if ((flagNeedArgs = parseFlags(command[2], client)) == -1)
             return ;
         executeFlags(command, clientFd, targetedChannel);
+        std::cout << "Invites status : " << targetedChannel->getInviteStatus() << std::endl;
+
     }
 }
