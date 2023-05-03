@@ -39,18 +39,23 @@ int Server::getAddrinfo() {
 
     if ((status = getaddrinfo(SERVER_ADDR, port, &hints, &servinfo)) != 0) {
         std::cerr << gai_strerror(status) << std::endl;
+        delete g_ircserver;
         exit(1);
     }
 
     if (std::atoi(port) > 65535)
     {
         std::cerr << "Port too large" << std::endl;
+        freeaddrinfo(servinfo);
+        delete g_ircserver;
         exit(1);
     }
 
     if (std::atoi(port) <= 1023)
     {
         std::cerr << "Port too small" << std::endl;
+        freeaddrinfo(servinfo);
+        delete g_ircserver;
         exit(1);
     }
 
@@ -60,6 +65,8 @@ int Server::getAddrinfo() {
     {
         // Print an error message if getnameinfo fails
         std::cerr << "getnameinfo: " << gai_strerror(status) << std::endl;
+        freeaddrinfo(servinfo);
+        delete g_ircserver;
         exit(1);
     }
     this->_serverName = hostname;

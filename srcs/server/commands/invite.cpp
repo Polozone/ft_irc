@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-using namespace std;
 #include    "../Server.hpp"
 
 /* // Channel structure

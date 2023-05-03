@@ -86,7 +86,7 @@ public:
     std::string             getPassword() const;
     bool                    getOperatorStatus() const;
     bool                    getAuthenticated() const;
-    std::vector<std::string> getChannelsJoined() const;
+    std::vector<std::string> &getChannelsJoined();
 
     // Setters
     void                    setFd(int fd);
