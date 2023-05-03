@@ -28,6 +28,8 @@ class Channel {
         bool                        getTopicStatus(){return _topic;};
         std::string                 getTopicContent(){return _topicContent;};
         int                         getMaxClient(){return _maxClients;};
+        std::map<int, Client*>      getClients(){return _clients;};
+        std::map<int, Client*>      getOperators(){return _clients;};
 
         // SETTERS
         void                        setPasswd(std::string &passwd){_passwd = passwd;};
@@ -45,6 +47,7 @@ class Channel {
         bool                        isOperator(const std::string &clientName);
 
         void                        addClientToChannel(int fdClient, Client *clientToAdd, const std::string& passwd);
+        void                        addClientToChannelInvite(int fdClientToAdd, Client *clientToAdd);
         void                        removeClientByFd(int fdClient);
         void                        addClientAllowed(std::string &nameAllowed);
         void                        removeClientAllowed(std::string &nameDisallowed);

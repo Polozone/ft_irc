@@ -60,7 +60,6 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
             channel->addClientToChannel(clientFd, client, passwdList[i]);
         else
             channel->addClientToChannel(clientFd, client, "");
-
         client->addChannelJoined(channelList[i]);
         i++;
     }
