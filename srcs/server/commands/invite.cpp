@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:40:51 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/05/03 09:35:53 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/05/03 10:04:31 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,21 @@ void Server::inviteCommand(Client &inviter, std::vector<std::string> args)
     // Check if channel is invite-only and if inviter is an operator
     if (channel->getInviteStatus())
     {
-        bool isOperator = false;
-        std::map<int, Client *> operators = channel->getOperators();
-        std::map<int, Client *>::iterator chaOpsIt = operators.find(inviter.getFd());
-        if (chaOpsIt != operators.end())
-        {
-            isOperator = true;
-        }
-        if (!isOperator)
+        std::cout << "Passing by check if channel is invite only True\n";
+        // bool isOperator = false;
+        // std::map<int, Client *> operators = channel->getOperators();
+        // std::map<int, Client *>::iterator chaOpsIt = operators.find(inviter.getFd());
+        if (!channel->isOperator(inviter.getNickname()))
         {
             // send numirc reply inviter not an operator
             inviter.sendMessage(ERR_CHANOPRIVSNEEDED(channel->getChannelName(), inviter.getNickname()));
+            // isOperator = true;
             return;
         }
+        // if (!isOperator)
+        // {
+        //     return;
+        // }
     }
 
     // Check if invitee is already on the channel
