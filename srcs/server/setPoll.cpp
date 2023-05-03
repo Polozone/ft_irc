@@ -20,7 +20,6 @@ int Server::closeConnection(int i)
 {
     std::cout << "connection closed - " << fds[i].fd << std::endl;
 
-
     if (isValidFd(fds[i].fd) == -1)
         return (-1);
 
