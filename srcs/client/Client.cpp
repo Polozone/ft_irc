@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 08:11:26 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/04 08:52:53 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/05/03 09:44:53 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ std::string Client::getHostname(void)                   const { return this->_ho
 short Client::getMode(void)                             const { return this->_mode; }
 std::string Client::getPassword(void)                   const { return this->_password; }
 bool Client::getAuthenticated(void)                     const { return this->_authenticated;}
-std::vector<std::string> & Client::getChannelsJoined(void) { return this->_channelsJoined;}
+std::vector<std::string> Client::getChannelsJoined(void) const { return this->_channelsJoined; }
 bool Client::hasMode(short mode)                              { return ((this->_mode & mode) > 0); }
 bool Client::getOperatorStatus() 						const { return (this->_operatorStatus); }
 
@@ -91,6 +91,7 @@ bool Client::removeChannelJoined(std::string channelName) {
 
 	for (it = this->_channelsJoined.begin(); it < ite; ++it) {
 		if (*it == channelName) {
+			std::cout << "Passinb by removeChannelJoined: " << "Channel name: " << *it << std::endl;
 			this->_channelsJoined.erase(it);
 			return true;
 		}

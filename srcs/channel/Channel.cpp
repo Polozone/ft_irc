@@ -83,6 +83,25 @@ void    Channel::addClientToChannel(int fdClient, Client *clientToAdd, const std
     }
 }
 
+void Channel::addClientToChannelInvite(int fdClientToAdd, Client *clientToAdd)
+{
+    if (_nbrClientsConnected < _maxClients)
+    {
+        std::pair<std::map<int, Client *>::iterator, bool> result = _clients.insert(std::make_pair(fdClientToAdd, clientToAdd));
+        if (result.second)
+        {
+            clientToAdd->sendMessage(RPL_NAMREPLY(clientToAdd->getUsername(), _channelName, clientToAdd->getNickname()));
+            std::string message = ":" + clientToAdd->getNickname() + " JOIN " + _channelName + "\r\n";
+            sendToAllClients(message, clientToAdd);
+            _nbrClientsConnected++;
+        }
+    }
+    else
+    {
+        clientToAdd->sendMessage(ERR_CHANNELISFULL(_channelName));
+    }
+}
+
 void    Channel::removeClientByFd(int fdClient)
 {
     _clients.erase(fdClient);

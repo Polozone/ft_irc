@@ -142,6 +142,8 @@ private:
     // KICK
     int         kickCommand(int client_fd, std::vector<std::string> inputClient);
 
+    // INVITE
+    void inviteCommand(Client &inviter, std::vector<std::string> args);
     // TOPIC
     void        topicCommand(int client_fd, std::vector<std::string> inputClient);
 

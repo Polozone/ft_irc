@@ -31,8 +31,14 @@
 # define ERR_NICKNAMEINUSE(nickname) ":localhost 433 " + nickname + ":Nickname already in use\r\n"
 # define ERR_ERRONEUSNICKNAME(port, nickname) ":localhost/" + port + " 432 " + nickname + " :Invalid Nickname\r\n"
 # define RPL_NAMREPLY(username, channel, nickname) ":localhost 353 " + username + " " + channel + ":\r\n"
-# define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n"
+# define ERR_CHANOPRIVSNEEDED(nickname, channel) ":localhost 482 " + nickname + " :You're not channel operator\r\n"
 # define RPL_WELCOME(port, nick) ":localhost/" + port + " 001 " + nick + " :Welcome to the server\r\n"
 # define ERR_CHANNELISFULL(channel) ":localhost 471 " + channel + " :Cannot join channel (+l)"
 # define ERR_NOPRIVILEGES ":localhost 481 :Permission Denied- You're not an IRC operator"
 # define ERR_UNKNOWNMODE(mode) mode + " :is unknown mode char to me"
+
+//------------------*ERROR-INVITE--------------------------
+# define ERR_NOTONCHANNEL(channel, inviter) ":localhost 442 " + inviter + " " + channel + " :You are not on that channel" 
+# define ERR_USERONCHANNEL(invitee) ":localhost 443 " + invitee + " :is already on channel"
+# define RPL_INVITING(channel, inviter, invitee) ":localhost 341 " + inviter + " " + channel + " :Inviting " + invitee + " to join " + channel
+# define RPL_AWAY(channel, invitee) ":localhost 301 " + " " + invitee + " :is away"

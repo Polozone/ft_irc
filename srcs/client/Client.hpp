@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 07:46:30 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/04/12 14:09:09 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/05/03 09:45:11 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <string>
 # include <iostream>
 # include <vector>
-# include <deque>
 # include <ctime>
 # include <map>
 // send function
@@ -87,7 +86,7 @@ public:
     std::string             getPassword() const;
     bool                    getOperatorStatus() const;
     bool                    getAuthenticated() const;
-    std::vector<std::string> & getChannelsJoined();
+    std::vector<std::string> getChannelsJoined() const;
 
     // Setters
     void                    setFd(int fd);
