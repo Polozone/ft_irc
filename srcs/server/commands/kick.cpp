@@ -27,21 +27,36 @@ int Server::kickCommand(int client_fd, std::vector<std::string> inputClient)
     Client  *clientToKick = findClientByNick(inputClient[2]);
     if (!clientToKick)
     {
-        sendNumericReplies(client_fd, ERR_NOSUCHNICK(getClientByFd(client_fd).getNickname(), inputClient[2]));
+        sendNumericReplies(client_fd, ERR_NOSUCHNICK(client.getNickname(), inputClient[2]));
         return (1);
     }
     Channel *chan = findChannelByName(inputClient[pos]);
+    if (!chan)
+    {
+        sendNumericReplies(client_fd, ERR_NOSUCHCHANNEL(client.getNickname()));
+        return (1);
+    }
 
     if (findChannelByName(inputClient[pos])->isOperator(
-        getClientByFd(client_fd).getNickname()) == 1)
+        client.getNickname()) == 1)
     {
-        std::string message = getClientByFd(client_fd).getNickname() + " KICK " + clientToKick->getNickname() + " " + chan->getChannelName() + "\r\n";
+        std::string reason(" :You've been kicked\r\n");
+        try
+        {
+            if (!inputClient.at(3).empty())
+                reason = ": " + createStringWithParams(3, inputClient);
+        }
+        catch(const std::exception& e)
+        {
+        }
+        
+        std::string message = ":" + client.getNickname() + " KICK " + chan->getChannelName() + " " + clientToKick->getNickname() + reason;
         chan->sendToAllClients(message , &client);
         chan->removeClientByFd(clientToKick->getFd());
     }
     else
     {
-        sendNumericReplies(client_fd, ERR_CHANOPRIVSNEEDED(getClientByFd(client_fd).getNickname(), chan->getChannelName()));
+        sendNumericReplies(client_fd, ERR_CHANOPRIVSNEEDED(client.getNickname(), chan->getChannelName()));
     }
     
     return (0);

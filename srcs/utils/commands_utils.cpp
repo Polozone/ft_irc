@@ -24,6 +24,8 @@ void    Server::callCommand(std::vector<std::string> inputClient, const std::str
         killCommand(clientFd, inputClient[1]);
     else if (inputClient[0] == "INVITE")
         inviteCommand(getClientByFd(clientFd), inputClient);
+    else if (inputClient[0] == "TOPIC")
+        topicCommand(clientFd, inputClient);
 }
 
 void    Server::setCommand(std::string &clientInput, int clientFd)

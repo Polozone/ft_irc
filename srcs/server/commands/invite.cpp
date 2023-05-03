@@ -6,7 +6,7 @@
 /*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:40:51 by alexanderva       #+#    #+#             */
-/*   Updated: 2023/05/02 13:33:45 by alexanderva      ###   ########.fr       */
+/*   Updated: 2023/05/03 09:35:53 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ struct Channel {
 
 // Client structure
 struct Client {
-    string nickname;
-    vector<string> channels;
+    string nickname; vector<string> channels;
     bool away;
 };
  */
@@ -37,6 +36,7 @@ void Server::inviteCommand(Client &inviter, std::vector<std::string> args)
         inviter.sendMessage(ERR_NEEDMOREPARAMS(inviter.getNickname()));
         return;
     }
+    std::cout << "Passing by invite command\n";
 
     Client *invitee = findClientByNick(args[1]);
     Channel *channel = findChannelByName(args[2]);
@@ -44,7 +44,7 @@ void Server::inviteCommand(Client &inviter, std::vector<std::string> args)
     if (!invitee)
     {
         // Send an error message to the client (e.g., ERR_NOSUCHNICK)
-        inviter.sendMessage(ERR_NOSUCHNICK(client.getNickname(), args[1]));
+        inviter.sendMessage(ERR_NOSUCHNICK(inviter.getNickname(), args[1]));
         return ;
     }
     if (!channel)
@@ -56,57 +56,62 @@ void Server::inviteCommand(Client &inviter, std::vector<std::string> args)
 
     // Check if inviter is a member of the channel
     bool isMember = false;
-    inviter.getChannelsJoined
-    if ()
-            
-      isMember = true; 
+    std::vector<std::string> channelsJoint = inviter.getChannelsJoined(); 
+    std::vector<std::string>::iterator it;
+    for (it = channelsJoint.begin(); it != channelsJoint.end(); it++)
+    {
+        if (*it == channel->getChannelName())
+            isMember = true;
     }
     if (!isMember)
     {
         // send numeric reply inviter in not in the channel
-        inviter.sendMessage(ERR_NOTONCHANNEL(channel.getChannelName(), inviter.getNickname()));
+        inviter.sendMessage(ERR_NOTONCHANNEL(channel->getChannelName(), inviter.getNickname()));
         return;
     }
 
     // Check if channel is invite-only and if inviter is an operator
-    if (channel.inviteOnly)
+    if (channel->getInviteStatus())
     {
         bool isOperator = false;
-        for (unsigned int i = 0; i < channel.operators.size(); i++)
+        std::map<int, Client *> operators = channel->getOperators();
+        std::map<int, Client *>::iterator chaOpsIt = operators.find(inviter.getFd());
+        if (chaOpsIt != operators.end())
         {
-            if (channel.operators[i] == inviter.nickname)
-            {
-                isOperator = true;
-                break;
-            }
+            isOperator = true;
         }
         if (!isOperator)
         {
             // send numirc reply inviter not an operator
-            inviter.sendMessage(ERR_CHANOPRIVSNEEDED(channel.getChannelName(), inviter.getNickname()));
+            inviter.sendMessage(ERR_CHANOPRIVSNEEDED(channel->getChannelName(), inviter.getNickname()));
             return;
         }
     }
 
     // Check if invitee is already on the channel
+    channelsJoint = invitee->getChannelsJoined(); // we use the inviter vector used before 
+    it = channelsJoint.begin(); // we use the same iterator used with inviter vector before 
     bool isOnChannel = false;
-    for (unsigned int i = 0; i < invitee.channels.size(); i++)
+    for (; it != channelsJoint.end(); it++)
     {
-        if (invitee.channels[i] == channel.name)
+        std::cout << "Passing by check if invitee is already on the channel\n";
+        if (*it == channel->getChannelName())
         {
+            std::cout << "Checkingif invitee is already on channel. Channel name :" << *it << std::endl;
             isOnChannel = true;
             break;
         }
     }
     if (isOnChannel)
     {
-        ERR_USERONCHANNEL(channel.getChannelName(), inviter.getNickname());
+        std::cout << "Passing by isOnChannel true\n";
+        inviter.sendMessage(ERR_USERONCHANNEL(invitee->getNickname()));
         return;
     }
     // Invite the user to the channel
-    invitee.channels.push_back(channel.name);
-    channel.members.push_back(invitee.nickname);
+    invitee->addChannelJoined(channel->getChannelName());
+    channel->addClientToChannelInvite(invitee->getFd(), invitee);
     // Notify the inviter and invitee of the invitation
-    RPL_INVITING(channel.getChannelName(), inviter.getNickname(), invitee.getNickname());
-    if (invitee.away)
+    inviter.sendMessage(RPL_INVITING(channel->getChannelName(), inviter.getNickname(), invitee->getNickname()));
+    // if (invitee.away)
 }

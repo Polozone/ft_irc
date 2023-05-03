@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theodeville <theodeville@student.42.fr>    +#+  +:+       +#+        */
+/*   By: alexandervalencia <alexandervalencia@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 16:27:02 by theodeville       #+#    #+#             */
-/*   Updated: 2023/04/20 13:47:06 by theodeville      ###   ########.fr       */
+/*   Updated: 2023/05/03 07:24:33 by alexanderva      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int Server::partCommand(int client_fd, std::vector<std::string> clientInput)
         std::string message = ":" + getClientByFd(client_fd).getNickname() + "!" + realname + " PART " + tmp->getChannelName() + " :WeeChat 3.5\r\n";
         send(client_fd, message.data(), message.size(), 0);
         tmp->sendToAllClients(message, &client);
+        client.removeChannelJoined(tmp->getChannelName());
     }
     return (0);
 }

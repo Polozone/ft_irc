@@ -35,3 +35,15 @@ bool isDigits(const std::string &str)
 {
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
+
+std::string createStringWithParams(int indexToStart, std::vector<std::string> inputClient)
+{
+    std::string str;
+    for (size_t i = indexToStart; i < inputClient.size(); i++)
+    {
+        str += inputClient.at(i);
+        if (i + 1 != inputClient.size())
+            str += " ";
+    }
+    return (str);
+}

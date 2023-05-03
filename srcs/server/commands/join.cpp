@@ -32,11 +32,27 @@ void    Server::joinCommand(std::vector<std::string> command, int clientFd)
         {
             if (i < passwdList.size())
             {
-                channel = new Channel(channelList[i], passwdList[i], client);
+                try
+                {
+                    channel = new Channel(channelList[i], passwdList[i], client);
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                    exit(1);
+                }
             }
             else
             {
-                channel = new Channel(channelList[i], "", client);
+                try
+                {
+                    channel = new Channel(channelList[i], "", client);
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << '\n';
+                    exit(1);
+                }
             }
             addToChannelList(channel);
         }
